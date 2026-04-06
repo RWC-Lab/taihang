@@ -1,0 +1,32 @@
+{
+  "tests": 4,
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "PrgTest",
+      "tests": 4,
+      "testsuite": [
+        {
+          "name": "Determinism",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_prg.cpp",
+          "line": 7
+        },
+        {
+          "name": "Divergence",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_prg.cpp",
+          "line": 21
+        },
+        {
+          "name": "HardwareEntropy",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_prg.cpp",
+          "line": 36
+        },
+        {
+          "name": "LargeMatrixGeneration",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_prg.cpp",
+          "line": 48
+        }
+      ]
+    }
+  ]
+}

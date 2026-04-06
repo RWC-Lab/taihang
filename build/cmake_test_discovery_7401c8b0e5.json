@@ -1,0 +1,142 @@
+{
+  "tests": 26,
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "NetIOTest",
+      "tests": 26,
+      "testsuite": [
+        {
+          "name": "RawBytes_SendRecv_Small",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 102
+        },
+        {
+          "name": "RawBytes_BufferFlush_Small",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 119
+        },
+        {
+          "name": "RawBytes_Large_1MB",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 141
+        },
+        {
+          "name": "RawBytes_AllZeros",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 156
+        },
+        {
+          "name": "Block_SendRecv",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 174
+        },
+        {
+          "name": "Block_BufferFlush",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 188
+        },
+        {
+          "name": "ECPoint_SendRecv_Single",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 213
+        },
+        {
+          "name": "ECPoint_SendRecv_Batch",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 229
+        },
+        {
+          "name": "ECPoint_BufferFlush_Batch",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 245
+        },
+        {
+          "name": "ECPoint_Generator_RoundTrip",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 266
+        },
+        {
+          "name": "ECPoint_Infinity_RoundTrip",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 282
+        },
+        {
+          "name": "ZnElement_SendRecv",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 302
+        },
+        {
+          "name": "ZnElement_BufferFlush",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 315
+        },
+        {
+          "name": "ZnElement_Zero_RoundTrip",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 336
+        },
+        {
+          "name": "BytesMatrix_SendRecv_Small",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 353
+        },
+        {
+          "name": "BytesMatrix_SendRecv_LargeTriggersWritev",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 370
+        },
+        {
+          "name": "BytesMatrix_BufferFlush",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 388
+        },
+        {
+          "name": "StringVector_SendRecv",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 409
+        },
+        {
+          "name": "StringVector_BufferFlush",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 425
+        },
+        {
+          "name": "MultiRound_PingPong_Bytes",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 446
+        },
+        {
+          "name": "MultiRound_MixedTypes",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 472
+        },
+        {
+          "name": "MultiRound_BidirectionalExchange",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 504
+        },
+        {
+          "name": "EdgeCase_EmptyFlushIsNoop",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 537
+        },
+        {
+          "name": "EdgeCase_PendingBytesTracksCorrectly",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 556
+        },
+        {
+          "name": "EdgeCase_SingleByteRoundTrip",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 581
+        },
+        {
+          "name": "EdgeCase_MaxValueBytes",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_net_io.cpp",
+          "line": 596
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+if(EXISTS "/Users/yuchen/Documents/Coding/taihang/build/test_bloom_filter[1]_tests.cmake")
+  include("/Users/yuchen/Documents/Coding/taihang/build/test_bloom_filter[1]_tests.cmake")
+else()
+  add_test(test_bloom_filter_NOT_BUILT test_bloom_filter_NOT_BUILT)
+endif()

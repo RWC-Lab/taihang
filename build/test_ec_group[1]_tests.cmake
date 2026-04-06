@@ -1,0 +1,7 @@
+add_test([=[EcTest.PointBasicLaws]=]  /Users/yuchen/Documents/Coding/taihang/build/test_ec_group [==[--gtest_filter=EcTest.PointBasicLaws]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[EcTest.PointBasicLaws]=]  PROPERTIES DEF_SOURCE_LINE /Users/yuchen/Documents/Coding/taihang/tests/test_ec_group.cpp:18 WORKING_DIRECTORY /Users/yuchen/Documents/Coding/taihang/build SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+add_test([=[EcTest.ScalarFieldArithmetic]=]  /Users/yuchen/Documents/Coding/taihang/build/test_ec_group [==[--gtest_filter=EcTest.ScalarFieldArithmetic]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[EcTest.ScalarFieldArithmetic]=]  PROPERTIES DEF_SOURCE_LINE /Users/yuchen/Documents/Coding/taihang/tests/test_ec_group.cpp:30 WORKING_DIRECTORY /Users/yuchen/Documents/Coding/taihang/build SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+add_test([=[EcTest.MultiScalarMultiplication]=]  /Users/yuchen/Documents/Coding/taihang/build/test_ec_group [==[--gtest_filter=EcTest.MultiScalarMultiplication]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[EcTest.MultiScalarMultiplication]=]  PROPERTIES DEF_SOURCE_LINE /Users/yuchen/Documents/Coding/taihang/tests/test_ec_group.cpp:49 WORKING_DIRECTORY /Users/yuchen/Documents/Coding/taihang/build SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+set(  test_ec_group_TESTS EcTest.PointBasicLaws EcTest.ScalarFieldArithmetic EcTest.MultiScalarMultiplication)

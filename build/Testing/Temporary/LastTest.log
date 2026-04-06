@@ -1,0 +1,1948 @@
+Start testing: Apr 06 15:46 CST
+----------------------------------------------------------
+1/69 Testing: AesTest.KeyExpansion
+1/69 Test: AesTest.KeyExpansion
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_aes" "--gtest_filter=AesTest.KeyExpansion" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"AesTest.KeyExpansion" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = AesTest.KeyExpansion
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AesTest
+[ RUN      ] AesTest.KeyExpansion
+[       OK ] AesTest.KeyExpansion (0 ms)
+[----------] 1 test from AesTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"AesTest.KeyExpansion" end time: Apr 06 15:46 CST
+"AesTest.KeyExpansion" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/69 Testing: AesTest.SingleBlockRoundTrip
+2/69 Test: AesTest.SingleBlockRoundTrip
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_aes" "--gtest_filter=AesTest.SingleBlockRoundTrip" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"AesTest.SingleBlockRoundTrip" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = AesTest.SingleBlockRoundTrip
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AesTest
+[ RUN      ] AesTest.SingleBlockRoundTrip
+[       OK ] AesTest.SingleBlockRoundTrip (0 ms)
+[----------] 1 test from AesTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"AesTest.SingleBlockRoundTrip" end time: Apr 06 15:46 CST
+"AesTest.SingleBlockRoundTrip" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/69 Testing: AesTest.ParallelEncryption
+3/69 Test: AesTest.ParallelEncryption
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_aes" "--gtest_filter=AesTest.ParallelEncryption" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"AesTest.ParallelEncryption" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = AesTest.ParallelEncryption
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AesTest
+[ RUN      ] AesTest.ParallelEncryption
+[       OK ] AesTest.ParallelEncryption (0 ms)
+[----------] 1 test from AesTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"AesTest.ParallelEncryption" end time: Apr 06 15:46 CST
+"AesTest.ParallelEncryption" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/69 Testing: AesTest.EcbMode
+4/69 Test: AesTest.EcbMode
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_aes" "--gtest_filter=AesTest.EcbMode" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"AesTest.EcbMode" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = AesTest.EcbMode
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AesTest
+[ RUN      ] AesTest.EcbMode
+[       OK ] AesTest.EcbMode (0 ms)
+[----------] 1 test from AesTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"AesTest.EcbMode" end time: Apr 06 15:46 CST
+"AesTest.EcbMode" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/69 Testing: AesTest.CbcMode
+5/69 Test: AesTest.CbcMode
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_aes" "--gtest_filter=AesTest.CbcMode" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"AesTest.CbcMode" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = AesTest.CbcMode
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AesTest
+[ RUN      ] AesTest.CbcMode
+[       OK ] AesTest.CbcMode (0 ms)
+[----------] 1 test from AesTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"AesTest.CbcMode" end time: Apr 06 15:46 CST
+"AesTest.CbcMode" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/69 Testing: AesTest.FixedKeyConsistency
+6/69 Test: AesTest.FixedKeyConsistency
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_aes" "--gtest_filter=AesTest.FixedKeyConsistency" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"AesTest.FixedKeyConsistency" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = AesTest.FixedKeyConsistency
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AesTest
+[ RUN      ] AesTest.FixedKeyConsistency
+[       OK ] AesTest.FixedKeyConsistency (0 ms)
+[----------] 1 test from AesTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"AesTest.FixedKeyConsistency" end time: Apr 06 15:46 CST
+"AesTest.FixedKeyConsistency" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/69 Testing: BigIntModTest.ModularAddition
+7/69 Test: BigIntModTest.ModularAddition
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bigint" "--gtest_filter=BigIntModTest.ModularAddition" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BigIntModTest.ModularAddition" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BigIntModTest.ModularAddition
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BigIntModTest
+[ RUN      ] BigIntModTest.ModularAddition
+a: 5
+b: 4
+m': 7
+result: 2
+[       OK ] BigIntModTest.ModularAddition (0 ms)
+[----------] 1 test from BigIntModTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BigIntModTest.ModularAddition" end time: Apr 06 15:46 CST
+"BigIntModTest.ModularAddition" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/69 Testing: BigIntModTest.ModularSubtraction
+8/69 Test: BigIntModTest.ModularSubtraction
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bigint" "--gtest_filter=BigIntModTest.ModularSubtraction" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BigIntModTest.ModularSubtraction" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BigIntModTest.ModularSubtraction
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BigIntModTest
+[ RUN      ] BigIntModTest.ModularSubtraction
+[       OK ] BigIntModTest.ModularSubtraction (0 ms)
+[----------] 1 test from BigIntModTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BigIntModTest.ModularSubtraction" end time: Apr 06 15:46 CST
+"BigIntModTest.ModularSubtraction" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/69 Testing: BigIntModTest.ModularMultiplication
+9/69 Test: BigIntModTest.ModularMultiplication
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bigint" "--gtest_filter=BigIntModTest.ModularMultiplication" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BigIntModTest.ModularMultiplication" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BigIntModTest.ModularMultiplication
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BigIntModTest
+[ RUN      ] BigIntModTest.ModularMultiplication
+[       OK ] BigIntModTest.ModularMultiplication (0 ms)
+[----------] 1 test from BigIntModTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BigIntModTest.ModularMultiplication" end time: Apr 06 15:46 CST
+"BigIntModTest.ModularMultiplication" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/69 Testing: BigIntModTest.ModularInverse
+10/69 Test: BigIntModTest.ModularInverse
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bigint" "--gtest_filter=BigIntModTest.ModularInverse" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BigIntModTest.ModularInverse" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BigIntModTest.ModularInverse
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BigIntModTest
+[ RUN      ] BigIntModTest.ModularInverse
+[       OK ] BigIntModTest.ModularInverse (0 ms)
+[----------] 1 test from BigIntModTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BigIntModTest.ModularInverse" end time: Apr 06 15:46 CST
+"BigIntModTest.ModularInverse" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/69 Testing: BigIntModTest.ModularExponentiation
+11/69 Test: BigIntModTest.ModularExponentiation
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bigint" "--gtest_filter=BigIntModTest.ModularExponentiation" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BigIntModTest.ModularExponentiation" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BigIntModTest.ModularExponentiation
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BigIntModTest
+[ RUN      ] BigIntModTest.ModularExponentiation
+[       OK ] BigIntModTest.ModularExponentiation (0 ms)
+[----------] 1 test from BigIntModTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BigIntModTest.ModularExponentiation" end time: Apr 06 15:46 CST
+"BigIntModTest.ModularExponentiation" time elapsed: 00:00:00
+----------------------------------------------------------
+
+12/69 Testing: BigIntModTest.ModularSquareRoot
+12/69 Test: BigIntModTest.ModularSquareRoot
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bigint" "--gtest_filter=BigIntModTest.ModularSquareRoot" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BigIntModTest.ModularSquareRoot" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BigIntModTest.ModularSquareRoot
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BigIntModTest
+[ RUN      ] BigIntModTest.ModularSquareRoot
+[       OK ] BigIntModTest.ModularSquareRoot (0 ms)
+[----------] 1 test from BigIntModTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BigIntModTest.ModularSquareRoot" end time: Apr 06 15:46 CST
+"BigIntModTest.ModularSquareRoot" time elapsed: 00:00:00
+----------------------------------------------------------
+
+13/69 Testing: BigIntModTest.LargeNumberWrapAround
+13/69 Test: BigIntModTest.LargeNumberWrapAround
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bigint" "--gtest_filter=BigIntModTest.LargeNumberWrapAround" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BigIntModTest.LargeNumberWrapAround" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BigIntModTest.LargeNumberWrapAround
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BigIntModTest
+[ RUN      ] BigIntModTest.LargeNumberWrapAround
+[       OK ] BigIntModTest.LargeNumberWrapAround (0 ms)
+[----------] 1 test from BigIntModTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BigIntModTest.LargeNumberWrapAround" end time: Apr 06 15:46 CST
+"BigIntModTest.LargeNumberWrapAround" time elapsed: 00:00:00
+----------------------------------------------------------
+
+14/69 Testing: BigIntModTest.ModuloNegativeResult
+14/69 Test: BigIntModTest.ModuloNegativeResult
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bigint" "--gtest_filter=BigIntModTest.ModuloNegativeResult" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BigIntModTest.ModuloNegativeResult" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BigIntModTest.ModuloNegativeResult
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BigIntModTest
+[ RUN      ] BigIntModTest.ModuloNegativeResult
+[       OK ] BigIntModTest.ModuloNegativeResult (0 ms)
+[----------] 1 test from BigIntModTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BigIntModTest.ModuloNegativeResult" end time: Apr 06 15:46 CST
+"BigIntModTest.ModuloNegativeResult" time elapsed: 00:00:00
+----------------------------------------------------------
+
+15/69 Testing: BigIntModTest.P256RandomIdentity
+15/69 Test: BigIntModTest.P256RandomIdentity
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bigint" "--gtest_filter=BigIntModTest.P256RandomIdentity" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BigIntModTest.P256RandomIdentity" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BigIntModTest.P256RandomIdentity
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BigIntModTest
+[ RUN      ] BigIntModTest.P256RandomIdentity
+[       OK ] BigIntModTest.P256RandomIdentity (2 ms)
+[----------] 1 test from BigIntModTest (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BigIntModTest.P256RandomIdentity" end time: Apr 06 15:46 CST
+"BigIntModTest.P256RandomIdentity" time elapsed: 00:00:00
+----------------------------------------------------------
+
+16/69 Testing: BigIntModTest.ThreadLocalContextSafety
+16/69 Test: BigIntModTest.ThreadLocalContextSafety
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bigint" "--gtest_filter=BigIntModTest.ThreadLocalContextSafety" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BigIntModTest.ThreadLocalContextSafety" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BigIntModTest.ThreadLocalContextSafety
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BigIntModTest
+[ RUN      ] BigIntModTest.ThreadLocalContextSafety
+[       OK ] BigIntModTest.ThreadLocalContextSafety (8 ms)
+[----------] 1 test from BigIntModTest (8 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (8 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"BigIntModTest.ThreadLocalContextSafety" end time: Apr 06 15:46 CST
+"BigIntModTest.ThreadLocalContextSafety" time elapsed: 00:00:00
+----------------------------------------------------------
+
+17/69 Testing: BlockTest.BasicOperations
+17/69 Test: BlockTest.BasicOperations
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_block" "--gtest_filter=BlockTest.BasicOperations" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BlockTest.BasicOperations" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BlockTest.BasicOperations
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BlockTest
+[ RUN      ] BlockTest.BasicOperations
+[       OK ] BlockTest.BasicOperations (0 ms)
+[----------] 1 test from BlockTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BlockTest.BasicOperations" end time: Apr 06 15:46 CST
+"BlockTest.BasicOperations" time elapsed: 00:00:00
+----------------------------------------------------------
+
+18/69 Testing: BlockTest.Constants
+18/69 Test: BlockTest.Constants
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_block" "--gtest_filter=BlockTest.Constants" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BlockTest.Constants" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BlockTest.Constants
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BlockTest
+[ RUN      ] BlockTest.Constants
+[       OK ] BlockTest.Constants (0 ms)
+[----------] 1 test from BlockTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BlockTest.Constants" end time: Apr 06 15:46 CST
+"BlockTest.Constants" time elapsed: 00:00:00
+----------------------------------------------------------
+
+19/69 Testing: BlockTest.Serialization
+19/69 Test: BlockTest.Serialization
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_block" "--gtest_filter=BlockTest.Serialization" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BlockTest.Serialization" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BlockTest.Serialization
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BlockTest
+[ RUN      ] BlockTest.Serialization
+[       OK ] BlockTest.Serialization (0 ms)
+[----------] 1 test from BlockTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BlockTest.Serialization" end time: Apr 06 15:46 CST
+"BlockTest.Serialization" time elapsed: 00:00:00
+----------------------------------------------------------
+
+20/69 Testing: BloomFilterTest.NoFalseNegatives
+20/69 Test: BloomFilterTest.NoFalseNegatives
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bloom_filter" "--gtest_filter=BloomFilterTest.NoFalseNegatives" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BloomFilterTest.NoFalseNegatives" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BloomFilterTest.NoFalseNegatives
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BloomFilterTest
+[ RUN      ] BloomFilterTest.NoFalseNegatives
+[       OK ] BloomFilterTest.NoFalseNegatives (0 ms)
+[----------] 1 test from BloomFilterTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BloomFilterTest.NoFalseNegatives" end time: Apr 06 15:46 CST
+"BloomFilterTest.NoFalseNegatives" time elapsed: 00:00:00
+----------------------------------------------------------
+
+21/69 Testing: BloomFilterTest.HighSecurityFPR
+21/69 Test: BloomFilterTest.HighSecurityFPR
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bloom_filter" "--gtest_filter=BloomFilterTest.HighSecurityFPR" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BloomFilterTest.HighSecurityFPR" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BloomFilterTest.HighSecurityFPR
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BloomFilterTest
+[ RUN      ] BloomFilterTest.HighSecurityFPR
+[       OK ] BloomFilterTest.HighSecurityFPR (1 ms)
+[----------] 1 test from BloomFilterTest (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (1 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BloomFilterTest.HighSecurityFPR" end time: Apr 06 15:46 CST
+"BloomFilterTest.HighSecurityFPR" time elapsed: 00:00:00
+----------------------------------------------------------
+
+22/69 Testing: BloomFilterTest.SerializationConsistency
+22/69 Test: BloomFilterTest.SerializationConsistency
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bloom_filter" "--gtest_filter=BloomFilterTest.SerializationConsistency" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BloomFilterTest.SerializationConsistency" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BloomFilterTest.SerializationConsistency
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BloomFilterTest
+[ RUN      ] BloomFilterTest.SerializationConsistency
+[       OK ] BloomFilterTest.SerializationConsistency (0 ms)
+[----------] 1 test from BloomFilterTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BloomFilterTest.SerializationConsistency" end time: Apr 06 15:46 CST
+"BloomFilterTest.SerializationConsistency" time elapsed: 00:00:00
+----------------------------------------------------------
+
+23/69 Testing: BSGSTest.SmallRangeCorrectness
+23/69 Test: BSGSTest.SmallRangeCorrectness
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bsgs_dlog" "--gtest_filter=BSGSTest.SmallRangeCorrectness" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BSGSTest.SmallRangeCorrectness" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BSGSTest.SmallRangeCorrectness
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BSGSTest
+[ RUN      ] BSGSTest.SmallRangeCorrectness
+[       OK ] BSGSTest.SmallRangeCorrectness (7 ms)
+[----------] 1 test from BSGSTest (7 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (7 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"BSGSTest.SmallRangeCorrectness" end time: Apr 06 15:46 CST
+"BSGSTest.SmallRangeCorrectness" time elapsed: 00:00:00
+----------------------------------------------------------
+
+24/69 Testing: BSGSTest.BoundaryValues
+24/69 Test: BSGSTest.BoundaryValues
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bsgs_dlog" "--gtest_filter=BSGSTest.BoundaryValues" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BSGSTest.BoundaryValues" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BSGSTest.BoundaryValues
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BSGSTest
+[ RUN      ] BSGSTest.BoundaryValues
+[       OK ] BSGSTest.BoundaryValues (2 ms)
+[----------] 1 test from BSGSTest (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BSGSTest.BoundaryValues" end time: Apr 06 15:46 CST
+"BSGSTest.BoundaryValues" time elapsed: 00:00:00
+----------------------------------------------------------
+
+25/69 Testing: BSGSTest.OutOfRange
+25/69 Test: BSGSTest.OutOfRange
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bsgs_dlog" "--gtest_filter=BSGSTest.OutOfRange" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BSGSTest.OutOfRange" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BSGSTest.OutOfRange
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BSGSTest
+[ RUN      ] BSGSTest.OutOfRange
+[       OK ] BSGSTest.OutOfRange (2 ms)
+[----------] 1 test from BSGSTest (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BSGSTest.OutOfRange" end time: Apr 06 15:46 CST
+"BSGSTest.OutOfRange" time elapsed: 00:00:00
+----------------------------------------------------------
+
+26/69 Testing: BSGSTest.ParallelExecution
+26/69 Test: BSGSTest.ParallelExecution
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bsgs_dlog" "--gtest_filter=BSGSTest.ParallelExecution" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BSGSTest.ParallelExecution" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BSGSTest.ParallelExecution
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BSGSTest
+[ RUN      ] BSGSTest.ParallelExecution
+[       OK ] BSGSTest.ParallelExecution (2 ms)
+[----------] 1 test from BSGSTest (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BSGSTest.ParallelExecution" end time: Apr 06 15:46 CST
+"BSGSTest.ParallelExecution" time elapsed: 00:00:00
+----------------------------------------------------------
+
+27/69 Testing: BSGSTest.ThreadCountConsistency
+27/69 Test: BSGSTest.ThreadCountConsistency
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bsgs_dlog" "--gtest_filter=BSGSTest.ThreadCountConsistency" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BSGSTest.ThreadCountConsistency" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BSGSTest.ThreadCountConsistency
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BSGSTest
+[ RUN      ] BSGSTest.ThreadCountConsistency
+[       OK ] BSGSTest.ThreadCountConsistency (6 ms)
+[----------] 1 test from BSGSTest (6 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (6 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"BSGSTest.ThreadCountConsistency" end time: Apr 06 15:46 CST
+"BSGSTest.ThreadCountConsistency" time elapsed: 00:00:00
+----------------------------------------------------------
+
+28/69 Testing: BSGSTest.TradeoffParameter
+28/69 Test: BSGSTest.TradeoffParameter
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bsgs_dlog" "--gtest_filter=BSGSTest.TradeoffParameter" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BSGSTest.TradeoffParameter" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BSGSTest.TradeoffParameter
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BSGSTest
+[ RUN      ] BSGSTest.TradeoffParameter
+[       OK ] BSGSTest.TradeoffParameter (2 ms)
+[----------] 1 test from BSGSTest (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BSGSTest.TradeoffParameter" end time: Apr 06 15:46 CST
+"BSGSTest.TradeoffParameter" time elapsed: 00:00:00
+----------------------------------------------------------
+
+29/69 Testing: BSGSTest.TradeoffConsistency
+29/69 Test: BSGSTest.TradeoffConsistency
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bsgs_dlog" "--gtest_filter=BSGSTest.TradeoffConsistency" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BSGSTest.TradeoffConsistency" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BSGSTest.TradeoffConsistency
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BSGSTest
+[ RUN      ] BSGSTest.TradeoffConsistency
+[       OK ] BSGSTest.TradeoffConsistency (5 ms)
+[----------] 1 test from BSGSTest (5 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (5 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"BSGSTest.TradeoffConsistency" end time: Apr 06 15:46 CST
+"BSGSTest.TradeoffConsistency" time elapsed: 00:00:00
+----------------------------------------------------------
+
+30/69 Testing: BSGSTest.PrepareAPI
+30/69 Test: BSGSTest.PrepareAPI
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bsgs_dlog" "--gtest_filter=BSGSTest.PrepareAPI" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BSGSTest.PrepareAPI" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BSGSTest.PrepareAPI
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BSGSTest
+[ RUN      ] BSGSTest.PrepareAPI
+[       OK ] BSGSTest.PrepareAPI (1 ms)
+[----------] 1 test from BSGSTest (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BSGSTest.PrepareAPI" end time: Apr 06 15:46 CST
+"BSGSTest.PrepareAPI" time elapsed: 00:00:00
+----------------------------------------------------------
+
+31/69 Testing: BSGSTest.TableFilenameEncoding
+31/69 Test: BSGSTest.TableFilenameEncoding
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_bsgs_dlog" "--gtest_filter=BSGSTest.TableFilenameEncoding" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"BSGSTest.TableFilenameEncoding" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = BSGSTest.TableFilenameEncoding
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from BSGSTest
+[ RUN      ] BSGSTest.TableFilenameEncoding
+[       OK ] BSGSTest.TableFilenameEncoding (0 ms)
+[----------] 1 test from BSGSTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"BSGSTest.TableFilenameEncoding" end time: Apr 06 15:46 CST
+"BSGSTest.TableFilenameEncoding" time elapsed: 00:00:00
+----------------------------------------------------------
+
+32/69 Testing: EcTest.PointBasicLaws
+32/69 Test: EcTest.PointBasicLaws
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_ec_group" "--gtest_filter=EcTest.PointBasicLaws" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"EcTest.PointBasicLaws" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = EcTest.PointBasicLaws
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EcTest
+[ RUN      ] EcTest.PointBasicLaws
+[       OK ] EcTest.PointBasicLaws (0 ms)
+[----------] 1 test from EcTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"EcTest.PointBasicLaws" end time: Apr 06 15:46 CST
+"EcTest.PointBasicLaws" time elapsed: 00:00:00
+----------------------------------------------------------
+
+33/69 Testing: EcTest.ScalarFieldArithmetic
+33/69 Test: EcTest.ScalarFieldArithmetic
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_ec_group" "--gtest_filter=EcTest.ScalarFieldArithmetic" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"EcTest.ScalarFieldArithmetic" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = EcTest.ScalarFieldArithmetic
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EcTest
+[ RUN      ] EcTest.ScalarFieldArithmetic
+[       OK ] EcTest.ScalarFieldArithmetic (2 ms)
+[----------] 1 test from EcTest (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"EcTest.ScalarFieldArithmetic" end time: Apr 06 15:46 CST
+"EcTest.ScalarFieldArithmetic" time elapsed: 00:00:00
+----------------------------------------------------------
+
+34/69 Testing: EcTest.MultiScalarMultiplication
+34/69 Test: EcTest.MultiScalarMultiplication
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_ec_group" "--gtest_filter=EcTest.MultiScalarMultiplication" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"EcTest.MultiScalarMultiplication" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = EcTest.MultiScalarMultiplication
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EcTest
+[ RUN      ] EcTest.MultiScalarMultiplication
+[       OK ] EcTest.MultiScalarMultiplication (4 ms)
+[----------] 1 test from EcTest (4 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (4 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"EcTest.MultiScalarMultiplication" end time: Apr 06 15:46 CST
+"EcTest.MultiScalarMultiplication" time elapsed: 00:00:00
+----------------------------------------------------------
+
+35/69 Testing: NetIOTest.RawBytes_SendRecv_Small
+35/69 Test: NetIOTest.RawBytes_SendRecv_Small
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.RawBytes_SendRecv_Small" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.RawBytes_SendRecv_Small" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.RawBytes_SendRecv_Small
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.RawBytes_SendRecv_Small
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.RawBytes_SendRecv_Small (51 ms)
+[----------] 1 test from NetIOTest (51 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (51 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.RawBytes_SendRecv_Small" end time: Apr 06 15:46 CST
+"NetIOTest.RawBytes_SendRecv_Small" time elapsed: 00:00:00
+----------------------------------------------------------
+
+36/69 Testing: NetIOTest.RawBytes_BufferFlush_Small
+36/69 Test: NetIOTest.RawBytes_BufferFlush_Small
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.RawBytes_BufferFlush_Small" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.RawBytes_BufferFlush_Small" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.RawBytes_BufferFlush_Small
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.RawBytes_BufferFlush_Small
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.RawBytes_BufferFlush_Small (52 ms)
+[----------] 1 test from NetIOTest (52 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (52 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.RawBytes_BufferFlush_Small" end time: Apr 06 15:46 CST
+"NetIOTest.RawBytes_BufferFlush_Small" time elapsed: 00:00:00
+----------------------------------------------------------
+
+37/69 Testing: NetIOTest.RawBytes_Large_1MB
+37/69 Test: NetIOTest.RawBytes_Large_1MB
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.RawBytes_Large_1MB" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.RawBytes_Large_1MB" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.RawBytes_Large_1MB
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.RawBytes_Large_1MB
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.RawBytes_Large_1MB (53 ms)
+[----------] 1 test from NetIOTest (53 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (53 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.RawBytes_Large_1MB" end time: Apr 06 15:46 CST
+"NetIOTest.RawBytes_Large_1MB" time elapsed: 00:00:00
+----------------------------------------------------------
+
+38/69 Testing: NetIOTest.RawBytes_AllZeros
+38/69 Test: NetIOTest.RawBytes_AllZeros
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.RawBytes_AllZeros" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.RawBytes_AllZeros" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.RawBytes_AllZeros
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.RawBytes_AllZeros
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.RawBytes_AllZeros (53 ms)
+[----------] 1 test from NetIOTest (53 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (53 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.RawBytes_AllZeros" end time: Apr 06 15:46 CST
+"NetIOTest.RawBytes_AllZeros" time elapsed: 00:00:00
+----------------------------------------------------------
+
+39/69 Testing: NetIOTest.Block_SendRecv
+39/69 Test: NetIOTest.Block_SendRecv
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.Block_SendRecv" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.Block_SendRecv" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.Block_SendRecv
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.Block_SendRecv
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.Block_SendRecv (54 ms)
+[----------] 1 test from NetIOTest (54 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (55 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.Block_SendRecv" end time: Apr 06 15:46 CST
+"NetIOTest.Block_SendRecv" time elapsed: 00:00:00
+----------------------------------------------------------
+
+40/69 Testing: NetIOTest.Block_BufferFlush
+40/69 Test: NetIOTest.Block_BufferFlush
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.Block_BufferFlush" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.Block_BufferFlush" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.Block_BufferFlush
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.Block_BufferFlush
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.Block_BufferFlush (52 ms)
+[----------] 1 test from NetIOTest (52 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (52 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.Block_BufferFlush" end time: Apr 06 15:46 CST
+"NetIOTest.Block_BufferFlush" time elapsed: 00:00:00
+----------------------------------------------------------
+
+41/69 Testing: NetIOTest.ECPoint_SendRecv_Single
+41/69 Test: NetIOTest.ECPoint_SendRecv_Single
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.ECPoint_SendRecv_Single" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.ECPoint_SendRecv_Single" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.ECPoint_SendRecv_Single
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.ECPoint_SendRecv_Single
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.ECPoint_SendRecv_Single (56 ms)
+[----------] 1 test from NetIOTest (56 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (56 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.ECPoint_SendRecv_Single" end time: Apr 06 15:46 CST
+"NetIOTest.ECPoint_SendRecv_Single" time elapsed: 00:00:00
+----------------------------------------------------------
+
+42/69 Testing: NetIOTest.ECPoint_SendRecv_Batch
+42/69 Test: NetIOTest.ECPoint_SendRecv_Batch
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.ECPoint_SendRecv_Batch" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.ECPoint_SendRecv_Batch" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.ECPoint_SendRecv_Batch
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.ECPoint_SendRecv_Batch
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.ECPoint_SendRecv_Batch (58 ms)
+[----------] 1 test from NetIOTest (58 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (58 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.ECPoint_SendRecv_Batch" end time: Apr 06 15:46 CST
+"NetIOTest.ECPoint_SendRecv_Batch" time elapsed: 00:00:00
+----------------------------------------------------------
+
+43/69 Testing: NetIOTest.ECPoint_BufferFlush_Batch
+43/69 Test: NetIOTest.ECPoint_BufferFlush_Batch
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.ECPoint_BufferFlush_Batch" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.ECPoint_BufferFlush_Batch" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.ECPoint_BufferFlush_Batch
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.ECPoint_BufferFlush_Batch
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.ECPoint_BufferFlush_Batch (60 ms)
+[----------] 1 test from NetIOTest (60 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (60 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.ECPoint_BufferFlush_Batch" end time: Apr 06 15:46 CST
+"NetIOTest.ECPoint_BufferFlush_Batch" time elapsed: 00:00:00
+----------------------------------------------------------
+
+44/69 Testing: NetIOTest.ECPoint_Generator_RoundTrip
+44/69 Test: NetIOTest.ECPoint_Generator_RoundTrip
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.ECPoint_Generator_RoundTrip" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.ECPoint_Generator_RoundTrip" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.ECPoint_Generator_RoundTrip
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.ECPoint_Generator_RoundTrip
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.ECPoint_Generator_RoundTrip (57 ms)
+[----------] 1 test from NetIOTest (57 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (57 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.ECPoint_Generator_RoundTrip" end time: Apr 06 15:46 CST
+"NetIOTest.ECPoint_Generator_RoundTrip" time elapsed: 00:00:00
+----------------------------------------------------------
+
+45/69 Testing: NetIOTest.ECPoint_Infinity_RoundTrip
+45/69 Test: NetIOTest.ECPoint_Infinity_RoundTrip
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.ECPoint_Infinity_RoundTrip" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.ECPoint_Infinity_RoundTrip" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.ECPoint_Infinity_RoundTrip
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.ECPoint_Infinity_RoundTrip
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.ECPoint_Infinity_RoundTrip (54 ms)
+[----------] 1 test from NetIOTest (54 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (54 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.ECPoint_Infinity_RoundTrip" end time: Apr 06 15:46 CST
+"NetIOTest.ECPoint_Infinity_RoundTrip" time elapsed: 00:00:00
+----------------------------------------------------------
+
+46/69 Testing: NetIOTest.ZnElement_SendRecv
+46/69 Test: NetIOTest.ZnElement_SendRecv
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.ZnElement_SendRecv" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.ZnElement_SendRecv" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.ZnElement_SendRecv
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.ZnElement_SendRecv
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.ZnElement_SendRecv (55 ms)
+[----------] 1 test from NetIOTest (55 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (55 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.ZnElement_SendRecv" end time: Apr 06 15:46 CST
+"NetIOTest.ZnElement_SendRecv" time elapsed: 00:00:00
+----------------------------------------------------------
+
+47/69 Testing: NetIOTest.ZnElement_BufferFlush
+47/69 Test: NetIOTest.ZnElement_BufferFlush
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.ZnElement_BufferFlush" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.ZnElement_BufferFlush" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.ZnElement_BufferFlush
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.ZnElement_BufferFlush
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.ZnElement_BufferFlush (58 ms)
+[----------] 1 test from NetIOTest (58 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (58 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.ZnElement_BufferFlush" end time: Apr 06 15:46 CST
+"NetIOTest.ZnElement_BufferFlush" time elapsed: 00:00:00
+----------------------------------------------------------
+
+48/69 Testing: NetIOTest.ZnElement_Zero_RoundTrip
+48/69 Test: NetIOTest.ZnElement_Zero_RoundTrip
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.ZnElement_Zero_RoundTrip" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.ZnElement_Zero_RoundTrip" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.ZnElement_Zero_RoundTrip
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.ZnElement_Zero_RoundTrip
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:[NetIO] Client connected from 127.0.0.1
+19000
+[       OK ] NetIOTest.ZnElement_Zero_RoundTrip (56 ms)
+[----------] 1 test from NetIOTest (56 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (56 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.ZnElement_Zero_RoundTrip" end time: Apr 06 15:46 CST
+"NetIOTest.ZnElement_Zero_RoundTrip" time elapsed: 00:00:00
+----------------------------------------------------------
+
+49/69 Testing: NetIOTest.BytesMatrix_SendRecv_Small
+49/69 Test: NetIOTest.BytesMatrix_SendRecv_Small
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.BytesMatrix_SendRecv_Small" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.BytesMatrix_SendRecv_Small" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.BytesMatrix_SendRecv_Small
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.BytesMatrix_SendRecv_Small
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.BytesMatrix_SendRecv_Small (56 ms)
+[----------] 1 test from NetIOTest (56 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (56 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.BytesMatrix_SendRecv_Small" end time: Apr 06 15:46 CST
+"NetIOTest.BytesMatrix_SendRecv_Small" time elapsed: 00:00:00
+----------------------------------------------------------
+
+50/69 Testing: NetIOTest.BytesMatrix_SendRecv_LargeTriggersWritev
+50/69 Test: NetIOTest.BytesMatrix_SendRecv_LargeTriggersWritev
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.BytesMatrix_SendRecv_LargeTriggersWritev" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.BytesMatrix_SendRecv_LargeTriggersWritev" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.BytesMatrix_SendRecv_LargeTriggersWritev
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.BytesMatrix_SendRecv_LargeTriggersWritev
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.BytesMatrix_SendRecv_LargeTriggersWritev (58 ms)
+[----------] 1 test from NetIOTest (58 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (58 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.BytesMatrix_SendRecv_LargeTriggersWritev" end time: Apr 06 15:46 CST
+"NetIOTest.BytesMatrix_SendRecv_LargeTriggersWritev" time elapsed: 00:00:00
+----------------------------------------------------------
+
+51/69 Testing: NetIOTest.BytesMatrix_BufferFlush
+51/69 Test: NetIOTest.BytesMatrix_BufferFlush
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.BytesMatrix_BufferFlush" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.BytesMatrix_BufferFlush" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.BytesMatrix_BufferFlush
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.BytesMatrix_BufferFlush
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.BytesMatrix_BufferFlush (57 ms)
+[----------] 1 test from NetIOTest (57 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (57 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.BytesMatrix_BufferFlush" end time: Apr 06 15:46 CST
+"NetIOTest.BytesMatrix_BufferFlush" time elapsed: 00:00:00
+----------------------------------------------------------
+
+52/69 Testing: NetIOTest.StringVector_SendRecv
+52/69 Test: NetIOTest.StringVector_SendRecv
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.StringVector_SendRecv" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.StringVector_SendRecv" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.StringVector_SendRecv
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.StringVector_SendRecv
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.StringVector_SendRecv (54 ms)
+[----------] 1 test from NetIOTest (54 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (54 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.StringVector_SendRecv" end time: Apr 06 15:46 CST
+"NetIOTest.StringVector_SendRecv" time elapsed: 00:00:00
+----------------------------------------------------------
+
+53/69 Testing: NetIOTest.StringVector_BufferFlush
+53/69 Test: NetIOTest.StringVector_BufferFlush
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.StringVector_BufferFlush" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.StringVector_BufferFlush" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.StringVector_BufferFlush
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.StringVector_BufferFlush
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.StringVector_BufferFlush (56 ms)
+[----------] 1 test from NetIOTest (56 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (56 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.StringVector_BufferFlush" end time: Apr 06 15:46 CST
+"NetIOTest.StringVector_BufferFlush" time elapsed: 00:00:00
+----------------------------------------------------------
+
+54/69 Testing: NetIOTest.MultiRound_PingPong_Bytes
+54/69 Test: NetIOTest.MultiRound_PingPong_Bytes
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.MultiRound_PingPong_Bytes" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.MultiRound_PingPong_Bytes" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.MultiRound_PingPong_Bytes
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.MultiRound_PingPong_Bytes
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.MultiRound_PingPong_Bytes (53 ms)
+[----------] 1 test from NetIOTest (53 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (53 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.MultiRound_PingPong_Bytes" end time: Apr 06 15:46 CST
+"NetIOTest.MultiRound_PingPong_Bytes" time elapsed: 00:00:00
+----------------------------------------------------------
+
+55/69 Testing: NetIOTest.MultiRound_MixedTypes
+55/69 Test: NetIOTest.MultiRound_MixedTypes
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.MultiRound_MixedTypes" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.MultiRound_MixedTypes" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.MultiRound_MixedTypes
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.MultiRound_MixedTypes
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.MultiRound_MixedTypes (55 ms)
+[----------] 1 test from NetIOTest (55 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (55 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.MultiRound_MixedTypes" end time: Apr 06 15:46 CST
+"NetIOTest.MultiRound_MixedTypes" time elapsed: 00:00:00
+----------------------------------------------------------
+
+56/69 Testing: NetIOTest.MultiRound_BidirectionalExchange
+56/69 Test: NetIOTest.MultiRound_BidirectionalExchange
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.MultiRound_BidirectionalExchange" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.MultiRound_BidirectionalExchange" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.MultiRound_BidirectionalExchange
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.MultiRound_BidirectionalExchange
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.MultiRound_BidirectionalExchange (59 ms)
+[----------] 1 test from NetIOTest (59 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (59 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.MultiRound_BidirectionalExchange" end time: Apr 06 15:46 CST
+"NetIOTest.MultiRound_BidirectionalExchange" time elapsed: 00:00:00
+----------------------------------------------------------
+
+57/69 Testing: NetIOTest.EdgeCase_EmptyFlushIsNoop
+57/69 Test: NetIOTest.EdgeCase_EmptyFlushIsNoop
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.EdgeCase_EmptyFlushIsNoop" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.EdgeCase_EmptyFlushIsNoop" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.EdgeCase_EmptyFlushIsNoop
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.EdgeCase_EmptyFlushIsNoop
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.EdgeCase_EmptyFlushIsNoop (52 ms)
+[----------] 1 test from NetIOTest (52 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (52 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.EdgeCase_EmptyFlushIsNoop" end time: Apr 06 15:46 CST
+"NetIOTest.EdgeCase_EmptyFlushIsNoop" time elapsed: 00:00:00
+----------------------------------------------------------
+
+58/69 Testing: NetIOTest.EdgeCase_PendingBytesTracksCorrectly
+58/69 Test: NetIOTest.EdgeCase_PendingBytesTracksCorrectly
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.EdgeCase_PendingBytesTracksCorrectly" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.EdgeCase_PendingBytesTracksCorrectly" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.EdgeCase_PendingBytesTracksCorrectly
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.EdgeCase_PendingBytesTracksCorrectly
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.EdgeCase_PendingBytesTracksCorrectly (54 ms)
+[----------] 1 test from NetIOTest (54 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (55 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.EdgeCase_PendingBytesTracksCorrectly" end time: Apr 06 15:46 CST
+"NetIOTest.EdgeCase_PendingBytesTracksCorrectly" time elapsed: 00:00:00
+----------------------------------------------------------
+
+59/69 Testing: NetIOTest.EdgeCase_SingleByteRoundTrip
+59/69 Test: NetIOTest.EdgeCase_SingleByteRoundTrip
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.EdgeCase_SingleByteRoundTrip" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.EdgeCase_SingleByteRoundTrip" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.EdgeCase_SingleByteRoundTrip
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.EdgeCase_SingleByteRoundTrip
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.EdgeCase_SingleByteRoundTrip (51 ms)
+[----------] 1 test from NetIOTest (51 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (51 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.EdgeCase_SingleByteRoundTrip" end time: Apr 06 15:46 CST
+"NetIOTest.EdgeCase_SingleByteRoundTrip" time elapsed: 00:00:00
+----------------------------------------------------------
+
+60/69 Testing: NetIOTest.EdgeCase_MaxValueBytes
+60/69 Test: NetIOTest.EdgeCase_MaxValueBytes
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_net_io" "--gtest_filter=NetIOTest.EdgeCase_MaxValueBytes" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"NetIOTest.EdgeCase_MaxValueBytes" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = NetIOTest.EdgeCase_MaxValueBytes
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NetIOTest
+[ RUN      ] NetIOTest.EdgeCase_MaxValueBytes
+[NetIO] Server listening on port 19000...
+[NetIO] Connected to 127.0.0.1:19000
+[NetIO] Client connected from 127.0.0.1
+[       OK ] NetIOTest.EdgeCase_MaxValueBytes (52 ms)
+[----------] 1 test from NetIOTest (52 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (53 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"NetIOTest.EdgeCase_MaxValueBytes" end time: Apr 06 15:46 CST
+"NetIOTest.EdgeCase_MaxValueBytes" time elapsed: 00:00:00
+----------------------------------------------------------
+
+61/69 Testing: PrgTest.Determinism
+61/69 Test: PrgTest.Determinism
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_prg" "--gtest_filter=PrgTest.Determinism" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"PrgTest.Determinism" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = PrgTest.Determinism
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from PrgTest
+[ RUN      ] PrgTest.Determinism
+[       OK ] PrgTest.Determinism (0 ms)
+[----------] 1 test from PrgTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"PrgTest.Determinism" end time: Apr 06 15:46 CST
+"PrgTest.Determinism" time elapsed: 00:00:00
+----------------------------------------------------------
+
+62/69 Testing: PrgTest.Divergence
+62/69 Test: PrgTest.Divergence
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_prg" "--gtest_filter=PrgTest.Divergence" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"PrgTest.Divergence" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = PrgTest.Divergence
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from PrgTest
+[ RUN      ] PrgTest.Divergence
+[       OK ] PrgTest.Divergence (0 ms)
+[----------] 1 test from PrgTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"PrgTest.Divergence" end time: Apr 06 15:46 CST
+"PrgTest.Divergence" time elapsed: 00:00:00
+----------------------------------------------------------
+
+63/69 Testing: PrgTest.HardwareEntropy
+63/69 Test: PrgTest.HardwareEntropy
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_prg" "--gtest_filter=PrgTest.HardwareEntropy" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"PrgTest.HardwareEntropy" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = PrgTest.HardwareEntropy
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from PrgTest
+[ RUN      ] PrgTest.HardwareEntropy
+[       OK ] PrgTest.HardwareEntropy (0 ms)
+[----------] 1 test from PrgTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"PrgTest.HardwareEntropy" end time: Apr 06 15:46 CST
+"PrgTest.HardwareEntropy" time elapsed: 00:00:00
+----------------------------------------------------------
+
+64/69 Testing: PrgTest.LargeMatrixGeneration
+64/69 Test: PrgTest.LargeMatrixGeneration
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_prg" "--gtest_filter=PrgTest.LargeMatrixGeneration" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"PrgTest.LargeMatrixGeneration" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = PrgTest.LargeMatrixGeneration
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from PrgTest
+[ RUN      ] PrgTest.LargeMatrixGeneration
+[       OK ] PrgTest.LargeMatrixGeneration (0 ms)
+[----------] 1 test from PrgTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"PrgTest.LargeMatrixGeneration" end time: Apr 06 15:46 CST
+"PrgTest.LargeMatrixGeneration" time elapsed: 00:00:00
+----------------------------------------------------------
+
+65/69 Testing: ZnTest.FactoryMethods
+65/69 Test: ZnTest.FactoryMethods
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_zn" "--gtest_filter=ZnTest.FactoryMethods" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"ZnTest.FactoryMethods" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = ZnTest.FactoryMethods
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ZnTest
+[ RUN      ] ZnTest.FactoryMethods
+[       OK ] ZnTest.FactoryMethods (0 ms)
+[----------] 1 test from ZnTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"ZnTest.FactoryMethods" end time: Apr 06 15:46 CST
+"ZnTest.FactoryMethods" time elapsed: 00:00:00
+----------------------------------------------------------
+
+66/69 Testing: ZnTest.BasicArithmetic
+66/69 Test: ZnTest.BasicArithmetic
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_zn" "--gtest_filter=ZnTest.BasicArithmetic" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"ZnTest.BasicArithmetic" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = ZnTest.BasicArithmetic
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ZnTest
+[ RUN      ] ZnTest.BasicArithmetic
+[       OK ] ZnTest.BasicArithmetic (0 ms)
+[----------] 1 test from ZnTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"ZnTest.BasicArithmetic" end time: Apr 06 15:46 CST
+"ZnTest.BasicArithmetic" time elapsed: 00:00:00
+----------------------------------------------------------
+
+67/69 Testing: ZnTest.ModularInverse
+67/69 Test: ZnTest.ModularInverse
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_zn" "--gtest_filter=ZnTest.ModularInverse" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"ZnTest.ModularInverse" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = ZnTest.ModularInverse
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ZnTest
+[ RUN      ] ZnTest.ModularInverse
+[       OK ] ZnTest.ModularInverse (0 ms)
+[----------] 1 test from ZnTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"ZnTest.ModularInverse" end time: Apr 06 15:46 CST
+"ZnTest.ModularInverse" time elapsed: 00:00:00
+----------------------------------------------------------
+
+68/69 Testing: ZnTest.Exponentiation
+68/69 Test: ZnTest.Exponentiation
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_zn" "--gtest_filter=ZnTest.Exponentiation" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"ZnTest.Exponentiation" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = ZnTest.Exponentiation
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ZnTest
+[ RUN      ] ZnTest.Exponentiation
+[       OK ] ZnTest.Exponentiation (0 ms)
+[----------] 1 test from ZnTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"ZnTest.Exponentiation" end time: Apr 06 15:46 CST
+"ZnTest.Exponentiation" time elapsed: 00:00:00
+----------------------------------------------------------
+
+69/69 Testing: ZnTest.Randomness
+69/69 Test: ZnTest.Randomness
+Command: "/Users/yuchen/Documents/Coding/taihang/build/test_zn" "--gtest_filter=ZnTest.Randomness" "--gtest_also_run_disabled_tests"
+Directory: /Users/yuchen/Documents/Coding/taihang/build
+"ZnTest.Randomness" start time: Apr 06 15:46 CST
+Output:
+----------------------------------------------------------
+Running main() from /private/tmp/googletest-20250808-4990-9ldiyw/googletest-1.17.0/googletest/src/gtest_main.cc
+Note: Google Test filter = ZnTest.Randomness
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ZnTest
+[ RUN      ] ZnTest.Randomness
+[       OK ] ZnTest.Randomness (2 ms)
+[----------] 1 test from ZnTest (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"ZnTest.Randomness" end time: Apr 06 15:46 CST
+"ZnTest.Randomness" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Apr 06 15:46 CST

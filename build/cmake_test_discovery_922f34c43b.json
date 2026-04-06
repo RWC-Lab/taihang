@@ -1,0 +1,57 @@
+{
+  "tests": 9,
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "BSGSTest",
+      "tests": 9,
+      "testsuite": [
+        {
+          "name": "SmallRangeCorrectness",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_bsgs_dlog.cpp",
+          "line": 41
+        },
+        {
+          "name": "BoundaryValues",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_bsgs_dlog.cpp",
+          "line": 56
+        },
+        {
+          "name": "OutOfRange",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_bsgs_dlog.cpp",
+          "line": 84
+        },
+        {
+          "name": "ParallelExecution",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_bsgs_dlog.cpp",
+          "line": 95
+        },
+        {
+          "name": "ThreadCountConsistency",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_bsgs_dlog.cpp",
+          "line": 107
+        },
+        {
+          "name": "TradeoffParameter",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_bsgs_dlog.cpp",
+          "line": 129
+        },
+        {
+          "name": "TradeoffConsistency",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_bsgs_dlog.cpp",
+          "line": 142
+        },
+        {
+          "name": "PrepareAPI",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_bsgs_dlog.cpp",
+          "line": 165
+        },
+        {
+          "name": "TableFilenameEncoding",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_bsgs_dlog.cpp",
+          "line": 188
+        }
+      ]
+    }
+  ]
+}

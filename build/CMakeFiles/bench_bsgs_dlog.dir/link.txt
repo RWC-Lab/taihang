@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/bench_bsgs_dlog.dir/benchmarks/bench_bsgs_dlog.cpp.o -o bench_bsgs_dlog  -Wl,-rpath,/usr/local/lib libtaihang.a /usr/local/lib/libcrypto.a /usr/local/lib/libomp.dylib /usr/local/lib/libxxhash.0.8.3.dylib

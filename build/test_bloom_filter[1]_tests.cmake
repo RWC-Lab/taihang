@@ -1,0 +1,7 @@
+add_test([=[BloomFilterTest.NoFalseNegatives]=]  /Users/yuchen/Documents/Coding/taihang/build/test_bloom_filter [==[--gtest_filter=BloomFilterTest.NoFalseNegatives]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[BloomFilterTest.NoFalseNegatives]=]  PROPERTIES DEF_SOURCE_LINE /Users/yuchen/Documents/Coding/taihang/tests/test_bloom_filter.cpp:6 WORKING_DIRECTORY /Users/yuchen/Documents/Coding/taihang/build SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+add_test([=[BloomFilterTest.HighSecurityFPR]=]  /Users/yuchen/Documents/Coding/taihang/build/test_bloom_filter [==[--gtest_filter=BloomFilterTest.HighSecurityFPR]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[BloomFilterTest.HighSecurityFPR]=]  PROPERTIES DEF_SOURCE_LINE /Users/yuchen/Documents/Coding/taihang/tests/test_bloom_filter.cpp:17 WORKING_DIRECTORY /Users/yuchen/Documents/Coding/taihang/build SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+add_test([=[BloomFilterTest.SerializationConsistency]=]  /Users/yuchen/Documents/Coding/taihang/build/test_bloom_filter [==[--gtest_filter=BloomFilterTest.SerializationConsistency]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[BloomFilterTest.SerializationConsistency]=]  PROPERTIES DEF_SOURCE_LINE /Users/yuchen/Documents/Coding/taihang/tests/test_bloom_filter.cpp:39 WORKING_DIRECTORY /Users/yuchen/Documents/Coding/taihang/build SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+set(  test_bloom_filter_TESTS BloomFilterTest.NoFalseNegatives BloomFilterTest.HighSecurityFPR BloomFilterTest.SerializationConsistency)

@@ -1,0 +1,37 @@
+{
+  "tests": 5,
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "ZnTest",
+      "tests": 5,
+      "testsuite": [
+        {
+          "name": "FactoryMethods",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_zn.cpp",
+          "line": 18
+        },
+        {
+          "name": "BasicArithmetic",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_zn.cpp",
+          "line": 30
+        },
+        {
+          "name": "ModularInverse",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_zn.cpp",
+          "line": 43
+        },
+        {
+          "name": "Exponentiation",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_zn.cpp",
+          "line": 52
+        },
+        {
+          "name": "Randomness",
+          "file": "\/Users\/yuchen\/Documents\/Coding\/taihang\/tests\/test_zn.cpp",
+          "line": 59
+        }
+      ]
+    }
+  ]
+}

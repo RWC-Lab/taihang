@@ -1,0 +1,7 @@
+add_test([=[BlockTest.BasicOperations]=]  /Users/yuchen/Documents/Coding/taihang/build/test_block [==[--gtest_filter=BlockTest.BasicOperations]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[BlockTest.BasicOperations]=]  PROPERTIES DEF_SOURCE_LINE /Users/yuchen/Documents/Coding/taihang/tests/test_block.cpp:12 WORKING_DIRECTORY /Users/yuchen/Documents/Coding/taihang/build SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+add_test([=[BlockTest.Constants]=]  /Users/yuchen/Documents/Coding/taihang/build/test_block [==[--gtest_filter=BlockTest.Constants]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[BlockTest.Constants]=]  PROPERTIES DEF_SOURCE_LINE /Users/yuchen/Documents/Coding/taihang/tests/test_block.cpp:30 WORKING_DIRECTORY /Users/yuchen/Documents/Coding/taihang/build SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+add_test([=[BlockTest.Serialization]=]  /Users/yuchen/Documents/Coding/taihang/build/test_block [==[--gtest_filter=BlockTest.Serialization]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[BlockTest.Serialization]=]  PROPERTIES DEF_SOURCE_LINE /Users/yuchen/Documents/Coding/taihang/tests/test_block.cpp:49 WORKING_DIRECTORY /Users/yuchen/Documents/Coding/taihang/build SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+set(  test_block_TESTS BlockTest.BasicOperations BlockTest.Constants BlockTest.Serialization)
