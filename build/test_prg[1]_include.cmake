@@ -1,5 +1,0 @@
-if(EXISTS "/Users/yuchen/Documents/Coding/taihang/build/test_prg[1]_tests.cmake")
-  include("/Users/yuchen/Documents/Coding/taihang/build/test_prg[1]_tests.cmake")
-else()
-  add_test(test_prg_NOT_BUILT test_prg_NOT_BUILT)
-endif()

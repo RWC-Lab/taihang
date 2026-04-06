@@ -1,5 +1,0 @@
-if(EXISTS "/Users/yuchen/Documents/Coding/taihang/build/test_block[1]_tests.cmake")
-  include("/Users/yuchen/Documents/Coding/taihang/build/test_block[1]_tests.cmake")
-else()
-  add_test(test_block_NOT_BUILT test_block_NOT_BUILT)
-endif()

@@ -1,6 +1,0 @@
-41:NetIOTest.ECPoint_SendRecv_Single
-42:NetIOTest.ECPoint_SendRecv_Batch
-43:NetIOTest.ECPoint_BufferFlush_Batch
-44:NetIOTest.ECPoint_Generator_RoundTrip
-55:NetIOTest.MultiRound_MixedTypes
-56:NetIOTest.MultiRound_BidirectionalExchange

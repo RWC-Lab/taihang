@@ -1,5 +1,0 @@
-if(EXISTS "/Users/yuchen/Documents/Coding/taihang/build/test_bsgs_dlog[1]_tests.cmake")
-  include("/Users/yuchen/Documents/Coding/taihang/build/test_bsgs_dlog[1]_tests.cmake")
-else()
-  add_test(test_bsgs_dlog_NOT_BUILT test_bsgs_dlog_NOT_BUILT)
-endif()
