@@ -16,8 +16,8 @@
 #include <algorithm>
 #include <taihang/common/check.hpp>
 
-namespace taihang {
-namespace cryptohash {
+namespace taihang::cryptohash 
+{
 
 /// @brief Default output length for SHA256 and SM3 (256 bits).
 inline constexpr size_t kDigestOutputLen = 32;
@@ -121,7 +121,6 @@ inline void kdf(const uint8_t* key, size_t key_len,
     }
 }
 
-} // namespace cryptohash
-} // namespace taihang
+} // namespace taihang::cryptohash
 
 #endif // TAIHANG_CRYPTO_HASH_HPP_

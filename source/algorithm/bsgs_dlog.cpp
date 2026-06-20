@@ -175,7 +175,7 @@ void BSGSSolver::prepare() {
 }
 
 std::string BSGSSolver::get_table_filename() const {
-    return "bsgs_" + g.to_hex()
+    return "bsgs_" + g.to_string()
          + "_" + std::to_string(bsgs_config.range_bits)
          + "_" + std::to_string(bsgs_config.tradeoff_num)
          + ".table";

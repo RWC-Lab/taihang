@@ -62,9 +62,20 @@ public:
     // ------------------------------------------------------------------
 
     void buffer(const void* data, size_t len);
-    void buffer(const std::vector<ECPoint>& A);
+
+    template <typename T>
+    void buffer(const T& n); 
+
+    void buffer(const std::vector<uint8_t>& vec_a); 
+
+    void buffer(const ECPoint& a);
+    void buffer(const std::vector<ECPoint>& vec_a);
+
     void buffer(const ZnElement& a);
+
     void buffer(const Block& b);
+    void buffer(const std::vector<Block>& vec_b); 
+    
     void buffer(const std::vector<std::vector<uint8_t>>& M);
     void buffer(const std::vector<std::string>& S);
 
@@ -77,9 +88,20 @@ public:
     // ------------------------------------------------------------------
 
     void send(const void* data, size_t len);
-    void send(const std::vector<ECPoint>& A);
+
+    template <typename T>
+    void send(const T& n);
+
+    void send(const std::vector<uint8_t>& vec_a); 
+
+    void send(const ECPoint& a);    
+    void send(const std::vector<ECPoint>& vec_a);
+
     void send(const ZnElement& a);
+
     void send(const Block& b);
+    void send(const std::vector<Block>& vec_b); 
+
     void send(const std::vector<std::vector<uint8_t>>& M);
     void send(const std::vector<std::string>& S);
 
@@ -89,11 +111,21 @@ public:
     // ------------------------------------------------------------------
 
     void recv(void* data, size_t len);
-    void recv(std::vector<ECPoint>& A, size_t len);
+
+    template <typename T>
+    void recv(T& n);
+
+    void recv(std::vector<uint8_t>& vec_a); 
+
+    void recv(ECPoint& a);     
+    void recv(std::vector<ECPoint>& vec_a);
+
     void recv(ZnElement& a);
+
     void recv(Block& b);
-    void recv(std::vector<std::vector<uint8_t>>& A, size_t num, size_t len);
-    void recv(std::vector<std::string>& S, size_t num, size_t len);
+    void recv(std::vector<Block>& vec_b); 
+    void recv(std::vector<std::vector<uint8_t>>& A);
+    void recv(std::vector<std::string>& S);
 
     // ------------------------------------------------------------------
     // Accessors

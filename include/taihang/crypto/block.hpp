@@ -147,7 +147,7 @@ inline void clear_bit(Block &a, size_t n) {
 // --- Logic Operations ---
 
 /** @brief Performs element-wise XOR on two vectors of blocks. */
-inline std::vector<Block> xor_vectors(const std::vector<Block> &vec_a, const std::vector<Block> &vec_b) {
+inline std::vector<Block> xor_blocks(const std::vector<Block> &vec_a, const std::vector<Block> &vec_b) {
     TAIHANG_ASSERT(vec_a.size() == vec_b.size(), "Block: Vector XOR size mismatch.");
     std::vector<Block> result(vec_a.size());
     for (size_t i = 0; i < vec_a.size(); ++i) {
@@ -159,64 +159,6 @@ inline std::vector<Block> xor_vectors(const std::vector<Block> &vec_a, const std
     }
     return result;
 }
-
-// --- Comparison ---
-
-/** @brief Checks if two blocks are bitwise identical. */
-inline bool is_equal(const Block &a, const Block &b) {
-#if defined(TAIHANG_ARCH_X64)
-    Block vcmp = _mm_xor_si128(a.mm, b.mm);
-    return _mm_testz_si128(vcmp.mm, vcmp.mm);
-#else
-    uint64x2_t v64 = vreinterpretq_u64_u8(veorq_u8(a.mm, b.mm));
-    return (vgetq_lane_u64(v64, 0) == 0) && (vgetq_lane_u64(v64, 1) == 0);
-#endif
-}
-
-/** @brief Lexicographical comparison (implemented in block.cpp). */
-bool is_less_than(const Block &a, const Block &b);
-
-// --- Serialization & Formatting ---
-
-/** @brief Serializes the block into a 16-byte raw string. */
-inline std::string to_bytes(const Block &var) {
-    std::string str(16, '\0');
-#if defined(TAIHANG_ARCH_X64)
-    _mm_storeu_si128(reinterpret_cast<__m128i*>(&str[0]), var.mm);
-#else
-    vst1q_u8(reinterpret_cast<uint8_t*>(&str[0]), var.mm);
-#endif
-    return str;
-}
-
-// --- Hashing & Random Oracles ---
-
-/**
- * @brief Maps arbitrary data to a 128-bit block using a hash function.
- * @tparam Algo Hash algorithm (SHA256, SM3). Defaults to kDefaultHash.
- */
-template <cryptohash::Provider Algo = kDefaultHash>
-inline Block hash_to_block(const uint8_t* data, size_t len) {
-    if (len == 0) return kZeroBlock;
-    alignas(16) uint8_t digest[cryptohash::kDigestOutputLen];
-    cryptohash::digest<Algo>(data, len, digest);
-#if defined(TAIHANG_ARCH_X64)
-    return _mm_load_si128(reinterpret_cast<const __m128i*>(digest));
-#else
-    return vld1q_u8(digest);
-#endif
-}
-
-/** @brief Convenience overload for string input to block mapping. */
-template <cryptohash::Provider Algo = kDefaultHash>
-inline Block hash_to_block(const std::string& str) {
-    return hash_to_block<Algo>(reinterpret_cast<const uint8_t*>(str.data()), str.size());
-}
-
-// --- Matrix & Buffer Operations ---
-
-/** @brief Transposes a bit-matrix for OT Extension (implemented in block.cpp). */
-void bit_matrix_transpose(uint8_t const *input, uint64_t output_rows, uint64_t output_cols, uint8_t *output);
 
 /** @brief Procedural XOR for block arrays. */
 inline void xor_blocks(Block* result, const Block* src_a, const Block* src_b, size_t count) {
@@ -254,6 +196,92 @@ inline void xor_bytes(uint8_t* result, const uint8_t* src_a, const uint8_t* src_
     }
 }
 
+// --- Comparison ---
+
+/** @brief Checks if two blocks are bitwise identical. */
+inline bool is_equal(const Block &a, const Block &b) {
+#if defined(TAIHANG_ARCH_X64)
+    Block vcmp = _mm_xor_si128(a.mm, b.mm);
+    return _mm_testz_si128(vcmp.mm, vcmp.mm);
+#else
+    uint64x2_t v64 = vreinterpretq_u64_u8(veorq_u8(a.mm, b.mm));
+    return (vgetq_lane_u64(v64, 0) == 0) && (vgetq_lane_u64(v64, 1) == 0);
+#endif
+}
+
+/** @brief Lexicographical comparison (implemented in block.cpp). */
+bool is_less_than(const Block &a, const Block &b);
+
+// --- Serialization & Formatting ---
+
+/** @brief Serializes the block into a 16-byte raw string. */
+inline std::string to_bytes(const Block &var) {
+    std::string str(16, '\0');
+#if defined(TAIHANG_ARCH_X64)
+    _mm_storeu_si128(reinterpret_cast<__m128i*>(&str[0]), var.mm);
+#else
+    vst1q_u8(reinterpret_cast<uint8_t*>(&str[0]), var.mm);
+#endif
+    return str;
+}
+
+
+/**
+ * @brief Shrinks n bits stored as sparse bytes into n/128 blocks.
+ * @param byte_data Input buffer
+ * @param byte_len Total number of bytes in byte_data.
+ * @param block_data Output array of blocks.
+ * @param block_len Number of blocks to produce.
+ */
+inline void pack_bits_to_blocks(const uint8_t* byte_data, size_t byte_len, Block* block_data, size_t block_len) {
+    // Validate that input size matches expected bit capacity
+    TAIHANG_ASSERT(byte_len == block_len * 128, "pack bits to blocks: size mismatch.");
+
+    for (size_t i = 0; i < block_len; ++i) {
+        // Initialize block to kZeroBlock (default constructor)
+        block_data[i] = kZeroBlock;
+        
+        for (size_t j = 0; j < 128; ++j) {
+            // Check if the bit is set in the byte stream
+            if (byte_data[128 * i + j]) {
+                // Bits are mapped from 0 to 127. 
+                // Adjust index if your specific protocol requires reverse bit order.
+                set_bit(block_data[i], j);
+            }
+        }
+    }
+}
+
+// --- Hashing & Random Oracles ---
+
+/**
+ * @brief Maps arbitrary data to a 128-bit block using a hash function.
+ * @tparam Algo Hash algorithm (SHA256, SM3). Defaults to kDefaultHash.
+ */
+template <cryptohash::Provider Algo = kDefaultHash>
+inline Block hash_to_block(const uint8_t* data, size_t len) {
+    if (len == 0) return kZeroBlock;
+    alignas(16) uint8_t digest[cryptohash::kDigestOutputLen];
+    cryptohash::digest<Algo>(data, len, digest);
+#if defined(TAIHANG_ARCH_X64)
+    return _mm_load_si128(reinterpret_cast<const __m128i*>(digest));
+#else
+    return vld1q_u8(digest);
+#endif
+}
+
+/** @brief Convenience overload for string input to block mapping. */
+template <cryptohash::Provider Algo = kDefaultHash>
+inline Block hash_to_block(const std::string& str) {
+    return hash_to_block<Algo>(reinterpret_cast<const uint8_t*>(str.data()), str.size());
+}
+
+// --- Matrix Operations ---
+
+/** @brief Transposes a bit-matrix for OT Extension (implemented in block.cpp). */
+void bit_matrix_transpose(uint8_t const *input, uint64_t output_rows, uint64_t output_cols, uint8_t *output);
+
+
 /* --- Operator Overloads --- */
 
 inline Block operator^(const Block& a, const Block& b) {
@@ -267,6 +295,15 @@ inline Block operator^(const Block& a, const Block& b) {
 inline Block& operator^=(Block& a, const Block& b) {
     a = a ^ b;
     return a;
+}
+
+inline std::vector<Block> operator^(const std::vector<Block>& vec_a, const std::vector<Block>& vec_b) {
+    return xor_blocks(vec_a, vec_b); 
+}
+
+inline std::vector<Block>& operator^=(std::vector<Block>& vec_a, const std::vector<Block>& vec_b) {
+    vec_a = vec_a ^ vec_b;
+    return vec_a;
 }
 
 inline bool operator==(const Block& a, const Block& b) { return is_equal(a, b); }

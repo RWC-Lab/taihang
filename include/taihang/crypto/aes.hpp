@@ -13,7 +13,11 @@
 #include <cstdint>
 #include <vector>
 
+
 namespace taihang::aes {
+
+// Import the symbol so we can use 'Block' directly
+using taihang::Block;
 
 /**
  * @struct AESKey
@@ -23,6 +27,8 @@ namespace taihang::aes {
  * AES-256 (14 rounds + 1 initial key).
  */
 struct alignas(16) AESKey {
+
+
     /** @brief Array of round keys, mapped to native SIMD registers. */
     Block expanded_keys[15];
     
@@ -81,6 +87,11 @@ void encrypt_cbc(const AESKey& key, Block* data, size_t num_blocks, Block iv);
 
 /** @brief Cipher Block Chaining (CBC) mode decryption. */
 void decrypt_cbc(const AESKey& key, Block* data, size_t num_blocks, Block iv);
+
+
+// --- Derived Hash Functions ---
+
+Block hash_blocks_to_block(const std::vector<Block>& input_blocks); 
 
 } // namespace taihang::aes
 

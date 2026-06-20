@@ -114,8 +114,16 @@ bool ZnElement::operator!=(const ZnElement& other) const {
     return !(*this == other);
 }
 
-void ZnElement::print() const {
-    value.print(); // Delegates to BigInt print
+std::string ZnElement::to_string(Base base) const {
+    switch (base) {
+        case Base::Hex:
+            return value.to_hex();
+            break;
+
+        case Base::Dec:
+            return value.to_dec();
+            break;
+    }
 }
 
 std::vector<uint8_t> ZnElement::to_bytes() const {

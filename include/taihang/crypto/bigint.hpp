@@ -24,6 +24,7 @@ typedef struct bignum_st BIGNUM;
 
 namespace taihang {
 
+
 class BigInt {
 public:
     BIGNUM* bn_ptr;
@@ -108,14 +109,14 @@ public:
     bool is_non_negative() const;
     bool is_prime(double error_probability = 1e-40) const;
 
-    // --- Visualization ---
-    void print() const;
-    void print_in_dec(const std::string& note = "") const;
+    // --- format ---
+    enum class Base {
+        Hex,
+        Dec
+    };
+    std::string to_string(Base base = Base::Hex) const;
 };
 
-// // --- Global Constants (kPascalCase) ---
-// extern const BigInt kBn0;
-// extern const BigInt kBn1;
 
 // --- Utility Functions ---
 BigInt gen_random_bigint_less_than(const BigInt& max);
@@ -138,9 +139,6 @@ inline BigInt hash_to_bigint(const std::string& input) {
     return hash_to_bigint<Algo>(reinterpret_cast<const uint8_t*>(input.data()), input.size());
 }
 
-// inline void PrintTo(const BigInt& bn, ::std::ostream* os) {
-//     *os << "BigInt(" << bn.to_hex() << ")";
-// }
 
 } // namespace taihang
 

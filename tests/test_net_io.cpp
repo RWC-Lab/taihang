@@ -216,13 +216,12 @@ TEST_F(NetIOTest, ECPoint_SendRecv_Single) {
 
     run_pair(port,
         [&](NetIO& io) {
-            std::vector<ECPoint> pts = {pt};
-            io.send(pts);
+            io.send(pt);
         },
         [&](NetIO& io) {
-            std::vector<ECPoint> received = {ECPoint(group)};
-            io.recv(received, 1);
-            EXPECT_EQ(received[0], pt);
+            ECPoint received(group);
+            io.recv(received);
+            EXPECT_EQ(received, pt);
         });
 }
 
@@ -235,7 +234,7 @@ TEST_F(NetIOTest, ECPoint_SendRecv_Batch) {
         [&](NetIO& io) { io.send(pts); },
         [&](NetIO& io) {
             std::vector<ECPoint> received(N, ECPoint(group));
-            io.recv(received, N);
+            io.recv(received);
             for (size_t i = 0; i < N; ++i) {
                 EXPECT_EQ(received[i], pts[i]) << "mismatch at i=" << i;
             }
@@ -256,7 +255,7 @@ TEST_F(NetIOTest, ECPoint_BufferFlush_Batch) {
         },
         [&](NetIO& io) {
             std::vector<ECPoint> received(N, ECPoint(group));
-            io.recv(received, N);
+            io.recv(received);
             for (size_t i = 0; i < N; ++i) {
                 EXPECT_EQ(received[i], pts[i]) << "mismatch at i=" << i;
             }
@@ -274,7 +273,7 @@ TEST_F(NetIOTest, ECPoint_Generator_RoundTrip) {
         },
         [&](NetIO& io) {
             std::vector<ECPoint> received = {ECPoint(group)};
-            io.recv(received, 1);
+            io.recv(received);
             EXPECT_EQ(received[0], g);
         });
 }
@@ -290,7 +289,7 @@ TEST_F(NetIOTest, ECPoint_Infinity_RoundTrip) {
         },
         [&](NetIO& io) {
             std::vector<ECPoint> received = {ECPoint(group)};
-            io.recv(received, 1);
+            io.recv(received);
             EXPECT_TRUE(received[0].is_at_infinity());
         });
 }
@@ -361,8 +360,8 @@ TEST_F(NetIOTest, BytesMatrix_SendRecv_Small) {
     run_pair(port,
         [&](NetIO& io) { io.send(M); },
         [&](NetIO& io) {
-            std::vector<std::vector<uint8_t>> R;
-            io.recv(R, NUM, LEN);
+            std::vector<std::vector<uint8_t>> R(NUM, std::vector<uint8_t>(LEN));
+            io.recv(R);
             EXPECT_EQ(R, M);
         });
 }
@@ -379,8 +378,8 @@ TEST_F(NetIOTest, BytesMatrix_SendRecv_LargeTriggersWritev) {
     run_pair(port,
         [&](NetIO& io) { io.send(M); },
         [&](NetIO& io) {
-            std::vector<std::vector<uint8_t>> R;
-            io.recv(R, NUM, LEN);
+            std::vector<std::vector<uint8_t>> R(NUM, std::vector<uint8_t>(LEN));
+            io.recv(R);
             EXPECT_EQ(R, M);
         });
 }
@@ -396,8 +395,8 @@ TEST_F(NetIOTest, BytesMatrix_BufferFlush) {
             io.flush();
         },
         [&](NetIO& io) {
-            std::vector<std::vector<uint8_t>> R;
-            io.recv(R, NUM, LEN);
+            std::vector<std::vector<uint8_t>> R(NUM, std::vector<uint8_t>(LEN, 0xCC));
+            io.recv(R);
             EXPECT_EQ(R, M);
         });
 }
@@ -410,14 +409,13 @@ TEST_F(NetIOTest, StringVector_SendRecv) {
     const uint16_t port = next_port();
     const size_t LEN = 16;
     std::vector<std::string> S = {"hello_world_1234", "taihang_net_test"};
-    ASSERT_EQ(S[0].size(), LEN);
-    ASSERT_EQ(S[1].size(), LEN);
+
 
     run_pair(port,
         [&](NetIO& io) { io.send(S); },
         [&](NetIO& io) {
-            std::vector<std::string> R;
-            io.recv(R, S.size(), LEN);
+            std::vector<std::string> R(S.size(), std::string(LEN, '\0'));
+            io.recv(R);
             EXPECT_EQ(R, S);
         });
 }
@@ -433,8 +431,8 @@ TEST_F(NetIOTest, StringVector_BufferFlush) {
             io.flush();
         },
         [&](NetIO& io) {
-            std::vector<std::string> R;
-            io.recv(R, S.size(), LEN);
+            std::vector<std::string> R(3, std::string(LEN, '\0'));
+            io.recv(R);
             EXPECT_EQ(R, S);
         });
 }
@@ -480,22 +478,22 @@ TEST_F(NetIOTest, MultiRound_MixedTypes) {
     run_pair(port,
         // Server: buffer everything in one round, flush once
         [&](NetIO& io) {
-            io.buffer(std::vector<ECPoint>{pt});
+            io.buffer(pt);
             io.buffer(a);
             io.buffer(b);
             io.flush();
         },
         // Client: recv each type separately
         [&](NetIO& io) {
-            std::vector<ECPoint> rpt = {ECPoint(group)};
+            ECPoint rpt = {ECPoint(group)};
             ZnElement ra(field, BigInt(0ULL));
             Block rb;
 
-            io.recv(rpt, 1);
+            io.recv(rpt);
             io.recv(ra);
             io.recv(rb);
 
-            EXPECT_EQ(rpt[0], pt);
+            EXPECT_EQ(rpt, pt);
             EXPECT_EQ(ra.value, a.value);
             EXPECT_EQ(std::memcmp(&b, &rb, sizeof(Block)), 0);
         });
@@ -513,7 +511,7 @@ TEST_F(NetIOTest, MultiRound_BidirectionalExchange) {
             io.send(server_pts);
             // Round 2: server receives client's points
             std::vector<ECPoint> received(10, ECPoint(group));
-            io.recv(received, 10);
+            io.recv(received);
             for (size_t i = 0; i < 10; ++i) {
                 EXPECT_EQ(received[i], client_pts[i]) << "server: mismatch at i=" << i;
             }
@@ -521,7 +519,7 @@ TEST_F(NetIOTest, MultiRound_BidirectionalExchange) {
         [&](NetIO& io) {
             // Round 1: client receives server's points
             std::vector<ECPoint> received(10, ECPoint(group));
-            io.recv(received, 10);
+            io.recv(received);
             for (size_t i = 0; i < 10; ++i) {
                 EXPECT_EQ(received[i], server_pts[i]) << "client: mismatch at i=" << i;
             }

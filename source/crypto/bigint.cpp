@@ -12,12 +12,10 @@
 #include <openssl/bn.h>
 #include <openssl/crypto.h>
 #include <omp.h>
+#include <sstream>
 
 namespace taihang {
 
-// // Initialization of global constants
-// const BigInt kBn0(0ULL);
-// const BigInt kBn1(1ULL);
 
 // --- Lifecycle ---
 
@@ -333,13 +331,17 @@ bool BigInt::is_prime(double error_probability) const {
     return BN_is_prime_ex(bn_ptr, BN_prime_checks, ctx, nullptr) == 1;
 }
 
-void BigInt::print() const {
-    std::cout << to_hex() << std::endl;
-}
 
-void BigInt::print_in_dec(const std::string& note) const {
-    if (!note.empty()) std::cout << note << ": ";
-    std::cout << to_dec() << std::endl;
+std::string BigInt::to_string(Base base) const { 
+    switch (base) {
+        case Base::Hex:
+            return to_hex();
+            break;
+
+        case Base::Dec:
+            return to_dec();
+            break;
+    }
 }
 
 } // namespace taihang

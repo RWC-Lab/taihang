@@ -103,7 +103,11 @@ public:
     bool operator!=(const ZnElement& other) const;
 
     // --- Serialization & Debug ---
-    void print() const;
+    enum class Base {
+        Hex,
+        Dec
+    };
+    std::string to_string(Base base = Base::Hex) const;
     std::vector<uint8_t> to_bytes() const;
     void from_bytes(const uint8_t* buffer, size_t len); 
 };

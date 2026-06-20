@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <taihang/crypto/bigint.hpp>
 #include <taihang/crypto/zn.hpp>
 #include <taihang/crypto/bn_ctx.hpp>
@@ -50,8 +51,10 @@ public:
     BigInt b; // The 'b' coefficient in the curve equation: y^2 = x^3 + ax + b. 
 
     size_t base_field_byte_len; // The length of the prime p in bytes (e.g., 32 for a 256-bit curve). 
-    size_t point_byte_len; // The length of an uncompressed serialized point in bytes. 
-    size_t point_byte_compressed_len; // The length of a compressed serialized point in bytes. 
+    size_t uncompressed_point_byte_len; // The length of an uncompressed serialized point in bytes. 
+    size_t compressed_point_byte_len; // The length of a compressed serialized point in bytes. 
+
+    size_t get_point_byte_len() const; //
 
     // --- Lifecycle ---
 
@@ -178,6 +181,12 @@ public:
     // avoid heavy serialization EC_POINT_point2oct: Use EC_POINT_get_affine_coordinates to get the raw $X$ coordinate.
     uint64_t xxhash_to_uint64() const;
 
+    /** * @brief Cryptographically hashes the point to a 128-bit Block.
+     * @details Serializes the point and applies a cryptographic hash (Random Oracle),
+     * truncating the output to 128 bits. Primarily used for symmetric key extraction.
+     */
+    Block hash_to_block() const;
+
     // --- Serialization ---
 
     /** 
@@ -202,9 +211,9 @@ public:
     void from_bytes(const std::vector<uint8_t> input); 
 
 
-    // --- debugging ---
-    std::string to_hex() const; 
-    void print(std::string_view label, std::ostream& os) const; 
+    // --- debugging ---printprint
+    // return hex string
+    std::string to_string() const;  
 
     // --- Operator Overloads ---
 
@@ -224,6 +233,8 @@ public:
     /** @brief Stream input operator for serialization. */
     friend std::istream& operator>>(std::istream& is, ECPoint& point);
 };
+
+
 
 // --- Vectorized & Parallel Operations ---
 

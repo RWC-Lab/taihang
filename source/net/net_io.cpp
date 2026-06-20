@@ -46,30 +46,61 @@ void NetIO::buffer(const void* data, size_t len) {
     send_buffer.insert(send_buffer.end(), p, p + len);
 }
 
-void NetIO::buffer(const std::vector<ECPoint>& A) {
-    if (A.size() == 0) return;
-    size_t point_byte_len = A[0].group_ctx->point_byte_len;
+template <typename T>
+void NetIO::buffer(const T& n){
+    buffer(&n, sizeof(T));
+}
+
+void NetIO::buffer(const std::vector<uint8_t>& vec_a) {
+    if (vec_a.size() == 0) return;
+    const auto* p = static_cast<const uint8_t*>(vec_a.data());
+    send_buffer.insert(send_buffer.end(), p, p + vec_a.size());
+}
+
+void NetIO::buffer(const std::vector<ECPoint>& vec_a) {
+    if (vec_a.size() == 0) return;
+    size_t point_byte_len = vec_a[0].group_ctx->get_point_byte_len();
     size_t offset = send_buffer.size();
     
     // Resize is preferred over insert here to avoid initializing new elements.
-    send_buffer.resize(offset + A.size() * point_byte_len);
+    send_buffer.resize(offset + vec_a.size() * point_byte_len);
     uint8_t* dst = send_buffer.data() + offset;
 
     #pragma omp parallel for num_threads(config::thread_num)
-    for (size_t i = 0; i < A.size(); ++i) {
-        A[i].to_bytes(dst + i * point_byte_len);
+    for (size_t i = 0; i < vec_a.size(); ++i) {
+        vec_a[i].to_bytes(dst + i * point_byte_len);
     }
+}
+
+void NetIO::buffer(const ECPoint& a) {
+    size_t offset = send_buffer.size();
+    size_t point_byte_len = a.group_ctx->get_point_byte_len();
+    send_buffer.resize(offset + point_byte_len);
+    uint8_t* dst = send_buffer.data() + offset;
+    a.to_bytes(dst);
 }
 
 void NetIO::buffer(const ZnElement& a) {
     size_t offset = send_buffer.size();
     size_t element_byte_len = a.field_ctx->element_byte_len;
     send_buffer.resize(offset + element_byte_len);
-    BN_bn2binpad(a.value.bn_ptr, send_buffer.data() + offset, element_byte_len);
+    uint8_t* dst = send_buffer.data() + offset;
+    BN_bn2binpad(a.value.bn_ptr, dst, element_byte_len);
 }
 
 void NetIO::buffer(const Block& b) {
     buffer(&b, sizeof(Block));
+}
+
+void NetIO::buffer(const std::vector<Block>& vec_b) {
+    if (vec_b.size() == 0) return;
+    size_t offset = send_buffer.size();
+    
+    // Resize is preferred over insert here to avoid initializing new elements.
+    send_buffer.resize(offset + vec_b.size() * sizeof(Block));
+    uint8_t* dst = send_buffer.data() + offset;
+
+    std::memcpy(dst, vec_b.data(), vec_b.size() * sizeof(Block));
 }
 
 void NetIO::buffer(const std::vector<std::vector<uint8_t>>& M) {
@@ -113,8 +144,25 @@ void NetIO::send(const void* data, size_t len) {
     send_raw(data, len);
 }
 
-void NetIO::send(const std::vector<ECPoint>& A) {
-    buffer(A);
+template <typename T>
+void NetIO::send(const T& n){
+    send_raw(&n, sizeof(T));
+}
+
+void NetIO::send(const std::vector<uint8_t>& vec_a) {
+    if (vec_a.empty()) return;
+    buffer(vec_a);
+    flush();
+}
+
+void NetIO::send(const std::vector<ECPoint>& vec_a) {
+    if (vec_a.empty()) return;
+    buffer(vec_a);
+    flush();
+}
+
+void NetIO::send(const ECPoint& a) {
+    buffer(a);
     flush();
 }
 
@@ -125,6 +173,12 @@ void NetIO::send(const ZnElement& a) {
 
 void NetIO::send(const Block& b) {
     buffer(b);
+    flush();
+}
+
+void NetIO::send(const std::vector<Block>& vec_b) {
+    if (vec_b.empty()) return;
+    buffer(vec_b);
     flush();
 }
 
@@ -173,17 +227,38 @@ void NetIO::recv(void* data, size_t len) {
     recv_raw(data, len);
 }
 
-// A must be properly initialized
-void NetIO::recv(std::vector<ECPoint>& A, size_t len) {
-    if (len == 0) return;
-    size_t point_byte_len = A[0].group_ctx->point_byte_len;
+template <typename T>
+void NetIO::recv(T& n) {
+    recv_raw(&n, sizeof(T));
+}
+
+// vec_a must be properly initialized
+void NetIO::recv(std::vector<uint8_t>& vec_a) {
+    if (vec_a.empty()) return;
+    size_t len = vec_a.size();
+    recv_raw(vec_a.data(), len);
+}
+
+// vec_a must be properly initialized
+void NetIO::recv(std::vector<ECPoint>& vec_a) {
+    if (vec_a.empty()) return; 
+    size_t len = vec_a.size();
+    size_t point_byte_len = vec_a[0].group_ctx->get_point_byte_len();
     recv_buffer.resize(len * point_byte_len);
     recv_raw(recv_buffer.data(), recv_buffer.size());
 
     #pragma omp parallel for num_threads(config::thread_num)
     for (size_t i = 0; i < len; ++i) {
-        A[i].from_bytes(recv_buffer.data() + i * point_byte_len);
+        vec_a[i].from_bytes(recv_buffer.data() + i * point_byte_len);
     }
+}
+
+// a must be properly initialized
+void NetIO::recv(ECPoint& a) {
+    size_t point_byte_len = a.group_ctx->get_point_byte_len();
+    recv_buffer.resize(point_byte_len);
+    recv_raw(recv_buffer.data(), recv_buffer.size());
+    a.from_bytes(recv_buffer.data());
 }
 
 void NetIO::recv(ZnElement& a) {
@@ -197,21 +272,40 @@ void NetIO::recv(Block& b) {
     recv_raw(&b, sizeof(Block));
 }
 
-void NetIO::recv(std::vector<std::vector<uint8_t>>& A, size_t num, size_t len) {
+// vec_a must be properly initialized
+void NetIO::recv(std::vector<Block>& vec_b) {
+    if (vec_b.empty()) return;
+    size_t len = vec_b.size();
+    recv_raw(vec_b.data(), len * sizeof(Block));
+}
+
+// M must be properly initialized
+void NetIO::recv(std::vector<std::vector<uint8_t>>& M) {
+    if (M.empty()) return; 
+    size_t num = M.size(); 
+    size_t len = M[0].size(); 
+
     recv_buffer.resize(num * len);
     recv_raw(recv_buffer.data(), recv_buffer.size());
 
-    A.resize(num);
+    M.resize(num);
+    #pragma omp parallel for num_threads(config::thread_num)
     for (size_t i = 0; i < num; ++i) {
-        A[i].assign(recv_buffer.data() + i * len, recv_buffer.data() + (i + 1) * len);
+        M[i].assign(recv_buffer.data() + i * len, recv_buffer.data() + (i + 1) * len);
     }
 }
 
-void NetIO::recv(std::vector<std::string>& S, size_t num, size_t len) {
+// S must be properly initialized
+void NetIO::recv(std::vector<std::string>& S) {
+    if (S.empty()) return; 
+    size_t num = S.size(); 
+    size_t len = S[0].size();
+
     recv_buffer.resize(num * len);
     recv_raw(recv_buffer.data(), recv_buffer.size());
 
     S.resize(num);
+    #pragma omp parallel for num_threads(config::thread_num)
     for (size_t i = 0; i < num; ++i) {
         S[i].assign(reinterpret_cast<char*>(recv_buffer.data() + i * len), len);
     }

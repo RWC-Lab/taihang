@@ -29,11 +29,11 @@ TEST_F(BigIntModTest, ModularAddition) {
     BigInt b(4);
     // (5 + 4) mod 7 = 2
 
-    a.print_in_dec("a");
-    b.print_in_dec("b"); 
-    m_prime7.print_in_dec("m'");  
+    std::cout << "a=" << a.to_string(BigInt::Base::Dec);
+    std::cout << "b=" << b.to_string(BigInt::Base::Dec); 
+    std::cout << "m'=" << m_prime7.to_string(BigInt::Base::Dec);  
     BigInt result = a.mod_add(b, m_prime7);
-    result.print_in_dec("result"); 
+    std::cout << "result=" << result.to_string(BigInt::Base::Dec) << std::endl; 
     EXPECT_EQ(result.to_uint64(), 2ULL);
 }
 

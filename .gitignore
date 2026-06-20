@@ -36,4 +36,4 @@ build/
 deprecated/
 
 # Files
-DS_Store
+.DS_Store

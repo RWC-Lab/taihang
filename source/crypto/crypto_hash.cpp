@@ -1,8 +1,7 @@
 #include <taihang/crypto/crypto_hash.hpp>
 #include <openssl/evp.h>
 
-namespace taihang {
-namespace cryptohash {
+namespace taihang::cryptohash {
 
 /**
  * @struct OpaqueInternalState
@@ -73,5 +72,4 @@ void State::finalize(uint8_t* output) {
     TAIHANG_ASSERT(actual_len == kDigestOutputLen, "Hash: Output length mismatch.");
 }
 
-} // namespace cryptohash
-} // namespace taihang
+} // namespace taihang::cryptohash

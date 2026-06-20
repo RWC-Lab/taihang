@@ -37,8 +37,8 @@ ECGroup::ECGroup(int input_curve_id, bool precompute_flag) : group_ptr(nullptr) 
     TAIHANG_CHECK(1 == EC_GROUP_get_curve_GFp(group_ptr, p.bn_ptr, a.bn_ptr, b.bn_ptr, bn_ctx), "ECGroup: Failed to get curve params.");
 
     base_field_byte_len = BN_num_bytes(p.bn_ptr);
-    point_byte_len = 1 + 2 * base_field_byte_len;     // Uncompressed: 1 byte header + X + Y (2 * field_len)
-    point_byte_compressed_len = 1 + base_field_byte_len;   // Compressed:   1 byte header + X (1 * field_len)
+    uncompressed_point_byte_len = 1 + 2 * base_field_byte_len;     // Uncompressed: 1 byte header + X + Y (2 * field_len)
+    compressed_point_byte_len = 1 + base_field_byte_len;           // Compressed:   1 byte header + X (1 * field_len)
 
     if (precompute_flag) {
         precompute();
@@ -49,6 +49,7 @@ ECGroup::~ECGroup() {
     if (group_ptr != nullptr) EC_GROUP_free(group_ptr);
 }
 
+
 void ECGroup::precompute() const {
     EC_GROUP_precompute_mult(const_cast<EC_GROUP*>(group_ptr), BnContext::get());
 }
@@ -56,6 +57,10 @@ void ECGroup::precompute() const {
 bool ECGroup::is_precomputed() const {
     return EC_GROUP_have_precompute_mult(group_ptr) == 1;
 }
+
+size_t ECGroup::get_point_byte_len() const {
+    return config::use_point_compression? compressed_point_byte_len: uncompressed_point_byte_len;
+};
 
 ECPoint ECGroup::get_infinity() const {
     ECPoint result(this);
@@ -254,7 +259,7 @@ uint64_t ECPoint::aeshash_to_uint64() const {
     alignas(16) uint8_t buffer[80] = {0};
 
     // 2. Serialize (Force Compressed for uniqueness)
-    size_t len = group_ctx->point_byte_compressed_len;
+    size_t len = group_ctx->get_point_byte_len();
     
     // Sanity check to prevent buffer overflow if a huge custom curve is added
     if (len > sizeof(buffer)) return 0; 
@@ -311,7 +316,7 @@ uint64_t ECPoint::xxhash_to_uint64() const {
     // Use Fixed-Length Padding
     // P-256 is 32 bytes, P-521 is 66 bytes. 
     // group_ctx->point_byte_len should be pre-calculated (field size in bytes).
-    size_t field_len = group_ctx->point_byte_len; 
+    size_t field_len = group_ctx->get_point_byte_len(); 
     alignas(16) uint8_t buffer[80]; 
     
     // BN_bn2binpad is faster than BN_bn2bin because it avoids conditional length logic
@@ -328,13 +333,31 @@ uint64_t ECPoint::xxhash_to_uint64() const {
     return hash;
 }
 
+
+Block ECPoint::hash_to_block() const {
+    // 1. Determine correct serialization length based on configuration
+    size_t fixed_len = group_ctx->get_point_byte_len(); 
+    
+    // 2. Stack allocation for maximum speed (256 bytes covers up to P-521 uncompressed)
+    uint8_t pt_buffer[256];
+    TAIHANG_ASSERT(fixed_len <= sizeof(pt_buffer), "ECPoint::hash_to_block: Point size exceeds stack buffer limit");
+    
+    // 3. Serialize the ECPoint to bytes using the existing member function
+    this->to_bytes(pt_buffer);
+
+    // 4. Hash the serialized point to 256 bits (32 bytes)
+    alignas(16) uint8_t hash_out[32];
+    cryptohash::digest<kDefaultHash>(pt_buffer, fixed_len, hash_out);
+
+    // 5. Load and return the first 128 bits as the Block
+    return _mm_loadu_si128(reinterpret_cast<const __m128i*>(hash_out));
+}
+
 // --- Serialization ---
 
 void ECPoint::to_bytes(uint8_t* buffer) const {
     // 1. Determine Fixed Length based on config
-    size_t fixed_len = config::use_point_compression ? 
-                       group_ctx->point_byte_compressed_len : 
-                       group_ctx->point_byte_len;
+    size_t fixed_len = group_ctx->get_point_byte_len(); 
 
     // 2. Handle Infinity (Special Fixed-Length Case)
     if (this->is_at_infinity()) {
@@ -359,9 +382,7 @@ void ECPoint::to_bytes(uint8_t* buffer) const {
 }
 
 std::vector<uint8_t> ECPoint::to_bytes() const {
-    size_t fixed_len = config::use_point_compression ? 
-                 group_ctx->point_byte_compressed_len : 
-                 group_ctx->point_byte_len;
+    size_t fixed_len = group_ctx->get_point_byte_len(); 
     
     // std::vector constructor zero-initializes memory.
     // This is efficient and safe.
@@ -373,9 +394,7 @@ std::vector<uint8_t> ECPoint::to_bytes() const {
 // --- Deserialization ---
 
 void ECPoint::from_bytes(const uint8_t* buffer) {
-    size_t fixed_len = config::use_point_compression ? 
-                        group_ctx->point_byte_compressed_len : 
-                        group_ctx->point_byte_len;
+    size_t fixed_len = group_ctx->get_point_byte_len(); 
 
     // Optimization: Check for Infinity (All Zeros)
     // Checking just the first byte is sufficient because valid points
@@ -398,9 +417,7 @@ void ECPoint::from_bytes(const std::vector<uint8_t> input) {
 // --- Stream Operators (Optimized) ---
 
 std::ostream& operator<<(std::ostream& os, const ECPoint& point) {
-    size_t fixed_len = config::use_point_compression ? 
-                        point.group_ctx->point_byte_compressed_len : 
-                        point.group_ctx->point_byte_len;
+    size_t fixed_len = point.group_ctx->get_point_byte_len(); 
 
     // Use a fixed-size stack buffer to avoid heap allocation.
     // 256 bytes is enough for P-521 uncompressed (approx 133 bytes).
@@ -416,9 +433,7 @@ std::ostream& operator<<(std::ostream& os, const ECPoint& point) {
 }
 
 std::istream& operator>>(std::istream& is, ECPoint& point) {
-    size_t fixed_len = config::use_point_compression ? 
-                        point.group_ctx->point_byte_compressed_len : 
-                        point.group_ctx->point_byte_len;
+    size_t fixed_len = point.group_ctx->get_point_byte_len(); 
 
     uint8_t buffer[256];
     TAIHANG_ASSERT(fixed_len <= sizeof(buffer), "Curve point size exceeds stack buffer limit.");
@@ -437,7 +452,7 @@ std::istream& operator>>(std::istream& is, ECPoint& point) {
  * @brief Converts the EC point to a hex string representation.
  * @return std::string containing the hex representation.
  */
-std::string ECPoint::to_hex() const {
+std::string ECPoint::to_string() const {
     point_conversion_form_t form = config::use_point_compression ? 
                                    POINT_CONVERSION_COMPRESSED : POINT_CONVERSION_UNCOMPRESSED;
 
@@ -455,12 +470,6 @@ std::string ECPoint::to_hex() const {
     return result;
 }
 
-// --- debugging ---
-
-
-void ECPoint::print(std::string_view label, std::ostream& os) const {
-    os << label << (label.empty() ? "" : ": ") << to_hex() << std::endl;
-}
 
 // --- Vectorized & Parallel Implementation ---
 

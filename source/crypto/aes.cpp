@@ -330,4 +330,18 @@ void encrypt_two_blocks(const AESKey& key, Block* data) {
 #endif
 }
 
+
+Block hash_blocks_to_block(const std::vector<Block>& input_blocks) {
+    if (input_blocks.empty()) return kZeroBlock;
+
+    std::vector<Block> working_blocks = input_blocks;
+    size_t block_num = working_blocks.size();
+    
+    // Perform AES-CBC encryption using the fixed global key.
+    // The final block serves as the hash output.
+    aes::encrypt_cbc(aes::get_fixed_key(), working_blocks.data(), block_num, kZeroBlock);
+    
+    return working_blocks[block_num - 1];
+}
+
 } // namespace taihang::aes

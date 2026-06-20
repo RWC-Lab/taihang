@@ -116,17 +116,31 @@ void bit_matrix_transpose(uint8_t const *input, uint64_t output_rows, uint64_t o
             }
         }
     }
-#else
+// #else
+//     /* --- ARM/Portable Fallback Path --- */
+//     // Since NEON lacks a direct movemask equivalent, we use a bit-level transpose.
+//     // We clear the output first since we use OR operations.
+//     std::memset(output, 0, (output_rows * output_cols) / 8);
+//     for (uint64_t i = 0; i < output_rows; ++i) {
+//         for (uint64_t j = 0; j < output_cols; ++j) {
+//             // Extract the bit at (i, j)
+//             uint8_t bit = (input[i * (output_cols / 8) + (j / 8)] >> (j % 8)) & 1;
+//             // Place it at (j, i) in the output matrix
+//             output[j * (output_rows / 8) + (i / 8)] |= (bit << (i % 8));
+//         }
+//     }
+// #endif
+
+    #else
     /* --- ARM/Portable Fallback Path --- */
-    // Since NEON lacks a direct movemask equivalent, we use a bit-level transpose.
-    // We clear the output first since we use OR operations.
     std::memset(output, 0, (output_rows * output_cols) / 8);
     for (uint64_t i = 0; i < output_rows; ++i) {
         for (uint64_t j = 0; j < output_cols; ++j) {
-            // Extract the bit at (i, j)
-            uint8_t bit = (input[i * (output_cols / 8) + (j / 8)] >> (j % 8)) & 1;
-            // Place it at (j, i) in the output matrix
-            output[j * (output_rows / 8) + (i / 8)] |= (bit << (i % 8));
+            // Unify bit extraction order to match structure layout mapping
+            uint8_t bit = (input[i * (output_cols / 8) + (j / 8)] >> (7 - (j % 8))) & 1;
+            
+            // Place matching the target row alignment byte
+            output[j * (output_rows / 8) + (i / 8)] |= (bit << (7 - (i % 8)));
         }
     }
 #endif
