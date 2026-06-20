@@ -233,21 +233,15 @@ inline std::string to_bytes(const Block &var) {
  * @param block_data Output array of blocks.
  * @param block_len Number of blocks to produce.
  */
+// AFTER — pack directly into bytes with LSB-first order, matching the transpose:
 inline void pack_bits_to_blocks(const uint8_t* byte_data, size_t byte_len, Block* block_data, size_t block_len) {
-    // Validate that input size matches expected bit capacity
     TAIHANG_ASSERT(byte_len == block_len * 128, "pack bits to blocks: size mismatch.");
-
-    for (size_t i = 0; i < block_len; ++i) {
-        // Initialize block to kZeroBlock (default constructor)
-        block_data[i] = kZeroBlock;
-        
-        for (size_t j = 0; j < 128; ++j) {
-            // Check if the bit is set in the byte stream
-            if (byte_data[128 * i + j]) {
-                // Bits are mapped from 0 to 127. 
-                // Adjust index if your specific protocol requires reverse bit order.
-                set_bit(block_data[i], j);
-            }
+    uint8_t* out = reinterpret_cast<uint8_t*>(block_data);
+    std::memset(out, 0, block_len * 16);
+    for (size_t k = 0; k < byte_len; ++k) {
+        if (byte_data[k]) {
+            // bit k → byte k/8, bit position k%8 (LSB = bit 0)
+            out[k / 8] |= (uint8_t(1) << (k % 8));
         }
     }
 }
