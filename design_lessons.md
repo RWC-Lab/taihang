@@ -165,3 +165,51 @@ In modern C++:
 * 它写在构造函数的函数体之前，用来初始化成员变量
 * const成员只能用初始化列表初始化
 
+
+
+Ah, the classic text-stream extraction hazard. Using std::ostream and std::istream with raw type chaining (<< and >>) works smoothly for primitive calculations, but it introduces a major pitfall when serialization switches from numbers to booleans without explicit delimiters.
+
+The Bug: Token Smushing
+When pp.malicious (a bool) is serialized using os << pp.malicious, it outputs as either 0 or 1 in text format. Immediately following it, you write pp.base_len (an integer, say 128).
+
+If pp.malicious = false and pp.base_len = 128, your stream receives:
+
+Plaintext
+[base_ot_pp_data]0128
+When is >> parses this back:
+
+It reads the base parameters.
+
+It encounters the string 0128.
+
+Because pp.malicious is a boolean extraction target, is >> pp.malicious only consumes the first valid boolean digit (0). It sets pp.malicious = false.
+
+The remaining digits (128) are left in the stream buffer to be extracted into pp.base_len.
+
+However, if pp.malicious = true, the stream receives:
+
+Plaintext
+[base_ot_pp_data]1128
+When reading it back, is >> pp.malicious reads the 1, sets pp.malicious = true. The stream left over is 128, which populates pp.base_len. This direction matches up purely by luck.
+
+The true failure happens depending on how pp.base_ot_pp serializes. If pp.base_ot_pp ends in a numeric digit, that digit gets concatenated with your boolean variable. For example, if base_ot_pp ends with a 5, the stream sees 50128. is >> pp.base_ot_pp may swallow parts of the boolean or the next numbers, completely corrupting the stream alignment and shifting garbage data into pp.malicious (turning any non-zero leftover value into true).
+
+The Fix: Add Space Delimiters
+The simplest, standard C++ text-stream way to fix this is to inject space delimiters between fields so that the extraction operators (>>) know exactly where tokens start and stop.
+
+Update your operators like this:
+
+C++
+std::ostream& operator<<(std::ostream& os, const PublicParameters& pp) {
+    os << pp.base_ot_pp << " " 
+       << pp.malicious << " " 
+       << pp.base_len;
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, PublicParameters& pp) {
+    is >> pp.base_ot_pp >> pp.malicious >> pp.base_len;
+    return is;
+}
+Because std::istream::operator>> automatically skips whitespace before parsing tokens, adding spaces keeps your serialization token-isolated and completely safe from layout variations or adjacent number smushing. Recompile, rerun test_alsz_ote, and your round-trips should pass beautifully!
+

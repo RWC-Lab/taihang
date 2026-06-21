@@ -536,4 +536,7 @@ void NetIO::throw_errno(const char* context) {
     throw std::runtime_error(std::string("[NetIO Error] ") + context + ": " + std::strerror(errno));
 }
 
+template void NetIO::send<size_t>(const size_t& n);
+template void NetIO::recv<size_t>(size_t& n);
+
 } // namespace taihang::net

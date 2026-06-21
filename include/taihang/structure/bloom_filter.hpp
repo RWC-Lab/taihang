@@ -85,6 +85,7 @@ public:
     // --- Serialization ---
 
     size_t get_serialized_size() const;
+    
     std::ostream& serialize(std::ostream& os) const;
     std::istream& deserialize(std::istream& is);
 
