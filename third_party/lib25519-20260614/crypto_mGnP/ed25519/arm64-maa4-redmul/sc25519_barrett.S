@@ -1,1 +1,0 @@
-../arm64-uma9l/sc25519_barrett.S

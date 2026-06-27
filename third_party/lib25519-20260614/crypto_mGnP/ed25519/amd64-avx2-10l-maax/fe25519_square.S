@@ -1,1 +1,0 @@
-../amd64-maax/fe25519_square.S

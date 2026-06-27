@@ -1,1 +1,0 @@
-../arm64-neonplusuma10l/nG.c

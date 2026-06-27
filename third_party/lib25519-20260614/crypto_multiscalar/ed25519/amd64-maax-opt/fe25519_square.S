@@ -1,1 +1,0 @@
-../../../crypto_nP/montgomery25519/amd64-maax/fe25519_square.S

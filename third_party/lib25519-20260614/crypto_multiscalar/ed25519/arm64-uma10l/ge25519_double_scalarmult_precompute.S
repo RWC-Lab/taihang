@@ -1,1 +1,0 @@
-../../../crypto_mGnP/ed25519/arm64-uma10l/ge25519_double_scalarmult_precompute.S

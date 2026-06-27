@@ -1,1 +1,0 @@
-../../../crypto_pow/inv25519/arm64-uma9l/fe25519_dense_pack.S

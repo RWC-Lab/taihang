@@ -1,1 +1,0 @@
-../../../crypto_mGnP/ed25519/ref10/sc_reduce.c

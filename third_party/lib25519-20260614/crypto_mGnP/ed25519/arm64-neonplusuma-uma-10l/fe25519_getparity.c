@@ -1,1 +1,0 @@
-../arm64-uma10l/fe25519_getparity.c

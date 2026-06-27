@@ -1,1 +1,0 @@
-../../../crypto_mGnP/ed25519/amd64-maa4/fe25519_nsquare.S

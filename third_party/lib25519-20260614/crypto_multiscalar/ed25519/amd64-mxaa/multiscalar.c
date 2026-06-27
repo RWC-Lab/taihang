@@ -1,1 +1,0 @@
-../amd64-maa4/multiscalar.c

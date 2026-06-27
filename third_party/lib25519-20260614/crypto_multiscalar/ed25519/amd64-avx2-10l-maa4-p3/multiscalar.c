@@ -1,1 +1,0 @@
-../amd64-avx2-9l-maa4-p3/multiscalar.c

@@ -1,1 +1,0 @@
-../amd64-avx2-ns10l-maa4/fe25519_from_10l.c

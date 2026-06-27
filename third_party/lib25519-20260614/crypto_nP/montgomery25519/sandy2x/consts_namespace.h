@@ -1,1 +1,0 @@
-../../../crypto_nG/montgomery25519/sandy2x/consts_namespace.h

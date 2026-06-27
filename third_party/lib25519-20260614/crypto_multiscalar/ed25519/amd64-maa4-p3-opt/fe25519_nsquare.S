@@ -1,1 +1,0 @@
-../amd64-maa4-opt/fe25519_nsquare.S

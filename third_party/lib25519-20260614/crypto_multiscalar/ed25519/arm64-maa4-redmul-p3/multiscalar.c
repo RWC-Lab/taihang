@@ -1,1 +1,0 @@
-../arm64-maa4-intmul-p3/multiscalar.c
