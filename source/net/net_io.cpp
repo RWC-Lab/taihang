@@ -72,9 +72,32 @@ void NetIO::buffer(const std::vector<ECPoint>& vec_a) {
     }
 }
 
+void NetIO::buffer(const std::vector<EC25519Point>& vec_a) {
+    if (vec_a.size() == 0) return;
+    size_t point_byte_len = EC25519Point::POINT_BYTE_LEN;
+    size_t offset = send_buffer.size();
+    
+    // Resize is preferred over insert here to avoid initializing new elements.
+    send_buffer.resize(offset + vec_a.size() * point_byte_len);
+    uint8_t* dst = send_buffer.data() + offset;
+
+    #pragma omp parallel for num_threads(config::thread_num)
+    for (size_t i = 0; i < vec_a.size(); ++i) {
+        vec_a[i].to_bytes(dst + i * point_byte_len);
+    }
+}
+
 void NetIO::buffer(const ECPoint& a) {
     size_t offset = send_buffer.size();
     size_t point_byte_len = a.group_ctx->get_point_byte_len();
+    send_buffer.resize(offset + point_byte_len);
+    uint8_t* dst = send_buffer.data() + offset;
+    a.to_bytes(dst);
+}
+
+void NetIO::buffer(const EC25519Point& a) {
+    size_t offset = send_buffer.size();
+    size_t point_byte_len = EC25519Point::POINT_BYTE_LEN;
     send_buffer.resize(offset + point_byte_len);
     uint8_t* dst = send_buffer.data() + offset;
     a.to_bytes(dst);
@@ -161,7 +184,18 @@ void NetIO::send(const std::vector<ECPoint>& vec_a) {
     flush();
 }
 
+void NetIO::send(const std::vector<EC25519Point>& vec_a) {
+    if (vec_a.empty()) return;
+    buffer(vec_a);
+    flush();
+}
+
 void NetIO::send(const ECPoint& a) {
+    buffer(a);
+    flush();
+}
+
+void NetIO::send(const EC25519Point& a) {
     buffer(a);
     flush();
 }
@@ -253,9 +287,33 @@ void NetIO::recv(std::vector<ECPoint>& vec_a) {
     }
 }
 
+// vec_a must be properly initialized
+void NetIO::recv(std::vector<EC25519Point>& vec_a) {
+    if (vec_a.empty()) return; 
+    size_t len = vec_a.size();
+    size_t point_byte_len = EC25519Point::POINT_BYTE_LEN;
+    recv_buffer.resize(len * point_byte_len);
+    recv_raw(recv_buffer.data(), recv_buffer.size());
+
+    #pragma omp parallel for num_threads(config::thread_num)
+    for (size_t i = 0; i < len; ++i) {
+        vec_a[i].from_bytes(recv_buffer.data() + i * point_byte_len);
+    }
+}
+
+
 // a must be properly initialized
 void NetIO::recv(ECPoint& a) {
     size_t point_byte_len = a.group_ctx->get_point_byte_len();
+    recv_buffer.resize(point_byte_len);
+    recv_raw(recv_buffer.data(), recv_buffer.size());
+    a.from_bytes(recv_buffer.data());
+}
+
+
+// a must be properly initialized
+void NetIO::recv(EC25519Point& a) {
+    size_t point_byte_len = EC25519Point::POINT_BYTE_LEN;
     recv_buffer.resize(point_byte_len);
     recv_raw(recv_buffer.data(), recv_buffer.size());
     a.from_bytes(recv_buffer.data());

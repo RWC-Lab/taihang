@@ -25,6 +25,7 @@
 #include <cstddef>
 
 #include <taihang/crypto/ec_group.hpp>
+#include <taihang/crypto/ec25519_point.hpp>
 #include <taihang/crypto/bigint.hpp>
 #include <taihang/crypto/block.hpp>
 
@@ -71,6 +72,9 @@ public:
     void buffer(const ECPoint& a);
     void buffer(const std::vector<ECPoint>& vec_a);
 
+    void buffer(const EC25519Point& a);
+    void buffer(const std::vector<EC25519Point>& vec_a);
+
     void buffer(const ZnElement& a);
 
     void buffer(const Block& b);
@@ -97,6 +101,9 @@ public:
     void send(const ECPoint& a);    
     void send(const std::vector<ECPoint>& vec_a);
 
+    void send(const EC25519Point& a);    
+    void send(const std::vector<EC25519Point>& vec_a);
+
     void send(const ZnElement& a);
 
     void send(const Block& b);
@@ -119,6 +126,9 @@ public:
 
     void recv(ECPoint& a);     
     void recv(std::vector<ECPoint>& vec_a);
+
+    void recv(EC25519Point& a);     
+    void recv(std::vector<EC25519Point>& vec_a);
 
     void recv(ZnElement& a);
 

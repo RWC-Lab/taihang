@@ -288,7 +288,21 @@ ECPoint hash_to_curve_standard(const std::string& data, const std::string& dst, 
 /** @brief RFC 9380 compliant mapping for 128-bit blocks. */
 ECPoint hash_to_curve_standard(const Block& data, const std::string& dst, const ECGroup& group = ECGroup::get_default_group());
 
+
+/* customized hash for ECPoint class */
+struct ECPointHash{
+    size_t operator()(const ECPoint& A) const noexcept;
+};
+
+
+
+auto ECPoint_Lexical_Compare = [](ECPoint A, ECPoint B){ 
+    return A.to_string() < B.to_string(); 
+};
+
 } // namespace taihang
+
+
 
 #endif // TAIHANG_CRYPTO_EC_GROUP_HPP
 

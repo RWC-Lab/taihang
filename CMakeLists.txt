@@ -117,7 +117,7 @@ target_link_libraries(taihang
         xxHash::xxhash
 )
 
-target_compile_features(taihang PUBLIC cxx_std_17)
+target_compile_features(taihang PUBLIC cxx_std_20)
 
 # ------------------------------------------------------------
 # 6. Optimization / Sanitizers

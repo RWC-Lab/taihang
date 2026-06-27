@@ -713,6 +713,12 @@ ECPoint hash_to_curve_standard(const Block& input_block, const std::string& dst,
     return hash_to_curve_standard(reinterpret_cast<const uint8_t*>(&input_block), 16, dst, group);
 }
 
+
+size_t ECPointHash::operator()(const ECPoint& A) const noexcept {
+    std::vector<uint8_t> byte_string = A.to_bytes();
+    return std::hash<std::string_view>{}(std::string_view(reinterpret_cast<const char*>(byte_string.data()), byte_string.size()));
+}
+
 } // namespace taihang
 
 

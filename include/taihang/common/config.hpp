@@ -44,6 +44,7 @@ extern bool use_point_compression;
  */
 extern int thread_num;
 
+
 } // namespace config
 } // namespace taihang
 

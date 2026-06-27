@@ -1,0 +1,1289 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style type="text/css">
+html{overflow-y:scroll;background-color:#091552}
+body{font-family:"Noto Sans","Droid Sans","DejaVu Sans","Arial",sans-serif;line-height:1.5}
+tt,code{background-color:#f0f0f0;font-family:Consolas,Monaco,"Noto Sans Mono","DejaVu Sans Mono",monospace,sans-serif;font-size:1em;}
+pre{margin-left:3em}
+p,ul,ol,blockquote,pre{font-size:1.0em;line-height:1.6}
+li p{font-size:1.0em}
+blockquote p{font-size:1.0em}
+h1{font-size:1.5em}
+h2{font-size:1.3em}
+h3{font-size:1.0em}
+h1 a{text-decoration:none}
+table{border-collapse:collapse}
+th,td{border:1px solid black}
+table a{text-decoration:none}
+table tr{font-size:1.0em;line-height:1.6em}
+table tr{font-size:1.0em;line-height:1.5}
+tbody tr:nth-child(12n+1){background-color:#f0ffff}
+tbody tr:nth-child(12n+2){background-color:#f0ffff}
+tbody tr:nth-child(12n+3){background-color:#f0ffff}
+tbody tr:nth-child(12n+4){background-color:#f0ffff}
+tbody tr:nth-child(12n+5){background-color:#f0ffff}
+tbody tr:nth-child(12n+6){background-color:#f0ffff}
+tbody tr:nth-child(12n+7){background-color:#fffff0}
+tbody tr:nth-child(12n+8){background-color:#fffff0}
+tbody tr:nth-child(12n+9){background-color:#fffff0}
+tbody tr:nth-child(12n+10){background-color:#fffff0}
+tbody tr:nth-child(12n+11){background-color:#fffff0}
+tbody tr:nth-child(12n+12){background-color:#fffff0}
+
+#headline{display:block;margin:0;padding:0;color:#ffffff;background-color:#091552}
+#headline .text{font-weight:bold;font-size:1.0em}
+#headline input{display:none}
+#nav ul{margin:0;padding:0}
+#nav li{list-style-type:none;margin:0;padding:0}
+.navtop{padding-bottom:0.5em;font-weight:bold;font-size:1.0em}
+.navtop{background-color:#091552;color:#ffffff}
+#nav .here{background-color:#091552;color:#ffffff}
+#nav .away{background-color:#091552;color:#ffffff}
+#nav .away a{text-decoration:none;display:block;color:#ffffff}
+#nav .away a:hover,.away a:active{text-decoration:underline}
+#hidemenu{visibility:hidden;display:none;overflow:hidden;position:fixed;top:0;left:0;height:100%;width:100%}
+
+.main{padding:5px}
+.main{background-color:#ffffff}
+.pagetitle{font-size:1.4em;font-weight:bold}
+@media only screen and (min-width:512px) {
+  .navtop{padding-top:5px}
+  #headline{top:0;margin:0;width:110px;height:100%;position:fixed;overflow:auto}
+  #headline .noselect{display:none}
+  #headline #nav{visibility:visible;display:block;width:auto;height:auto}
+  .main{margin-left:120px}
+  #headline #hidemenu{visibility:hidden}
+}
+@media not screen and (min-width:512px) {
+  #headline .noselect{-webkit-user-select:none;-ms-user-select:none;user-select:none;}
+  #headline #nav #navbot{visibility:hidden;position:fixed;top:0;left:-70%;z-index:2;transition:0.2s;margin:0;padding:0}
+  #headline input:checked ~ #nav #navbot{height:100%;position:fixed;top:0;left:0;visibility:visible;display:block;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;vertical-align:center;font-size:1.0em;width:70%;overflow:auto}
+  #headline input:checked ~ #hidemenu{visibility:visible;display:block;background:black;opacity:0.3;z-index:1}
+}
+
+.openssl{color:#900009}
+.s2n{color:#004040}
+.lib25519{color:#091552}
+</style>
+<title>
+lib25519: Speed</title>
+</head>
+<body>
+<label id=headline>
+<input type=checkbox />
+<nav id=nav>
+<div class=navtop>
+<span class=noselect>≡</span>
+lib25519</div>
+<ul id=navbot>
+<li class=away><a href=index.html>Intro</a>
+</li><li class=away><a href=download.html>Download</a>
+</li><li class=away><a href=install.html>Install</a>
+</li><li class=away><a href=test.html>Test</a>
+</li><li class=away><a href=x25519-cli.html>X CLI</a>
+</li><li class=away><a href=ed25519-cli.html>Ed CLI</a>
+</li><li class=away><a href=api.html>API</a>
+</li><li class=away><a href=security.html>Security</a>
+</li><li class=here>Speed
+</li><li class=away><a href=internals.html>Internals</a>
+</li><li class=away><a href=people.html>People</a>
+</li><li class=away><a href=license.html>License</a>
+</li></ul></nav>
+<div id=hidemenu></div>
+</label>
+<div class=main>
+<div class=pagetitle>lib25519: Speed</div>
+<p>In the following speed table, smaller numbers are better.
+The numbers are interquartile means of single-core cycle counts on various microarchitectures.
+Overclocking is disabled.</p>
+<p>The table reports cycle counts from lib25519 and, for comparison,
+OpenSSL and s2n-bignum.
+For comparability to OpenSSL's speed-testing utility,
+the OpenSSL cycle counts omit various OpenSSL overheads; see below for details.
+The s2n-bignum and lib25519 cycle counts include all overheads.
+There is also a lib25519+s2n line showing separate measurements of lib25519
+after an optional pre-configuration <code>./use-s2n-bignum</code> step
+(which is a supported option for lib25519);
+a lib25519+exp line showing separate measurements of lib25519
+after an experimental pre-configuration <code>mv skipcompilers/* compilers</code> step
+(which is unsupported: it uses instructions not supported by <code>valgrind</code>);
+and a lib25519+s2n+exp line.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">μarch</th>
+<th style="text-align: left;">software</th>
+<th style="text-align: right;">X key</th>
+<th style="text-align: right;">X dh</th>
+<th style="text-align: right;">X batch</th>
+<th style="text-align: right;">Ed key</th>
+<th style="text-align: right;">Ed sign</th>
+<th style="text-align: right;">Ed verif</th>
+<th style="text-align: right;">Ed MSM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Intel Redwood Cove (2023)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>102655</span></td>
+<td style="text-align: right;"><span class=openssl>103510</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>106608</span></td>
+<td style="text-align: right;"><span class=openssl>103247</span></td>
+<td style="text-align: right;"><span class=openssl>341443</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>23202</span></td>
+<td style="text-align: right;"><span class=lib25519>94878</span></td>
+<td style="text-align: right;"><span class=lib25519>63162</span></td>
+<td style="text-align: right;"><span class=lib25519>24481</span></td>
+<td style="text-align: right;"><span class=lib25519>27407</span></td>
+<td style="text-align: right;"><span class=lib25519>96199</span></td>
+<td style="text-align: right;"><span class=lib25519>30320</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>23345</span></td>
+<td style="text-align: right;"><span class=lib25519>67631</span></td>
+<td style="text-align: right;"><span class=lib25519>62627</span></td>
+<td style="text-align: right;"><span class=lib25519>24132</span></td>
+<td style="text-align: right;"><span class=lib25519>27683</span></td>
+<td style="text-align: right;"><span class=lib25519>93290</span></td>
+<td style="text-align: right;"><span class=lib25519>29890</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>23642</span></td>
+<td style="text-align: right;"><span class=lib25519>67570</span></td>
+<td style="text-align: right;"><span class=lib25519>62662</span></td>
+<td style="text-align: right;"><span class=lib25519>24103</span></td>
+<td style="text-align: right;"><span class=lib25519>27934</span></td>
+<td style="text-align: right;"><span class=lib25519>93889</span></td>
+<td style="text-align: right;"><span class=lib25519>29463</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>24140</span></td>
+<td style="text-align: right;"><span class=lib25519>94798</span></td>
+<td style="text-align: right;"><span class=lib25519>63032</span></td>
+<td style="text-align: right;"><span class=lib25519>24287</span></td>
+<td style="text-align: right;"><span class=lib25519>27932</span></td>
+<td style="text-align: right;"><span class=lib25519>94654</span></td>
+<td style="text-align: right;"><span class=lib25519>30479</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>24669</span></td>
+<td style="text-align: right;"><span class=s2n>75760</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">AMD Zen 4 (2022)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>111574</span></td>
+<td style="text-align: right;"><span class=openssl>109143</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>114875</span></td>
+<td style="text-align: right;"><span class=openssl>110739</span></td>
+<td style="text-align: right;"><span class=openssl>378734</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>27981</span></td>
+<td style="text-align: right;"><span class=lib25519>70915</span></td>
+<td style="text-align: right;"><span class=lib25519>45918</span></td>
+<td style="text-align: right;"><span class=lib25519>28641</span></td>
+<td style="text-align: right;"><span class=lib25519>31993</span></td>
+<td style="text-align: right;"><span class=lib25519>123236</span></td>
+<td style="text-align: right;"><span class=lib25519>38862</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>22731</span></td>
+<td style="text-align: right;"><span class=lib25519>53572</span></td>
+<td style="text-align: right;"><span class=lib25519>22362</span></td>
+<td style="text-align: right;"><span class=lib25519>23522</span></td>
+<td style="text-align: right;"><span class=lib25519>26680</span></td>
+<td style="text-align: right;"><span class=lib25519>111059</span></td>
+<td style="text-align: right;"><span class=lib25519>34695</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>22697</span></td>
+<td style="text-align: right;"><span class=lib25519>53535</span></td>
+<td style="text-align: right;"><span class=lib25519>22478</span></td>
+<td style="text-align: right;"><span class=lib25519>23463</span></td>
+<td style="text-align: right;"><span class=lib25519>26706</span></td>
+<td style="text-align: right;"><span class=lib25519>113579</span></td>
+<td style="text-align: right;"><span class=lib25519>34551</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>27990</span></td>
+<td style="text-align: right;"><span class=lib25519>71140</span></td>
+<td style="text-align: right;"><span class=lib25519>45752</span></td>
+<td style="text-align: right;"><span class=lib25519>28720</span></td>
+<td style="text-align: right;"><span class=lib25519>31793</span></td>
+<td style="text-align: right;"><span class=lib25519>124290</span></td>
+<td style="text-align: right;"><span class=lib25519>38900</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>26471</span></td>
+<td style="text-align: right;"><span class=s2n>87905</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Intel Golden Cove (2021)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>98110</span></td>
+<td style="text-align: right;"><span class=openssl>104590</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>99827</span></td>
+<td style="text-align: right;"><span class=openssl>98099</span></td>
+<td style="text-align: right;"><span class=openssl>331861</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>25446</span></td>
+<td style="text-align: right;"><span class=lib25519>83586</span></td>
+<td style="text-align: right;"><span class=lib25519>50346</span></td>
+<td style="text-align: right;"><span class=lib25519>24993</span></td>
+<td style="text-align: right;"><span class=lib25519>28114</span></td>
+<td style="text-align: right;"><span class=lib25519>96327</span></td>
+<td style="text-align: right;"><span class=lib25519>31080</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>23828</span></td>
+<td style="text-align: right;"><span class=lib25519>69036</span></td>
+<td style="text-align: right;"><span class=lib25519>49930</span></td>
+<td style="text-align: right;"><span class=lib25519>24981</span></td>
+<td style="text-align: right;"><span class=lib25519>29277</span></td>
+<td style="text-align: right;"><span class=lib25519>95024</span></td>
+<td style="text-align: right;"><span class=lib25519>30688</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>23926</span></td>
+<td style="text-align: right;"><span class=lib25519>67997</span></td>
+<td style="text-align: right;"><span class=lib25519>49888</span></td>
+<td style="text-align: right;"><span class=lib25519>25053</span></td>
+<td style="text-align: right;"><span class=lib25519>28602</span></td>
+<td style="text-align: right;"><span class=lib25519>96265</span></td>
+<td style="text-align: right;"><span class=lib25519>30279</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>24968</span></td>
+<td style="text-align: right;"><span class=lib25519>83546</span></td>
+<td style="text-align: right;"><span class=lib25519>50257</span></td>
+<td style="text-align: right;"><span class=lib25519>25311</span></td>
+<td style="text-align: right;"><span class=lib25519>28601</span></td>
+<td style="text-align: right;"><span class=lib25519>95184</span></td>
+<td style="text-align: right;"><span class=lib25519>31114</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>24124</span></td>
+<td style="text-align: right;"><span class=s2n>75653</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">AMD Zen 3 (2020)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>112079</span></td>
+<td style="text-align: right;"><span class=openssl>117092</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>114230</span></td>
+<td style="text-align: right;"><span class=openssl>111564</span></td>
+<td style="text-align: right;"><span class=openssl>369827</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>28736</span></td>
+<td style="text-align: right;"><span class=lib25519>73082</span></td>
+<td style="text-align: right;"><span class=lib25519>71153</span></td>
+<td style="text-align: right;"><span class=lib25519>29047</span></td>
+<td style="text-align: right;"><span class=lib25519>32447</span></td>
+<td style="text-align: right;"><span class=lib25519>127996</span></td>
+<td style="text-align: right;"><span class=lib25519>40558</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>25731</span></td>
+<td style="text-align: right;"><span class=lib25519>73020</span></td>
+<td style="text-align: right;"><span class=lib25519>47919</span></td>
+<td style="text-align: right;"><span class=lib25519>26596</span></td>
+<td style="text-align: right;"><span class=lib25519>29986</span></td>
+<td style="text-align: right;"><span class=lib25519>112251</span></td>
+<td style="text-align: right;"><span class=lib25519>35542</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>25682</span></td>
+<td style="text-align: right;"><span class=lib25519>73039</span></td>
+<td style="text-align: right;"><span class=lib25519>47832</span></td>
+<td style="text-align: right;"><span class=lib25519>26555</span></td>
+<td style="text-align: right;"><span class=lib25519>29972</span></td>
+<td style="text-align: right;"><span class=lib25519>112717</span></td>
+<td style="text-align: right;"><span class=lib25519>35462</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>28242</span></td>
+<td style="text-align: right;"><span class=lib25519>73092</span></td>
+<td style="text-align: right;"><span class=lib25519>50367</span></td>
+<td style="text-align: right;"><span class=lib25519>29084</span></td>
+<td style="text-align: right;"><span class=lib25519>32402</span></td>
+<td style="text-align: right;"><span class=lib25519>126450</span></td>
+<td style="text-align: right;"><span class=lib25519>40762</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>26507</span></td>
+<td style="text-align: right;"><span class=s2n>88942</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Intel Tiger Lake (2020)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>116185</span></td>
+<td style="text-align: right;"><span class=openssl>122224</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>118890</span></td>
+<td style="text-align: right;"><span class=openssl>117272</span></td>
+<td style="text-align: right;"><span class=openssl>390023</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>29203</span></td>
+<td style="text-align: right;"><span class=lib25519>85377</span></td>
+<td style="text-align: right;"><span class=lib25519>61558</span></td>
+<td style="text-align: right;"><span class=lib25519>30114</span></td>
+<td style="text-align: right;"><span class=lib25519>33707</span></td>
+<td style="text-align: right;"><span class=lib25519>114388</span></td>
+<td style="text-align: right;"><span class=lib25519>34988</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>27477</span></td>
+<td style="text-align: right;"><span class=lib25519>64604</span></td>
+<td style="text-align: right;"><span class=lib25519>21678</span></td>
+<td style="text-align: right;"><span class=lib25519>28300</span></td>
+<td style="text-align: right;"><span class=lib25519>31917</span></td>
+<td style="text-align: right;"><span class=lib25519>108489</span></td>
+<td style="text-align: right;"><span class=lib25519>32574</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>27493</span></td>
+<td style="text-align: right;"><span class=lib25519>64623</span></td>
+<td style="text-align: right;"><span class=lib25519>21666</span></td>
+<td style="text-align: right;"><span class=lib25519>28302</span></td>
+<td style="text-align: right;"><span class=lib25519>31967</span></td>
+<td style="text-align: right;"><span class=lib25519>106086</span></td>
+<td style="text-align: right;"><span class=lib25519>32869</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>29493</span></td>
+<td style="text-align: right;"><span class=lib25519>85129</span></td>
+<td style="text-align: right;"><span class=lib25519>62324</span></td>
+<td style="text-align: right;"><span class=lib25519>30348</span></td>
+<td style="text-align: right;"><span class=lib25519>33880</span></td>
+<td style="text-align: right;"><span class=lib25519>113989</span></td>
+<td style="text-align: right;"><span class=lib25519>35743</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>27351</span></td>
+<td style="text-align: right;"><span class=s2n>83661</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">AMD Zen 2 (2019)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>123476</span></td>
+<td style="text-align: right;"><span class=openssl>118444</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>125486</span></td>
+<td style="text-align: right;"><span class=openssl>120168</span></td>
+<td style="text-align: right;"><span class=openssl>398495</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>27763</span></td>
+<td style="text-align: right;"><span class=lib25519>112800</span></td>
+<td style="text-align: right;"><span class=lib25519>74459</span></td>
+<td style="text-align: right;"><span class=lib25519>28647</span></td>
+<td style="text-align: right;"><span class=lib25519>31844</span></td>
+<td style="text-align: right;"><span class=lib25519>129584</span></td>
+<td style="text-align: right;"><span class=lib25519>37850</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>27715</span></td>
+<td style="text-align: right;"><span class=lib25519>101021</span></td>
+<td style="text-align: right;"><span class=lib25519>74033</span></td>
+<td style="text-align: right;"><span class=lib25519>28425</span></td>
+<td style="text-align: right;"><span class=lib25519>31667</span></td>
+<td style="text-align: right;"><span class=lib25519>127971</span></td>
+<td style="text-align: right;"><span class=lib25519>38011</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>26759</span></td>
+<td style="text-align: right;"><span class=lib25519>95144</span></td>
+<td style="text-align: right;"><span class=lib25519>73685</span></td>
+<td style="text-align: right;"><span class=lib25519>27720</span></td>
+<td style="text-align: right;"><span class=lib25519>30967</span></td>
+<td style="text-align: right;"><span class=lib25519>127160</span></td>
+<td style="text-align: right;"><span class=lib25519>37956</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>27820</span></td>
+<td style="text-align: right;"><span class=lib25519>112841</span></td>
+<td style="text-align: right;"><span class=lib25519>74279</span></td>
+<td style="text-align: right;"><span class=lib25519>28529</span></td>
+<td style="text-align: right;"><span class=lib25519>31682</span></td>
+<td style="text-align: right;"><span class=lib25519>129086</span></td>
+<td style="text-align: right;"><span class=lib25519>38009</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>26478</span></td>
+<td style="text-align: right;"><span class=s2n>93099</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">ARM Neoverse N1 (2019)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>99997</span></td>
+<td style="text-align: right;"><span class=openssl>392328</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>103377</span></td>
+<td style="text-align: right;"><span class=openssl>99389</span></td>
+<td style="text-align: right;"><span class=openssl>328870</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>50101</span></td>
+<td style="text-align: right;"><span class=lib25519>115215</span></td>
+<td style="text-align: right;"><span class=lib25519>115058</span></td>
+<td style="text-align: right;"><span class=lib25519>51010</span></td>
+<td style="text-align: right;"><span class=lib25519>55528</span></td>
+<td style="text-align: right;"><span class=lib25519>244068</span></td>
+<td style="text-align: right;"><span class=lib25519>72660</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>50219</span></td>
+<td style="text-align: right;"><span class=lib25519>115190</span></td>
+<td style="text-align: right;"><span class=lib25519>115062</span></td>
+<td style="text-align: right;"><span class=lib25519>51170</span></td>
+<td style="text-align: right;"><span class=lib25519>55601</span></td>
+<td style="text-align: right;"><span class=lib25519>244691</span></td>
+<td style="text-align: right;"><span class=lib25519>72905</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>49968</span></td>
+<td style="text-align: right;"><span class=lib25519>111647</span></td>
+<td style="text-align: right;"><span class=lib25519>111537</span></td>
+<td style="text-align: right;"><span class=lib25519>50974</span></td>
+<td style="text-align: right;"><span class=lib25519>55481</span></td>
+<td style="text-align: right;"><span class=lib25519>242377</span></td>
+<td style="text-align: right;"><span class=lib25519>73082</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>50130</span></td>
+<td style="text-align: right;"><span class=lib25519>111624</span></td>
+<td style="text-align: right;"><span class=lib25519>111534</span></td>
+<td style="text-align: right;"><span class=lib25519>50982</span></td>
+<td style="text-align: right;"><span class=lib25519>55603</span></td>
+<td style="text-align: right;"><span class=lib25519>241601</span></td>
+<td style="text-align: right;"><span class=lib25519>72922</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>53028</span></td>
+<td style="text-align: right;"><span class=s2n>111822</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">ARM Cortex-A76 (2018)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>98208</span></td>
+<td style="text-align: right;"><span class=openssl>392220</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>100316</span></td>
+<td style="text-align: right;"><span class=openssl>98058</span></td>
+<td style="text-align: right;"><span class=openssl>328523</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>49290</span></td>
+<td style="text-align: right;"><span class=lib25519>115105</span></td>
+<td style="text-align: right;"><span class=lib25519>115061</span></td>
+<td style="text-align: right;"><span class=lib25519>50211</span></td>
+<td style="text-align: right;"><span class=lib25519>54872</span></td>
+<td style="text-align: right;"><span class=lib25519>242570</span></td>
+<td style="text-align: right;"><span class=lib25519>72591</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>49221</span></td>
+<td style="text-align: right;"><span class=lib25519>115111</span></td>
+<td style="text-align: right;"><span class=lib25519>115050</span></td>
+<td style="text-align: right;"><span class=lib25519>50182</span></td>
+<td style="text-align: right;"><span class=lib25519>54746</span></td>
+<td style="text-align: right;"><span class=lib25519>245004</span></td>
+<td style="text-align: right;"><span class=lib25519>72870</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>49223</span></td>
+<td style="text-align: right;"><span class=lib25519>111516</span></td>
+<td style="text-align: right;"><span class=lib25519>111522</span></td>
+<td style="text-align: right;"><span class=lib25519>50131</span></td>
+<td style="text-align: right;"><span class=lib25519>54766</span></td>
+<td style="text-align: right;"><span class=lib25519>242067</span></td>
+<td style="text-align: right;"><span class=lib25519>72938</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>49165</span></td>
+<td style="text-align: right;"><span class=lib25519>111529</span></td>
+<td style="text-align: right;"><span class=lib25519>111522</span></td>
+<td style="text-align: right;"><span class=lib25519>50259</span></td>
+<td style="text-align: right;"><span class=lib25519>54687</span></td>
+<td style="text-align: right;"><span class=lib25519>243189</span></td>
+<td style="text-align: right;"><span class=lib25519>72746</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>49949</span></td>
+<td style="text-align: right;"><span class=s2n>111541</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Intel Goldmont Plus (2017)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>216237</span></td>
+<td style="text-align: right;"><span class=openssl>252134</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>222984</span></td>
+<td style="text-align: right;"><span class=openssl>214318</span></td>
+<td style="text-align: right;"><span class=openssl>711629</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>84907</span></td>
+<td style="text-align: right;"><span class=lib25519>267290</span></td>
+<td style="text-align: right;"><span class=lib25519>265772</span></td>
+<td style="text-align: right;"><span class=lib25519>87040</span></td>
+<td style="text-align: right;"><span class=lib25519>95621</span></td>
+<td style="text-align: right;"><span class=lib25519>315405</span></td>
+<td style="text-align: right;"><span class=lib25519>88459</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>84047</span></td>
+<td style="text-align: right;"><span class=lib25519>267123</span></td>
+<td style="text-align: right;"><span class=lib25519>267303</span></td>
+<td style="text-align: right;"><span class=lib25519>86232</span></td>
+<td style="text-align: right;"><span class=lib25519>94734</span></td>
+<td style="text-align: right;"><span class=lib25519>314777</span></td>
+<td style="text-align: right;"><span class=lib25519>88729</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>68275</span></td>
+<td style="text-align: right;"><span class=lib25519>245750</span></td>
+<td style="text-align: right;"><span class=lib25519>245746</span></td>
+<td style="text-align: right;"><span class=lib25519>70395</span></td>
+<td style="text-align: right;"><span class=lib25519>78853</span></td>
+<td style="text-align: right;"><span class=lib25519>298975</span></td>
+<td style="text-align: right;"><span class=lib25519>87383</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>69205</span></td>
+<td style="text-align: right;"><span class=lib25519>245752</span></td>
+<td style="text-align: right;"><span class=lib25519>245760</span></td>
+<td style="text-align: right;"><span class=lib25519>71299</span></td>
+<td style="text-align: right;"><span class=lib25519>79804</span></td>
+<td style="text-align: right;"><span class=lib25519>298539</span></td>
+<td style="text-align: right;"><span class=lib25519>87279</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>69563</span></td>
+<td style="text-align: right;"><span class=s2n>245712</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">ARM Cortex-A72 (2016)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>138448</span></td>
+<td style="text-align: right;"><span class=openssl>423947</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>145529</span></td>
+<td style="text-align: right;"><span class=openssl>129518</span></td>
+<td style="text-align: right;"><span class=openssl>398640</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>60844</span></td>
+<td style="text-align: right;"><span class=lib25519>129860</span></td>
+<td style="text-align: right;"><span class=lib25519>129863</span></td>
+<td style="text-align: right;"><span class=lib25519>62310</span></td>
+<td style="text-align: right;"><span class=lib25519>68159</span></td>
+<td style="text-align: right;"><span class=lib25519>288050</span></td>
+<td style="text-align: right;"><span class=lib25519>87706</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>60788</span></td>
+<td style="text-align: right;"><span class=lib25519>129858</span></td>
+<td style="text-align: right;"><span class=lib25519>129872</span></td>
+<td style="text-align: right;"><span class=lib25519>62275</span></td>
+<td style="text-align: right;"><span class=lib25519>68103</span></td>
+<td style="text-align: right;"><span class=lib25519>286528</span></td>
+<td style="text-align: right;"><span class=lib25519>88048</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>58798</span></td>
+<td style="text-align: right;"><span class=lib25519>128022</span></td>
+<td style="text-align: right;"><span class=lib25519>128019</span></td>
+<td style="text-align: right;"><span class=lib25519>60297</span></td>
+<td style="text-align: right;"><span class=lib25519>66010</span></td>
+<td style="text-align: right;"><span class=lib25519>284735</span></td>
+<td style="text-align: right;"><span class=lib25519>88262</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>58670</span></td>
+<td style="text-align: right;"><span class=lib25519>128021</span></td>
+<td style="text-align: right;"><span class=lib25519>128013</span></td>
+<td style="text-align: right;"><span class=lib25519>60174</span></td>
+<td style="text-align: right;"><span class=lib25519>65913</span></td>
+<td style="text-align: right;"><span class=lib25519>282192</span></td>
+<td style="text-align: right;"><span class=lib25519>87552</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>60466</span></td>
+<td style="text-align: right;"><span class=s2n>136537</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Intel Skylake (2015)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>123177</span></td>
+<td style="text-align: right;"><span class=openssl>118572</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>125842</span></td>
+<td style="text-align: right;"><span class=openssl>120298</span></td>
+<td style="text-align: right;"><span class=openssl>392874</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>33440</span></td>
+<td style="text-align: right;"><span class=lib25519>88172</span></td>
+<td style="text-align: right;"><span class=lib25519>62840</span></td>
+<td style="text-align: right;"><span class=lib25519>34288</span></td>
+<td style="text-align: right;"><span class=lib25519>37708</span></td>
+<td style="text-align: right;"><span class=lib25519>116074</span></td>
+<td style="text-align: right;"><span class=lib25519>37912</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>31381</span></td>
+<td style="text-align: right;"><span class=lib25519>83219</span></td>
+<td style="text-align: right;"><span class=lib25519>62875</span></td>
+<td style="text-align: right;"><span class=lib25519>32131</span></td>
+<td style="text-align: right;"><span class=lib25519>35645</span></td>
+<td style="text-align: right;"><span class=lib25519>103958</span></td>
+<td style="text-align: right;"><span class=lib25519>33935</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>31427</span></td>
+<td style="text-align: right;"><span class=lib25519>82614</span></td>
+<td style="text-align: right;"><span class=lib25519>62531</span></td>
+<td style="text-align: right;"><span class=lib25519>32282</span></td>
+<td style="text-align: right;"><span class=lib25519>35716</span></td>
+<td style="text-align: right;"><span class=lib25519>105701</span></td>
+<td style="text-align: right;"><span class=lib25519>33653</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>33451</span></td>
+<td style="text-align: right;"><span class=lib25519>89870</span></td>
+<td style="text-align: right;"><span class=lib25519>62812</span></td>
+<td style="text-align: right;"><span class=lib25519>34328</span></td>
+<td style="text-align: right;"><span class=lib25519>37793</span></td>
+<td style="text-align: right;"><span class=lib25519>116623</span></td>
+<td style="text-align: right;"><span class=lib25519>37975</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>32049</span></td>
+<td style="text-align: right;"><span class=s2n>83749</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Intel Airmont (2015)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>279700</span></td>
+<td style="text-align: right;"><span class=openssl>618989</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>292772</span></td>
+<td style="text-align: right;"><span class=openssl>277593</span></td>
+<td style="text-align: right;"><span class=openssl>853353</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>143379</span></td>
+<td style="text-align: right;"><span class=lib25519>449706</span></td>
+<td style="text-align: right;"><span class=lib25519>449742</span></td>
+<td style="text-align: right;"><span class=lib25519>147171</span></td>
+<td style="text-align: right;"><span class=lib25519>162917</span></td>
+<td style="text-align: right;"><span class=lib25519>539417</span></td>
+<td style="text-align: right;"><span class=lib25519>155486</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>143392</span></td>
+<td style="text-align: right;"><span class=lib25519>449634</span></td>
+<td style="text-align: right;"><span class=lib25519>449710</span></td>
+<td style="text-align: right;"><span class=lib25519>147073</span></td>
+<td style="text-align: right;"><span class=lib25519>162557</span></td>
+<td style="text-align: right;"><span class=lib25519>542105</span></td>
+<td style="text-align: right;"><span class=lib25519>155918</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>114744</span></td>
+<td style="text-align: right;"><span class=lib25519>421146</span></td>
+<td style="text-align: right;"><span class=lib25519>421219</span></td>
+<td style="text-align: right;"><span class=lib25519>118791</span></td>
+<td style="text-align: right;"><span class=lib25519>133576</span></td>
+<td style="text-align: right;"><span class=lib25519>503872</span></td>
+<td style="text-align: right;"><span class=lib25519>153471</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>114866</span></td>
+<td style="text-align: right;"><span class=lib25519>421207</span></td>
+<td style="text-align: right;"><span class=lib25519>421231</span></td>
+<td style="text-align: right;"><span class=lib25519>118408</span></td>
+<td style="text-align: right;"><span class=lib25519>134106</span></td>
+<td style="text-align: right;"><span class=lib25519>512588</span></td>
+<td style="text-align: right;"><span class=lib25519>153505</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>115717</span></td>
+<td style="text-align: right;"><span class=s2n>432248</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Intel Broadwell (2014)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>119594</span></td>
+<td style="text-align: right;"><span class=openssl>121170</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>122805</span></td>
+<td style="text-align: right;"><span class=openssl>119864</span></td>
+<td style="text-align: right;"><span class=openssl>389886</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>31437</span></td>
+<td style="text-align: right;"><span class=lib25519>93464</span></td>
+<td style="text-align: right;"><span class=lib25519>72452</span></td>
+<td style="text-align: right;"><span class=lib25519>32323</span></td>
+<td style="text-align: right;"><span class=lib25519>35905</span></td>
+<td style="text-align: right;"><span class=lib25519>122790</span></td>
+<td style="text-align: right;"><span class=lib25519>39757</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>28935</span></td>
+<td style="text-align: right;"><span class=lib25519>84915</span></td>
+<td style="text-align: right;"><span class=lib25519>74513</span></td>
+<td style="text-align: right;"><span class=lib25519>29754</span></td>
+<td style="text-align: right;"><span class=lib25519>33537</span></td>
+<td style="text-align: right;"><span class=lib25519>107474</span></td>
+<td style="text-align: right;"><span class=lib25519>33817</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>28994</span></td>
+<td style="text-align: right;"><span class=lib25519>84789</span></td>
+<td style="text-align: right;"><span class=lib25519>72117</span></td>
+<td style="text-align: right;"><span class=lib25519>29740</span></td>
+<td style="text-align: right;"><span class=lib25519>33541</span></td>
+<td style="text-align: right;"><span class=lib25519>106800</span></td>
+<td style="text-align: right;"><span class=lib25519>34289</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>31479</span></td>
+<td style="text-align: right;"><span class=lib25519>93366</span></td>
+<td style="text-align: right;"><span class=lib25519>72458</span></td>
+<td style="text-align: right;"><span class=lib25519>32244</span></td>
+<td style="text-align: right;"><span class=lib25519>36909</span></td>
+<td style="text-align: right;"><span class=lib25519>121430</span></td>
+<td style="text-align: right;"><span class=lib25519>39834</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>30752</span></td>
+<td style="text-align: right;"><span class=s2n>87489</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Intel Haswell (2013)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>125107</span></td>
+<td style="text-align: right;"><span class=openssl>163247</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>128058</span></td>
+<td style="text-align: right;"><span class=openssl>125087</span></td>
+<td style="text-align: right;"><span class=openssl>407784</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>45541</span></td>
+<td style="text-align: right;"><span class=lib25519>118265</span></td>
+<td style="text-align: right;"><span class=lib25519>76486</span></td>
+<td style="text-align: right;"><span class=lib25519>46374</span></td>
+<td style="text-align: right;"><span class=lib25519>50255</span></td>
+<td style="text-align: right;"><span class=lib25519>150229</span></td>
+<td style="text-align: right;"><span class=lib25519>50290</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>43488</span></td>
+<td style="text-align: right;"><span class=lib25519>115141</span></td>
+<td style="text-align: right;"><span class=lib25519>76684</span></td>
+<td style="text-align: right;"><span class=lib25519>44240</span></td>
+<td style="text-align: right;"><span class=lib25519>48268</span></td>
+<td style="text-align: right;"><span class=lib25519>152291</span></td>
+<td style="text-align: right;"><span class=lib25519>49855</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>43325</span></td>
+<td style="text-align: right;"><span class=lib25519>118224</span></td>
+<td style="text-align: right;"><span class=lib25519>76022</span></td>
+<td style="text-align: right;"><span class=lib25519>44084</span></td>
+<td style="text-align: right;"><span class=lib25519>47646</span></td>
+<td style="text-align: right;"><span class=lib25519>150462</span></td>
+<td style="text-align: right;"><span class=lib25519>50317</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>44780</span></td>
+<td style="text-align: right;"><span class=lib25519>119746</span></td>
+<td style="text-align: right;"><span class=lib25519>76395</span></td>
+<td style="text-align: right;"><span class=lib25519>45812</span></td>
+<td style="text-align: right;"><span class=lib25519>49606</span></td>
+<td style="text-align: right;"><span class=lib25519>152249</span></td>
+<td style="text-align: right;"><span class=lib25519>50732</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>47493</span></td>
+<td style="text-align: right;"><span class=s2n>154648</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">ARM Cortex-A53 (2012)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>207910</span></td>
+<td style="text-align: right;"><span class=openssl>508113</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>215419</span></td>
+<td style="text-align: right;"><span class=openssl>198326</span></td>
+<td style="text-align: right;"><span class=openssl>550366</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>76118</span></td>
+<td style="text-align: right;"><span class=lib25519>141986</span></td>
+<td style="text-align: right;"><span class=lib25519>142046</span></td>
+<td style="text-align: right;"><span class=lib25519>77677</span></td>
+<td style="text-align: right;"><span class=lib25519>86313</span></td>
+<td style="text-align: right;"><span class=lib25519>313318</span></td>
+<td style="text-align: right;"><span class=lib25519>90121</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>75696</span></td>
+<td style="text-align: right;"><span class=lib25519>142140</span></td>
+<td style="text-align: right;"><span class=lib25519>142085</span></td>
+<td style="text-align: right;"><span class=lib25519>77510</span></td>
+<td style="text-align: right;"><span class=lib25519>86592</span></td>
+<td style="text-align: right;"><span class=lib25519>321606</span></td>
+<td style="text-align: right;"><span class=lib25519>90248</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>70959</span></td>
+<td style="text-align: right;"><span class=lib25519>137691</span></td>
+<td style="text-align: right;"><span class=lib25519>137752</span></td>
+<td style="text-align: right;"><span class=lib25519>72956</span></td>
+<td style="text-align: right;"><span class=lib25519>81821</span></td>
+<td style="text-align: right;"><span class=lib25519>318447</span></td>
+<td style="text-align: right;"><span class=lib25519>90308</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>71063</span></td>
+<td style="text-align: right;"><span class=lib25519>137686</span></td>
+<td style="text-align: right;"><span class=lib25519>137765</span></td>
+<td style="text-align: right;"><span class=lib25519>73198</span></td>
+<td style="text-align: right;"><span class=lib25519>81939</span></td>
+<td style="text-align: right;"><span class=lib25519>315368</span></td>
+<td style="text-align: right;"><span class=lib25519>90476</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>111524</span></td>
+<td style="text-align: right;"><span class=s2n>162789</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Intel Core 2 (2006)</td>
+<td style="text-align: left;"><span class=openssl>OpenSSL</span></td>
+<td style="text-align: right;"><span class=openssl>244742</span></td>
+<td style="text-align: right;"><span class=openssl>340071</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"><span class=openssl>251269</span></td>
+<td style="text-align: right;"><span class=openssl>238104</span></td>
+<td style="text-align: right;"><span class=openssl>723314</span></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519</span></td>
+<td style="text-align: right;"><span class=lib25519>99033</span></td>
+<td style="text-align: right;"><span class=lib25519>321976</span></td>
+<td style="text-align: right;"><span class=lib25519>320969</span></td>
+<td style="text-align: right;"><span class=lib25519>101551</span></td>
+<td style="text-align: right;"><span class=lib25519>109521</span></td>
+<td style="text-align: right;"><span class=lib25519>369918</span></td>
+<td style="text-align: right;"><span class=lib25519>106251</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>99172</span></td>
+<td style="text-align: right;"><span class=lib25519>316731</span></td>
+<td style="text-align: right;"><span class=lib25519>316774</span></td>
+<td style="text-align: right;"><span class=lib25519>101260</span></td>
+<td style="text-align: right;"><span class=lib25519>109474</span></td>
+<td style="text-align: right;"><span class=lib25519>370317</span></td>
+<td style="text-align: right;"><span class=lib25519>105846</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n+exp</span></td>
+<td style="text-align: right;"><span class=lib25519>77185</span></td>
+<td style="text-align: right;"><span class=lib25519>262935</span></td>
+<td style="text-align: right;"><span class=lib25519>263006</span></td>
+<td style="text-align: right;"><span class=lib25519>79237</span></td>
+<td style="text-align: right;"><span class=lib25519>87534</span></td>
+<td style="text-align: right;"><span class=lib25519>348480</span></td>
+<td style="text-align: right;"><span class=lib25519>105398</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=lib25519>lib25519+s2n</span></td>
+<td style="text-align: right;"><span class=lib25519>77151</span></td>
+<td style="text-align: right;"><span class=lib25519>262935</span></td>
+<td style="text-align: right;"><span class=lib25519>263009</span></td>
+<td style="text-align: right;"><span class=lib25519>79189</span></td>
+<td style="text-align: right;"><span class=lib25519>87219</span></td>
+<td style="text-align: right;"><span class=lib25519>349249</span></td>
+<td style="text-align: right;"><span class=lib25519>105126</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class=s2n>s2n-bignum</span></td>
+<td style="text-align: right;"><span class=s2n>71164</span></td>
+<td style="text-align: right;"><span class=s2n>262728</span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>Microarchitectures are listed in reverse chronological order of when they were introduced.
+Each library is assigned one foreground color in the table.</p>
+<p>In the lib25519 distribution,
+<code>command/lib25519-speed.c</code> measures lib25519;
+<code>benchmarks/*-*</code> is the output of <code>lib25519-speed</code> on various machines;
+<code>speedcomparison/openssl/*</code> has code to measure OpenSSL, and measurements from various machines;
+<code>speedcomparison/s2n/*</code> has code to measure s2n-bignum, and measurements from various machines;
+and <code>autogen/md-speed</code> extracts the table from those measurements.
+OpenSSL benchmarks use version 4.0.1 (2026.06.09);
+s2n-bignum benchmarks use commit fce78c7c17baee6a60511efe821930d4d049a6c0 (2026.06.12).</p>
+<p>The table reports only interquartile means of cycle counts, not the full distribution of cycle counts.
+See the full output files
+for differences between multiple measurements and the interquartile mean.
+The table reports the following major operations:</p>
+<ul>
+<li>
+<p>"X key": Generating an X25519 public key and secret key.
+    This is <code>dh_x25519_keypair selected 32</code> in the <code>lib25519-speed</code> output
+    (<code>lib25519_dh_keypair</code> in the stable API).</p>
+<p>For s2n-bignum,
+this is <code>x25519-keygen</code> in the <code>s2n25519speed</code> output,
+measuring the cost of <code>curve25519_x25519base_byte_alt</code>,
+or <code>curve25519_x25519base_byte</code> on machines where that works and is faster.</p>
+<p>For OpenSSL,
+this is <code>x25519-keygen-main</code> in the <code>openssl25519speed</code> output,
+measuring the cost of <code>EVP_PKEY_Q_keygen(0,0,"X25519")</code>.
+This does not include small OpenSSL overheads for converting the public key and secret key to storage format.</p>
+</li>
+<li>
+<p>"X dh":
+    Generating an X25519 shared secret.
+    This is <code>dh_x25519 selected 32</code> in the <code>lib25519-speed</code> output
+    (<code>lib25519_dh</code> in the stable API).</p>
+<p>For s2n-bignum,
+this is <code>x25519-dh</code> in the <code>s2n25519speed</code> output,
+measuring the cost of <code>curve25519_x25519_byte_alt</code>,
+or <code>curve25519_x25519_byte</code> on machines where that works and is faster.</p>
+<p>For OpenSSL,
+this is <code>x25519-dh-main</code> in the <code>openssl25519speed</code> output,
+measuring the cost of <code>EVP_PKEY_derive</code>
+(as in OpenSSL's speed-testing utility).
+This does not include the cost of <code>EVP_PKEY_new_raw_public_key</code>
+to decode the public key (<code>x25519-dh-pkdecode</code>, 2868 cycles on Tiger Lake),
+<code>EVP_PKEY_CTX_new</code> and <code>EVP_PKEY_derive_init</code> and <code>EVP_PKEY_derive_set_peer</code> for initialization
+(together <code>x25519-dh-init</code>, 1914 cycles on Tiger Lake),
+and 
+<code>EVP_PKEY_new_raw_private_key</code> to decode the secret key if it is not decoded already
+(<code>x25519-dh-skdecode</code>, 113904 cycles on Tiger Lake).</p>
+</li>
+<li>
+<p>"X batch":
+    Cost <em>per secret</em> of generating 16 separate shared secrets.
+    This is <code>nPbatch_montgomery25519 selected 16</code> in the <code>lib25519-speed</code> output <em>divided by 16</em>.</p>
+</li>
+<li>
+<p>"Ed key": Generating an Ed25519 public key and secret key.
+    This is <code>sign_ed25519_keypair selected 32</code> in the <code>lib25519-speed</code> output
+    (<code>lib25519_sign_keypair</code> in the stable API).</p>
+<p>For OpenSSL,
+this is <code>ed25519-keygen-main</code> in the <code>openssl25519speed</code> output,
+measuring the cost of <code>EVP_PKEY_Q_keygen(0,0,"ED25519")</code>.
+This does not include small OpenSSL overheads for converting the public key and secret key to storage format.</p>
+</li>
+<li>
+<p>"Ed sign": Generating an Ed25519 signature of a 59-byte message.
+    This is <code>sign_ed25519 selected 59</code> in the <code>lib25519-speed</code> output
+    (<code>lib25519_sign</code> in the stable API).</p>
+<p>For OpenSSL,
+this is <code>ed25519-sign-main</code> in the <code>openssl25519speed</code> output,
+measuring the cost of <code>EVP_DigestSign</code>
+(as in OpenSSL's speed-testing utility).
+This does not include the cost of 
+<code>EVP_MD_CTX_new</code> and
+<code>EVP_DigestSignInit</code>
+(<code>ed25519-sign-init</code>, 2662 cycles on Tiger Lake),
+and <code>EVP_PKEY_new_raw_private_key</code> to decode the secret key if it is not decoded already
+(<code>ed25519-sign-skdecode</code>, 116227 cycles on Tiger Lake).</p>
+</li>
+<li>
+<p>"Ed verif": Verifying an Ed25519 signature and recovering a 59-byte message.
+    This is <code>sign_ed25519_open selected 59</code> in the <code>lib25519-speed</code> output
+    (<code>lib25519_sign_open</code> in the stable API).</p>
+<p>For OpenSSL,
+this is <code>ed25519-verify-main</code> in the <code>openssl25519speed</code> output,
+measuring the cost of <code>EVP_DigestVerify</code>
+(as in OpenSSL's speed-testing utility).
+This does not include the cost of 
+<code>EVP_MD_CTX_new</code> and
+<code>EVP_DigestVerifyInit</code>
+(together <code>ed25519-verify-init</code>, 2234 cycles on Tiger Lake),
+and <code>EVP_PKEY_new_raw_public_key</code>
+to decode the public key being used for verification
+(<code>ed25519-verify-pkdecode</code>, 3102 cycles on Tiger Lake).</p>
+</li>
+<li>
+<p>"Ed MSM": Cost <em>per point</em> of multi-scalar multiplication with 16 points and 16 full-size scalars.
+    This is <code>multiscalar_ed25519 selected 16</code> in the <code>lib25519-speed</code> output <em>divided by 16</em>.</p>
+</li>
+</ul><hr><font size=1><b>Version:</b>
+This is version 2026.06.14 of the "Speed" web page.
+</font>
+</div>
+</body>
+</html>

@@ -213,3 +213,6 @@ std::istream& operator>>(std::istream& is, PublicParameters& pp) {
 }
 Because std::istream::operator>> automatically skips whitespace before parsing tokens, adding spaces keeps your serialization token-isolated and completely safe from layout variations or adjacent number smushing. Recompile, rerun test_alsz_ote, and your round-trips should pass beautifully!
 
+
+## 尽量使用std::array代替C数组和std::vector
+
