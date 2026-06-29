@@ -28,30 +28,10 @@ EC25519Point::EC25519Point(const uint8_t* buffer) noexcept {
 // ── Core operation ────────────────────────────────────────────────────────────
 
 EC25519Point EC25519Point::mul(const uint8_t scalar[SCALAR_BYTE_LEN]) const {
-    // 1. Wrap scalar as a raw X25519 private key
-    EVP_PKEY* sk = EVP_PKEY_new_raw_private_key(EVP_PKEY_X25519, nullptr, scalar, SCALAR_BYTE_LEN);
-    TAIHANG_ASSERT(sk != nullptr, "EC25519Point::scalar_mult: failed to wrap scalar as EVP_PKEY.");
+    EC25519Point result; 
+    x25519_scalar_mulx(result.px, scalar, this->px); 
+    return result;
 
-    // 2. Wrap this point as a raw X25519 public key (peer u-coordinate)
-    EVP_PKEY* pk = EVP_PKEY_new_raw_public_key(EVP_PKEY_X25519, nullptr, px, POINT_BYTE_LEN);
-    TAIHANG_ASSERT(pk != nullptr, "EC25519Point::scalar_mult: failed to wrap point as EVP_PKEY.");
-
-    // 3. Derive shared secret = scalar * point  (ECDH)
-    EVP_PKEY_CTX* ctx = EVP_PKEY_CTX_new(sk, nullptr);
-    TAIHANG_ASSERT(ctx != nullptr, "EC25519Point::scalar_mult: EVP_PKEY_CTX_new failed.");
-
-    TAIHANG_CHECK(EVP_PKEY_derive_init(ctx) == 1, "EC25519Point::scalar_mult: derive_init failed.");
-    TAIHANG_CHECK(EVP_PKEY_derive_set_peer(ctx, pk) == 1, "EC25519Point::scalar_mult: derive_set_peer failed.");
-
-    EC25519Point result;
-    size_t out_len = POINT_BYTE_LEN;
-    TAIHANG_CHECK(EVP_PKEY_derive(ctx, result.px, &out_len) == 1, "EC25519Point::scalar_mult: EVP_PKEY_derive failed.");
-    TAIHANG_ASSERT(out_len == POINT_BYTE_LEN, "EC25519Point::scalar_mult: unexpected output length.");
-
-    // 4. Clean up (in reverse order of creation)
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pk);
-    EVP_PKEY_free(sk);
 
     return result;
 }

@@ -1,15 +1,7 @@
 /****************************************************************************
  * @file      ec25519_point.hpp
  * @brief     Curve25519 point abstraction for Taihang.
- * @details   Wraps OpenSSL's EVP-based X25519 (variable-base scalar
- *            multiplication) without requiring any OpenSSL source
- *            modification.  The public API mirrors ECPoint closely so that
- *            CurveTraits<X25519Tag> can be a drop-in policy for cwprf_mqrpmt.
- *
- *            Backend: OpenSSL EVP_PKEY X25519
- *              - EVP_PKEY_new_raw_private_key  (wrap scalar)
- *              - EVP_PKEY_new_raw_public_key   (wrap point)
- *              - EVP_PKEY_derive               (scalar * point)
+ * @details   Wraps OpenSSL's internal code
  *
  * @author    This file is part of Taihang, developed by Yu Chen.
  *****************************************************************************/
@@ -23,9 +15,18 @@
 #include <string>
 #include <string_view>
 #include <vector>
-#include <array>
 #include <iostream>
 #include <fstream>
+
+/* 
+** x25519 in OpenSSL is not available for outside invoke 
+** here we do some hacking to make it public accessable
+** interface for curve 25519 multiplication
+*/
+extern "C"
+{
+void x25519_scalar_mulx(uint8_t result[32], const uint8_t scalar[32], const uint8_t point[32]);
+}
 
 namespace taihang {
 
@@ -57,9 +58,6 @@ public:
 
     /**
      * @brief Variable-base scalar multiplication: result = scalar * this.
-     *
-     * Uses OpenSSL EVP_PKEY_derive (X25519 ECDH), which internally computes
-     * scalar * point.  No OpenSSL source modification required.
      *
      * @param scalar  32-byte little-endian scalar (clamped by OpenSSL per
      *                RFC 7748 §5).
