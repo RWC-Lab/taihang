@@ -205,6 +205,52 @@ BigInt BigInt::mod_square_root(const BigInt& modulus) const {
     return result;
 }
 
+
+BigInt& BigInt::operator+=(const BigInt& other)
+{
+    int ret = BN_add(this->bn_ptr, this->bn_ptr, other.bn_ptr);
+    TAIHANG_ASSERT(ret == 1, "BigInt::operator+= failed.");
+    return *this;
+}
+
+BigInt& BigInt::operator-=(const BigInt& other)
+{
+    int ret = BN_sub(this->bn_ptr, this->bn_ptr, other.bn_ptr);
+    TAIHANG_ASSERT(ret == 1, "BigInt::operator-= failed.");
+    return *this;
+}
+
+BigInt& BigInt::operator*=(const BigInt& other)
+{
+    BN_CTX* ctx = BnContext::get();
+    int ret = BN_mul(this->bn_ptr, this->bn_ptr, other.bn_ptr, ctx);
+    TAIHANG_ASSERT(ret == 1, "BigInt::operator*= failed.");
+    return *this;
+}
+
+BigInt& BigInt::operator/=(const BigInt& other)
+{
+    BN_CTX* ctx = BnContext::get();
+    int ret = BN_div(this->bn_ptr, nullptr, this->bn_ptr, other.bn_ptr, ctx);
+    TAIHANG_ASSERT(ret == 1, "BigInt::operator/= failed.");
+    return *this;
+}
+
+BigInt& BigInt::operator<<=(int n)
+{
+    int ret = BN_lshift(this->bn_ptr, this->bn_ptr, n);
+    TAIHANG_ASSERT(ret == 1, "BigInt::operator<<= failed.");
+    return *this;
+}
+
+BigInt& BigInt::operator>>=(int n)
+{
+    int ret = BN_rshift(this->bn_ptr, this->bn_ptr, n);
+    TAIHANG_ASSERT(ret == 1, "BigInt::operator>>= failed.");
+    return *this;
+}
+
+
 BigInt BigInt::get_last_n_bits(int n) const {
     // If n is 0, return 0
     if (n <= 0) return BigInt(0ULL);
@@ -309,9 +355,8 @@ BigInt gen_random_bigint_less_than(const BigInt& max) {
 
 std::vector<BigInt> gen_random_bigint_vector_less_than(size_t len, const BigInt& modulus, int num_threads) {
     std::vector<BigInt> vec_result(len);
-    int threads = (num_threads > 0) ? num_threads : omp_get_max_threads();
     
-    #pragma omp parallel for num_threads(threads)
+    #pragma omp parallel for num_threads(config::thread_num)
     for (size_t i = 0; i < len; ++i) {
         vec_result[i] = gen_random_bigint_less_than(modulus);
     }

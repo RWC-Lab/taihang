@@ -11,6 +11,7 @@
 
 #include <taihang/crypto/crypto_hash.hpp>
 
+
 namespace taihang {
 
 /**
@@ -43,7 +44,6 @@ extern bool use_point_compression;
  * heavy operations like Multi-Scalar Multiplication (MSM).
  */
 extern int thread_num;
-
 
 } // namespace config
 } // namespace taihang

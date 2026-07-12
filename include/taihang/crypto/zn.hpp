@@ -60,7 +60,11 @@ public:
     // --- Lifecycle ---
     // Default constructor needed for vectors, but leaves object in invalid state until assigned
     ZnElement(); 
-    
+
+    // New constructor implementation
+    ZnElement(const Zn* field); 
+    ZnElement(std::shared_ptr<Zn> field);
+
     // Main constructor used by the Zn factory
     ZnElement(const Zn* field, const BigInt& val);
     ZnElement(const Zn& field, const BigInt& val);
@@ -95,6 +99,12 @@ public:
     inline ZnElement operator-(const ZnElement& other) const { return sub(other); }
     inline ZnElement operator*(const ZnElement& other) const { return mul(other); }
     inline ZnElement operator/(const ZnElement& other) const { return mul(other.inv()); }
+
+
+    ZnElement& operator+=(const ZnElement& other);
+    ZnElement& operator-=(const ZnElement& other);
+    ZnElement& operator*=(const ZnElement& other);
+    ZnElement& operator/=(const ZnElement& other);
     
     // Unary minus
     inline ZnElement operator-() const { return neg(); }
@@ -110,7 +120,10 @@ public:
     std::string to_string(Base base = Base::Hex) const;
     std::vector<uint8_t> to_bytes() const;
     void from_bytes(const uint8_t* buffer, size_t len); 
+    void from_bytes(const std::vector<uint8_t> buffer); 
 };
+
+std::vector<ZnElement> gen_random_znelement_vector(const Zn& field, size_t len); 
 
 } // namespace taihang
 

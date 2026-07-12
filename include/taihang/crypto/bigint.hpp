@@ -79,6 +79,15 @@ public:
     inline BigInt operator*(const BigInt& other) const { return mul(other); }
     inline BigInt operator/(const BigInt& other) const { return div(other); }
     inline BigInt operator%(const BigInt& m) const { return mod(m); }
+
+    BigInt& operator+=(const BigInt& other);
+    BigInt& operator-=(const BigInt& other);
+
+    BigInt& operator*=(const BigInt& other);
+    BigInt& operator/=(const BigInt& other);
+
+    BigInt& operator<<=(int n); 
+    BigInt& operator>>=(int n);
     
     inline bool operator==(const BigInt& other) const { return compare_to(other) == 0; }
     inline bool operator!=(const BigInt& other) const { return compare_to(other) != 0; }

@@ -29,7 +29,12 @@ ZnElement Zn::gen_random() const {
 
 // --- ZnElement (Instance) Implementation ---
 
+
 ZnElement::ZnElement() : value(BigInt(0ULL)), field_ctx(nullptr) {}
+
+ZnElement::ZnElement(const Zn* field) : value(BigInt(0ULL)), field_ctx(field) {}
+
+ZnElement::ZnElement(std::shared_ptr<Zn> field) : ZnElement(field.get()) {}
 
 ZnElement::ZnElement(const Zn* input_field_ctx, const BigInt& val) 
     :  value(val), field_ctx(input_field_ctx) {
@@ -68,6 +73,39 @@ ZnElement& ZnElement::operator=(ZnElement&& other) noexcept {
     }
     return *this;
 }
+
+ZnElement& ZnElement::operator+=(const ZnElement& other)
+{
+    TAIHANG_ASSERT(field_ctx == other.field_ctx, "ZnElement: Field context mismatch in operator+=");
+
+    value = value.mod_add(other.value, field_ctx->modulus);
+    return *this;
+}
+
+ZnElement& ZnElement::operator-=(const ZnElement& other)
+{
+    TAIHANG_ASSERT(field_ctx == other.field_ctx, "ZnElement: Field context mismatch in operator-=");
+
+    value = value.mod_sub(other.value, field_ctx->modulus);
+    return *this;
+}
+
+ZnElement& ZnElement::operator*=(const ZnElement& other)
+{
+    TAIHANG_ASSERT(field_ctx == other.field_ctx, "ZnElement: Field context mismatch in operator*=");
+
+    value = value.mod_mul(other.value, field_ctx->modulus);
+    return *this;
+}
+
+ZnElement& ZnElement::operator/=(const ZnElement& other)
+{
+    TAIHANG_ASSERT(field_ctx == other.field_ctx, "ZnElement: Field context mismatch in operator/=");
+
+    value = value.mod_mul(other.value.mod_inverse(field_ctx->modulus), field_ctx->modulus);
+    return *this;
+}
+
 
 // --- Core Arithmetic ---
 
@@ -138,5 +176,30 @@ void ZnElement::from_bytes(const uint8_t* buffer, size_t len) {
     if (BN_bin2bn(buffer, static_cast<int>(len), this->value.bn_ptr) == nullptr) {
         TAIHANG_ASSERT(false, "ZnElement: from_bytes failed.");
     }
+}
+
+void ZnElement::from_bytes(const std::vector<uint8_t> buffer) {
+    TAIHANG_ASSERT(buffer.size() != 0, "ZnElement: from_bytes received null.");
+    TAIHANG_ASSERT(field_ctx != nullptr, "ZnElement: Cannot deserialize without a valid field context.");
+
+    TAIHANG_ASSERT(buffer.size() == field_ctx->element_byte_len, "ZnElement: from_bytes length mismatch.");
+    if (BN_bin2bn(buffer.data(), static_cast<int>(buffer.size()), this->value.bn_ptr) == nullptr) {
+        TAIHANG_ASSERT(false, "ZnElement: from_bytes failed.");
+    }
 } 
+
+
+std::vector<ZnElement> gen_random_znelement_vector(const Zn& field, size_t len) {
+    // Requires the zero-argument default constructor we discussed earlier to exist.
+    std::vector<ZnElement> vec_result(len);
+    
+    #pragma omp parallel for num_threads(config::thread_num)
+    for (size_t i = 0; i < len; ++i) {
+        // Generates the random element and uses the move assignment operator
+        vec_result[i] = field.gen_random(); 
+    }
+    
+    return vec_result;
+}
+
 } // namespace taihang
