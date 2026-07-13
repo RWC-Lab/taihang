@@ -133,6 +133,16 @@ public:
 BigInt gen_random_bigint_less_than(const BigInt& max);
 
 /**
+ * @brief Generate a random prime of exactly bit_len bits.
+ *
+ * Internally uses OpenSSL BN_generate_prime_ex().
+ *
+ * @param bit_len Bit length of the prime.
+ * @return A random prime with exactly bit_len bits.
+ */
+BigInt gen_random_prime(size_t bit_len);
+
+/**
  * @brief Derives a BigInt from a hash of the input data.
  */
 template <cryptohash::Provider Algo = kDefaultHash>

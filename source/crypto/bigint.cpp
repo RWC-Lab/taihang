@@ -361,6 +361,8 @@ void BigInt::from_dec(const std::string& dec_str) {
 
 // --- Random Generation ---
 
+
+
 BigInt gen_random_bigint_less_than(const BigInt& max) {
     BigInt result;
     int ret = BN_rand_range(result.bn_ptr, max.bn_ptr); 
@@ -376,6 +378,24 @@ std::vector<BigInt> gen_random_bigint_vector_less_than(size_t len, const BigInt&
         vec_result[i] = gen_random_bigint_less_than(modulus);
     }
     return vec_result;
+}
+
+BigInt gen_random_prime(size_t bit_len){
+    TAIHANG_ASSERT(bit_len >= 2, "Prime bit length must be at least 2.");
+
+    BigInt p;
+
+    int success = BN_generate_prime_ex(
+        p.bn_ptr,
+        static_cast<int>(bit_len),
+        0,          // not a safe prime
+        nullptr,    // no modular constraint
+        nullptr,
+        nullptr);
+
+    TAIHANG_ASSERT(success == 1, "BN_generate_prime_ex() failed.");
+
+    return p;
 }
 
 // --- Status & Tests ---
