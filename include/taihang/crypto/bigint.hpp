@@ -57,6 +57,8 @@ public:
     BigInt exp(const BigInt& exponent) const;
 
     // --- Modular Arithmetic ---
+    BigInt gcd(const BigInt& other) const;
+
     BigInt mod(const BigInt& modulus) const;
     BigInt mod_add(const BigInt& other, const BigInt& modulus) const;
     BigInt mod_sub(const BigInt& other, const BigInt& modulus) const;

@@ -92,7 +92,7 @@ Taihang follows a strict naming convention to maintain a professional and scanna
 | **Types / Classes** | `PascalCase` | `ZnElement`, `ECPoint` |
 | **Functions** | `snake_case` | `get_zero()`, `to_bytes()` |
 | **Variables** | `snake_case` | `modulus`, `element_count` |
-| **Members** | `snake_case` | `this->value`, `field_ctx` |
+| **Members** | `snake_case` | `this->value`, `ring_ctx` |
 | **Constants** | `kPascalCase` | `kDefaultSecurityParam` |
 | **Templates** | `PascalCase` | `template <typename T>` |
 | **Macros** | `ALL_CAPS` | `TAIHANG_ASSERT` |

@@ -105,7 +105,7 @@ void NetIO::buffer(const EC25519Point& a) {
 
 void NetIO::buffer(const ZnElement& a) {
     size_t offset = send_buffer.size();
-    size_t element_byte_len = a.field_ctx->element_byte_len;
+    size_t element_byte_len = a.ring_ctx->element_byte_len;
     send_buffer.resize(offset + element_byte_len);
     uint8_t* dst = send_buffer.data() + offset;
     BN_bn2binpad(a.value.bn_ptr, dst, element_byte_len);
@@ -320,7 +320,7 @@ void NetIO::recv(EC25519Point& a) {
 }
 
 void NetIO::recv(ZnElement& a) {
-    size_t element_byte_len = a.field_ctx->element_byte_len; 
+    size_t element_byte_len = a.ring_ctx->element_byte_len; 
     recv_buffer.resize(element_byte_len);
     recv_raw(recv_buffer.data(), element_byte_len);
     BN_bin2bn(recv_buffer.data(), element_byte_len, a.value.bn_ptr);

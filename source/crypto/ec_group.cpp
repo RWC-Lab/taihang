@@ -204,7 +204,7 @@ ECPoint ECPoint::mul_generator(const BigInt& scalar) const {
 ECPoint ECPoint::mul(const ZnElement& scalar) const {
     // SAFETY CHECK:
     // Ensure the scalar comes from the correct field (Zn where n = group.order)
-    TAIHANG_ASSERT(scalar.field_ctx->modulus == group_ctx->order, 
+    TAIHANG_ASSERT(scalar.ring_ctx->modulus == group_ctx->order, 
                    "ECPoint::mul type mismatch: Scalar field modulus != Group order");
     // Delegate to the generic implementation using the underlying BigInt
     return this->mul(scalar.value);
@@ -213,7 +213,7 @@ ECPoint ECPoint::mul(const ZnElement& scalar) const {
 ECPoint ECPoint::mul_generator(const ZnElement& scalar) const {
     // SAFETY CHECK:
     // Ensure the scalar comes from the correct field (Zn where n = group.order)
-    TAIHANG_ASSERT(scalar.field_ctx->modulus == group_ctx->order, 
+    TAIHANG_ASSERT(scalar.ring_ctx->modulus == group_ctx->order, 
                    "ECPoint::mul type mismatch: Scalar field modulus != Group order");
     // Delegate to the generic implementation using the underlying BigInt
     return this->mul_generator(scalar.value);

@@ -134,6 +134,21 @@ BigInt BigInt::exp(const BigInt& exponent) const {
 }
 
 // --- Modular Arithmetic ---
+BigInt BigInt::gcd(const BigInt& other) const
+{
+    BigInt result;
+    BN_CTX* ctx = BN_CTX_new();
+
+    if (!BN_gcd(result.bn_ptr, bn_ptr, other.bn_ptr, ctx)) {
+        BN_CTX_free(ctx);
+        TAIHANG_ASSERT(false, "BN_gcd failed");
+    }
+
+    BN_CTX_free(ctx);
+    return result;
+}
+
+
 BigInt BigInt::mod(const BigInt& modulus) const {
     TAIHANG_ASSERT(!modulus.is_zero(), "BigInt::mod: division by zero.");
     BigInt result;

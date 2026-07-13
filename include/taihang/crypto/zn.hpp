@@ -55,7 +55,7 @@ public:
 class ZnElement {
 public:
     BigInt value;      // The actual integer value (always < modulus)
-    const Zn* field_ctx;   // Pointer to the context (The Modulus)
+    const Zn* ring_ctx;   // Pointer to the context (The Modulus)
 
     // --- Lifecycle ---
     // Default constructor needed for vectors, but leaves object in invalid state until assigned
@@ -79,6 +79,9 @@ public:
     ZnElement& operator=(ZnElement&& other) noexcept;
 
     // --- Core Arithmetic ---
+
+    bool is_unit() const;
+
     // All operations delegate to BigInt's modular functions using field->modulus
     
     ZnElement add(const ZnElement& other) const;
@@ -123,7 +126,8 @@ public:
     void from_bytes(const std::vector<uint8_t> buffer); 
 };
 
-std::vector<ZnElement> gen_random_znelement_vector(const Zn& field, size_t len); 
+std::vector<ZnElement> gen_random_znelement_vector(const Zn* ring_ctx, size_t len); 
+std::vector<ZnElement> gen_random_znelement_vector(const std::shared_ptr<Zn>& ring_ctx, size_t len); 
 
 } // namespace taihang
 

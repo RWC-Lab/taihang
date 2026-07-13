@@ -30,16 +30,16 @@ ZnElement Zn::gen_random() const {
 // --- ZnElement (Instance) Implementation ---
 
 
-ZnElement::ZnElement() : value(BigInt(0ULL)), field_ctx(nullptr) {}
+ZnElement::ZnElement() : value(BigInt(0ULL)), ring_ctx(nullptr) {}
 
-ZnElement::ZnElement(const Zn* field) : value(BigInt(0ULL)), field_ctx(field) {}
+ZnElement::ZnElement(const Zn* field) : value(BigInt(0ULL)), ring_ctx(field) {}
 
 ZnElement::ZnElement(std::shared_ptr<Zn> field) : ZnElement(field.get()) {}
 
-ZnElement::ZnElement(const Zn* input_field_ctx, const BigInt& val) 
-    :  value(val), field_ctx(input_field_ctx) {
-    if(field_ctx){
-        value = value.mod(field_ctx->modulus); 
+ZnElement::ZnElement(const Zn* input_ring_ctx, const BigInt& val) 
+    :  value(val), ring_ctx(input_ring_ctx) {
+    if(ring_ctx){
+        value = value.mod(ring_ctx->modulus); 
     }
 }
 
@@ -50,16 +50,16 @@ ZnElement::ZnElement(std::shared_ptr<Zn> field, const BigInt& val)
     : ZnElement(field.get(), val) {}
 
 ZnElement::ZnElement(const ZnElement& other) 
-    : value(other.value), field_ctx(other.field_ctx) {}
+    : value(other.value), ring_ctx(other.ring_ctx) {}
 
 ZnElement::ZnElement(ZnElement&& other) noexcept 
-    : value(std::move(other.value)), field_ctx(other.field_ctx) {
-    other.field_ctx = nullptr;
+    : value(std::move(other.value)), ring_ctx(other.ring_ctx) {
+    other.ring_ctx = nullptr;
 }
 
 ZnElement& ZnElement::operator=(const ZnElement& other) {
     if (this != &other) {
-        field_ctx = other.field_ctx;
+        ring_ctx = other.ring_ctx;
         value = other.value;
     }
     return *this;
@@ -67,84 +67,90 @@ ZnElement& ZnElement::operator=(const ZnElement& other) {
 
 ZnElement& ZnElement::operator=(ZnElement&& other) noexcept {
     if (this != &other) {
-        field_ctx = other.field_ctx;
+        ring_ctx = other.ring_ctx;
         value = std::move(other.value);
-        other.field_ctx = nullptr;
+        other.ring_ctx = nullptr;
     }
     return *this;
 }
 
 ZnElement& ZnElement::operator+=(const ZnElement& other)
 {
-    TAIHANG_ASSERT(field_ctx == other.field_ctx, "ZnElement: Field context mismatch in operator+=");
+    TAIHANG_ASSERT(ring_ctx == other.ring_ctx, "ZnElement: Ring context mismatch in operator+=");
 
-    value = value.mod_add(other.value, field_ctx->modulus);
+    value = value.mod_add(other.value, ring_ctx->modulus);
     return *this;
 }
 
 ZnElement& ZnElement::operator-=(const ZnElement& other)
 {
-    TAIHANG_ASSERT(field_ctx == other.field_ctx, "ZnElement: Field context mismatch in operator-=");
+    TAIHANG_ASSERT(ring_ctx == other.ring_ctx, "ZnElement: Ring context mismatch in operator-=");
 
-    value = value.mod_sub(other.value, field_ctx->modulus);
+    value = value.mod_sub(other.value, ring_ctx->modulus);
     return *this;
 }
 
 ZnElement& ZnElement::operator*=(const ZnElement& other)
 {
-    TAIHANG_ASSERT(field_ctx == other.field_ctx, "ZnElement: Field context mismatch in operator*=");
+    TAIHANG_ASSERT(ring_ctx == other.ring_ctx, "ZnElement: Ring context mismatch in operator*=");
 
-    value = value.mod_mul(other.value, field_ctx->modulus);
+    value = value.mod_mul(other.value, ring_ctx->modulus);
     return *this;
 }
 
 ZnElement& ZnElement::operator/=(const ZnElement& other)
 {
-    TAIHANG_ASSERT(field_ctx == other.field_ctx, "ZnElement: Field context mismatch in operator/=");
+    TAIHANG_ASSERT(ring_ctx == other.ring_ctx, "ZnElement: Ring context mismatch in operator/=");
 
-    value = value.mod_mul(other.value.mod_inverse(field_ctx->modulus), field_ctx->modulus);
+    value = value.mod_mul(other.value.mod_inverse(ring_ctx->modulus), ring_ctx->modulus);
     return *this;
 }
 
 
 // --- Core Arithmetic ---
 
+bool ZnElement::is_unit() const {
+    return value.gcd(ring_ctx->modulus) == BigInt(1);
+}
+
+
 ZnElement ZnElement::add(const ZnElement& other) const {
-    TAIHANG_ASSERT(field_ctx == other.field_ctx, "ZnElement: Field context mismatch in ADD");
+    TAIHANG_ASSERT(ring_ctx == other.ring_ctx, "ZnElement: Ring context mismatch in ADD");
     // Uses BigInt::mod_add
-    return ZnElement(field_ctx, value.mod_add(other.value, field_ctx->modulus));
+    return ZnElement(ring_ctx, value.mod_add(other.value, ring_ctx->modulus));
 }
 
 ZnElement ZnElement::sub(const ZnElement& other) const {
-    TAIHANG_ASSERT(field_ctx == other.field_ctx, "ZnElement: Field context mismatch in SUB");
+    TAIHANG_ASSERT(ring_ctx == other.ring_ctx, "ZnElement: Ring context mismatch in SUB");
     // Uses BigInt::mod_sub
-    return ZnElement(field_ctx, value.mod_sub(other.value, field_ctx->modulus));
+    return ZnElement(ring_ctx, value.mod_sub(other.value, ring_ctx->modulus));
 }
 
 ZnElement ZnElement::mul(const ZnElement& other) const {
-    TAIHANG_ASSERT(field_ctx == other.field_ctx, "ZnElement: Field context mismatch in MUL");
+    TAIHANG_ASSERT(ring_ctx == other.ring_ctx, "ZnElement: Ring context mismatch in MUL");
     // Uses BigInt::mod_mul
-    return ZnElement(field_ctx, value.mod_mul(other.value, field_ctx->modulus));
+    return ZnElement(ring_ctx, value.mod_mul(other.value, ring_ctx->modulus));
 }
 
 ZnElement ZnElement::inv() const {
     // Uses BigInt::mod_inverse
-    return ZnElement(field_ctx, value.mod_inverse(field_ctx->modulus));
+    TAIHANG_ASSERT(this->is_unit() == true, "ZnElement: The element is not unit");
+    return ZnElement(ring_ctx, value.mod_inverse(ring_ctx->modulus));
 }
 
 ZnElement ZnElement::neg() const {
     if (value.is_zero()) return *this;
     // -x mod n  =>  n - x
-    return ZnElement(field_ctx, field_ctx->modulus.sub(value));
+    return ZnElement(ring_ctx, ring_ctx->modulus.sub(value));
 }
 
 ZnElement ZnElement::pow(const BigInt& exp) const {
     // Uses BigInt::mod_exp
-    return ZnElement(field_ctx, value.mod_exp(exp, field_ctx->modulus));
+    return ZnElement(ring_ctx, value.mod_exp(exp, ring_ctx->modulus));
 }
 
 bool ZnElement::operator==(const ZnElement& other) const {
-    if (field_ctx != other.field_ctx) return false;
+    if (ring_ctx != other.ring_ctx) return false;
     return value == other.value;
 }
 
@@ -170,9 +176,9 @@ std::vector<uint8_t> ZnElement::to_bytes() const {
 
 void ZnElement::from_bytes(const uint8_t* buffer, size_t len) {
     TAIHANG_ASSERT(buffer != nullptr, "ZnElement: from_bytes received null.");
-    TAIHANG_ASSERT(field_ctx != nullptr, "ZnElement: Cannot deserialize without a valid field context.");
+    TAIHANG_ASSERT(ring_ctx != nullptr, "ZnElement: Cannot deserialize without a valid field context.");
 
-    TAIHANG_ASSERT(len == field_ctx->element_byte_len, "ZnElement: from_bytes length mismatch.");
+    TAIHANG_ASSERT(len == ring_ctx->element_byte_len, "ZnElement: from_bytes length mismatch.");
     if (BN_bin2bn(buffer, static_cast<int>(len), this->value.bn_ptr) == nullptr) {
         TAIHANG_ASSERT(false, "ZnElement: from_bytes failed.");
     }
@@ -180,26 +186,30 @@ void ZnElement::from_bytes(const uint8_t* buffer, size_t len) {
 
 void ZnElement::from_bytes(const std::vector<uint8_t> buffer) {
     TAIHANG_ASSERT(buffer.size() != 0, "ZnElement: from_bytes received null.");
-    TAIHANG_ASSERT(field_ctx != nullptr, "ZnElement: Cannot deserialize without a valid field context.");
+    TAIHANG_ASSERT(ring_ctx != nullptr, "ZnElement: Cannot deserialize without a valid field context.");
 
-    TAIHANG_ASSERT(buffer.size() == field_ctx->element_byte_len, "ZnElement: from_bytes length mismatch.");
+    TAIHANG_ASSERT(buffer.size() == ring_ctx->element_byte_len, "ZnElement: from_bytes length mismatch.");
     if (BN_bin2bn(buffer.data(), static_cast<int>(buffer.size()), this->value.bn_ptr) == nullptr) {
         TAIHANG_ASSERT(false, "ZnElement: from_bytes failed.");
     }
 } 
 
 
-std::vector<ZnElement> gen_random_znelement_vector(const Zn& field, size_t len) {
+std::vector<ZnElement> gen_random_znelement_vector(const Zn* ring_ctx, size_t len) {
     // Requires the zero-argument default constructor we discussed earlier to exist.
     std::vector<ZnElement> vec_result(len);
     
     #pragma omp parallel for num_threads(config::thread_num)
     for (size_t i = 0; i < len; ++i) {
         // Generates the random element and uses the move assignment operator
-        vec_result[i] = field.gen_random(); 
+        vec_result[i] = ring_ctx->gen_random(); 
     }
     
     return vec_result;
+}
+
+std::vector<ZnElement> gen_random_znelement_vector(const std::shared_ptr<Zn>& ring_ctx, size_t len){
+    return gen_random_znelement_vector(ring_ctx.get(), len);
 }
 
 } // namespace taihang
