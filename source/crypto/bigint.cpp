@@ -133,6 +133,7 @@ BigInt BigInt::exp(const BigInt& exponent) const {
     return result;
 }
 
+
 // --- Modular Arithmetic ---
 BigInt BigInt::gcd(const BigInt& other) const
 {
