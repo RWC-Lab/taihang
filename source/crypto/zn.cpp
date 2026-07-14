@@ -171,7 +171,10 @@ std::string ZnElement::to_string(Base base) const {
 }
 
 std::vector<uint8_t> ZnElement::to_bytes() const {
-    return value.to_bytes();
+    std::vector<uint8_t> result(ring_ctx->element_byte_len);
+    const int len = BN_bn2binpad(value.bn_ptr, result.data(), static_cast<int>(result.size()));
+    TAIHANG_ASSERT(len == static_cast<int>(result.size()), "ZnElement fixed-width encoding failed");
+    return result;
 }
 
 void ZnElement::from_bytes(const uint8_t* buffer, size_t len) {

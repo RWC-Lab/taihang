@@ -10,6 +10,12 @@
 #include <openssl/bn.h>
 #include <limits.h>
 
+
+/*
+* for 1-D vector:                      transfer [raw_data]
+* for 2-D vector of regular item size: transfer [item_size][raw_data]
+*/
+
 namespace taihang::net {
 
 // ---------------------------------------------------------------------------
@@ -51,12 +57,14 @@ void NetIO::buffer(const T& n){
     buffer(&n, sizeof(T));
 }
 
+// assume vec_a.size() are known by both sides 
 void NetIO::buffer(const std::vector<uint8_t>& vec_a) {
     if (vec_a.size() == 0) return;
     const auto* p = static_cast<const uint8_t*>(vec_a.data());
     send_buffer.insert(send_buffer.end(), p, p + vec_a.size());
 }
 
+// assume vec_a.size() are known by both sides 
 void NetIO::buffer(const std::vector<ECPoint>& vec_a) {
     if (vec_a.size() == 0) return;
     size_t point_byte_len = vec_a[0].group_ctx->get_point_byte_len();
@@ -72,6 +80,7 @@ void NetIO::buffer(const std::vector<ECPoint>& vec_a) {
     }
 }
 
+// assume vec_a.size() are known by both sides 
 void NetIO::buffer(const std::vector<EC25519Point>& vec_a) {
     if (vec_a.size() == 0) return;
     size_t point_byte_len = EC25519Point::POINT_BYTE_LEN;
@@ -115,6 +124,7 @@ void NetIO::buffer(const Block& b) {
     buffer(&b, sizeof(Block));
 }
 
+// assume vec_b.size() are known by both sides 
 void NetIO::buffer(const std::vector<Block>& vec_b) {
     if (vec_b.size() == 0) return;
     size_t offset = send_buffer.size();
@@ -126,29 +136,42 @@ void NetIO::buffer(const std::vector<Block>& vec_b) {
     std::memcpy(dst, vec_b.data(), vec_b.size() * sizeof(Block));
 }
 
+// assume vec_M.size() are known by both sides
+// each item has the same item len, but item_len may not known by the receiver 
 void NetIO::buffer(const std::vector<std::vector<uint8_t>>& M) {
     if (M.empty()) return;
-    size_t len = M[0].size();
+    size_t item_len = M[0].size();
+
+    // send item length first
+    buffer(item_len); 
+
     size_t offset = send_buffer.size();
-    send_buffer.resize(offset + M.size() * len);
+    send_buffer.resize(offset + M.size() * item_len);
     uint8_t* dst = send_buffer.data() + offset;
 
     #pragma omp parallel for num_threads(config::thread_num)
     for (size_t i = 0; i < M.size(); ++i) {
-        std::memcpy(dst + i * len, M[i].data(), len);
+        std::memcpy(dst + i * item_len, M[i].data(), item_len);
     }
 }
 
+// assume vec_S.size() are known by both sides
+// each string has the same str len, but str_len may not known by the receiver 
 void NetIO::buffer(const std::vector<std::string>& S) {
     if (S.empty()) return;
-    size_t len = S[0].size();
+
+    size_t str_len = S[0].size();
+
+    // send string length first
+    buffer(str_len); 
+
     size_t offset = send_buffer.size();
-    send_buffer.resize(offset + S.size() * len);
+    send_buffer.resize(offset + S.size() * str_len);
     uint8_t* dst = send_buffer.data() + offset;
 
     #pragma omp parallel for num_threads(config::thread_num)
     for (size_t i = 0; i < S.size(); ++i) {
-        std::memcpy(dst + i * len, S[i].data(), len);
+        std::memcpy(dst + i * str_len, S[i].data(), str_len);
     }
 }
 
@@ -218,18 +241,32 @@ void NetIO::send(const std::vector<Block>& vec_b) {
 
 void NetIO::send(const std::vector<std::vector<uint8_t>>& M) {
     if (M.empty()) return;
-    size_t total_size = M.size() * M[0].size();
+
+    size_t item_len = M[0].size();
+    size_t total_size = M.size() * item_len;
 
     // Use scatter-gather writev() for zero-copy if the batch is large.
     if (total_size > kMaxLinearizationSize) {
+        // flush any previously buffered data
         flush();
-        std::vector<struct iovec> iov(M.size());
+
+        // prepend item_len as the first iovec
+        std::vector<struct iovec> iov(M.size()+1);
+
+        iov[0].iov_base = &item_len;
+        iov[0].iov_len  = sizeof(size_t);
+
         for (size_t i = 0; i < M.size(); ++i) {
-            iov[i].iov_base = const_cast<uint8_t*>(M[i].data());
-            iov[i].iov_len  = M[i].size();
+            // Optional sanity check (recommended)
+            TAIHANG_ASSERT(M[i].size() == item_len, "NetIO::send(): vector<vector> has inconsistent element sizes.");
+
+            iov[i+1].iov_base = const_cast<uint8_t*>(M[i].data());
+            iov[i+1].iov_len  = item_len;
         }
+
         writev_all(iov);
-    } else {
+    } 
+    else {
         buffer(M);
         flush();
     }
@@ -237,17 +274,31 @@ void NetIO::send(const std::vector<std::vector<uint8_t>>& M) {
 
 void NetIO::send(const std::vector<std::string>& S) {
     if (S.empty()) return;
-    size_t total_size = S.size() * S[0].size();
+
+    size_t str_len = S[0].size();
+    size_t total_size = S.size() * str_len;
 
     if (total_size > kMaxLinearizationSize) {
+        // Flush any previously buffered data first.
         flush();
-        std::vector<struct iovec> iov(S.size());
+
+        // Prepend string length as the first iovec.
+        std::vector<struct iovec> iov(S.size() + 1);
+
+        iov[0].iov_base = &str_len;
+        iov[0].iov_len  = sizeof(size_t);
+
         for (size_t i = 0; i < S.size(); ++i) {
-            iov[i].iov_base = const_cast<char*>(S[i].data());
-            iov[i].iov_len  = S[i].size();
+            // Optional sanity check (recommended)
+            TAIHANG_ASSERT(S[i].size() == str_len, "NetIO::send(): vector<string> has inconsistent element sizes.");
+
+            iov[i+1].iov_base = const_cast<char*>(S[i].data());
+            iov[i+1].iov_len  = str_len;
         }
+
         writev_all(iov);
-    } else {
+    }
+    else {
         buffer(S);
         flush();
     }
@@ -337,35 +388,43 @@ void NetIO::recv(std::vector<Block>& vec_b) {
     recv_raw(vec_b.data(), len * sizeof(Block));
 }
 
-// M must be properly initialized
+// M must be properly initialized with correct len
 void NetIO::recv(std::vector<std::vector<uint8_t>>& M) {
     if (M.empty()) return; 
     size_t num = M.size(); 
-    size_t len = M[0].size(); 
 
-    recv_buffer.resize(num * len);
+    // receive item length
+    size_t item_len; 
+    recv(item_len); 
+
+    recv_buffer.resize(num * item_len);
     recv_raw(recv_buffer.data(), recv_buffer.size());
 
     M.resize(num);
     #pragma omp parallel for num_threads(config::thread_num)
     for (size_t i = 0; i < num; ++i) {
-        M[i].assign(recv_buffer.data() + i * len, recv_buffer.data() + (i + 1) * len);
+        M[i].resize(item_len); 
+        std::memcpy(M[i].data(), recv_buffer.data() + i * item_len, item_len);
     }
 }
 
-// S must be properly initialized
+// S must be properly initialized with correct len
 void NetIO::recv(std::vector<std::string>& S) {
     if (S.empty()) return; 
     size_t num = S.size(); 
-    size_t len = S[0].size();
 
-    recv_buffer.resize(num * len);
+    // receive string length
+    size_t str_len;
+    recv(str_len);
+
+    recv_buffer.resize(num * str_len);
     recv_raw(recv_buffer.data(), recv_buffer.size());
 
     S.resize(num);
     #pragma omp parallel for num_threads(config::thread_num)
     for (size_t i = 0; i < num; ++i) {
-        S[i].assign(reinterpret_cast<char*>(recv_buffer.data() + i * len), len);
+        S[i].resize(str_len); 
+        std::memcpy(S[i].data(), recv_buffer.data() + i * str_len, str_len);
     }
 }
 
