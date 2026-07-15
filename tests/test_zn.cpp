@@ -11,7 +11,7 @@ namespace taihang::test {
 class ZnTest : public ::testing::Test {
 protected:
     // Using a prime modulus for field properties (e.g., 17)
-    BigInt p = BigInt(17ULL);
+    BigInt p = BigInt(uint64_t{17});
     Zn field{p}; 
 };
 
@@ -19,41 +19,41 @@ TEST_F(ZnTest, FactoryMethods) {
     ZnElement zero = field.get_zero();
     ZnElement one = field.get_one();
     
-    EXPECT_EQ(zero.value, BigInt(0ULL));
-    EXPECT_EQ(one.value, BigInt(1ULL));
+    EXPECT_EQ(zero.value, kBigIntZero);
+    EXPECT_EQ(one.value, kBigIntOne);
     
     // Test auto-reduction in from_bigint
-    ZnElement reduced = ZnElement(field, BigInt(19ULL)); // 19 mod 17 = 2
-    EXPECT_EQ(reduced.value, BigInt(2ULL));
+    ZnElement reduced = ZnElement(field, BigInt(uint64_t{19})); // 19 mod 17 = 2
+    EXPECT_EQ(reduced.value, BigInt(uint64_t{2}));
 }
 
 TEST_F(ZnTest, BasicArithmetic) {
-    ZnElement a = ZnElement(field, BigInt(10ULL)); 
-    ZnElement b = ZnElement(field, BigInt(9ULL)); 
+    ZnElement a = ZnElement(field, BigInt(uint64_t{10})); 
+    ZnElement b = ZnElement(field, BigInt(uint64_t{9})); 
     // Addition: (10 + 9) mod 17 = 2
-    EXPECT_EQ((a + b).value, BigInt(2ULL));
+    EXPECT_EQ((a + b).value, BigInt(uint64_t{2}));
     
     // Subtraction: (9 - 10) mod 17 = 16
-    EXPECT_EQ((b - a).value, BigInt(16ULL));
+    EXPECT_EQ((b - a).value, BigInt(uint64_t{16}));
     
     // Multiplication: (10 * 9) mod 17 = 90 mod 17 = 5
-    EXPECT_EQ((a * b).value, BigInt(5ULL));
+    EXPECT_EQ((a * b).value, BigInt(uint64_t{5}));
 }
 
 TEST_F(ZnTest, ModularInverse) {
-    ZnElement a = ZnElement(field, BigInt(3ULL));
+    ZnElement a = ZnElement(field, BigInt(uint64_t{3}));
     ZnElement inv_a = a.inv();
     
     // 3 * 6 = 18 = 1 mod 17. So inverse of 3 is 6.
-    EXPECT_EQ(inv_a.value, BigInt(6ULL));
+    EXPECT_EQ(inv_a.value, BigInt(uint64_t{6}));
     EXPECT_EQ(a * inv_a, field.get_one());
 }
 
 TEST_F(ZnTest, Exponentiation) {
-    ZnElement a = ZnElement(field, BigInt(2ULL));
+    ZnElement a = ZnElement(field, BigInt(uint64_t{2}));
     // 2^4 mod 17 = 16
-    ZnElement res = a.pow(BigInt(4ULL));
-    EXPECT_EQ(res.value, BigInt(16ULL));
+    ZnElement res = a.pow(BigInt(uint64_t{4}));
+    EXPECT_EQ(res.value, BigInt(uint64_t{16}));
 }
 
 TEST_F(ZnTest, Randomness) {

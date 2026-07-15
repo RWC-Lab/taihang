@@ -32,7 +32,8 @@ static bool try_rdseed(uint64_t* buf) {
     // Check for hardware support at runtime before executing
     if (__builtin_cpu_supports("rdseed")) {
         for (int i = 0; i < 10; ++i) {
-            if (_rdseed64_step(&buf[0]) && _rdseed64_step(&buf[1])) {
+            if (_rdseed64_step(reinterpret_cast<unsigned long long*>(&buf[0])) && 
+                _rdseed64_step(reinterpret_cast<unsigned long long*>(&buf[1]))) { 
                 return true;
             }
         }

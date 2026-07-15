@@ -57,7 +57,7 @@ TEST_F(BSGSTest, BoundaryValues) {
     BSGSSolver solver = make_solver({.range_bits = 10, .tradeoff_num = 0, .thread_num = 1});
 
     // x = 0: h = point at infinity
-    BigInt  x_zero(0ULL);
+    BigInt  x_zero(kBigIntZero);
     ECPoint h_zero = group->get_infinity();
     auto    res_zero = solver.solve(h_zero);
     if (res_zero.has_value()) {
@@ -65,14 +65,14 @@ TEST_F(BSGSTest, BoundaryValues) {
     }
 
     // x = 1: h = g
-    BigInt  x_one(1ULL);
+    BigInt  x_one(kBigIntOne);
     ECPoint h_one = g;
     auto    res_one = solver.solve(h_one);
     ASSERT_TRUE(res_one.has_value());
     ASSERT_EQ(*res_one, x_one);
 
     // x = 2^10 - 1: maximum value in range
-    BigInt  x_max((1ULL << 10) - 1);
+    BigInt  x_max(uint64_t{(01ULL << 10) - 1});
     ECPoint h_max = g * x_max;
     auto    res_max = solver.solve(h_max);
     ASSERT_TRUE(res_max.has_value());
@@ -84,7 +84,7 @@ TEST_F(BSGSTest, BoundaryValues) {
 TEST_F(BSGSTest, OutOfRange) {
     BSGSSolver solver = make_solver({.range_bits = 10, .tradeoff_num = 0, .thread_num = 1});
 
-    BigInt  x_out(2000ULL);  // 2000 > 2^10 = 1024
+    BigInt  x_out(uint64_t{2000});  // 2000 > 2^10 = 1024
     ECPoint h_out = g * x_out;
     auto    result = solver.solve(h_out);
     ASSERT_FALSE(result.has_value());
@@ -95,7 +95,7 @@ TEST_F(BSGSTest, OutOfRange) {
 TEST_F(BSGSTest, ParallelExecution) {
     BSGSSolver solver = make_solver({.range_bits = 12, .tradeoff_num = 0, .thread_num = 4});
 
-    BigInt  x(4090ULL);
+    BigInt  x(uint64_t{4090});
     ECPoint h = g * x;
     auto    result = solver.solve(h);
     ASSERT_TRUE(result.has_value());
@@ -130,7 +130,7 @@ TEST_F(BSGSTest, TradeoffParameter) {
     // tradeoff=1: baby=2^7=128, giant=2^5=32 for range=12
     BSGSSolver solver = make_solver({.range_bits = 12, .tradeoff_num = 1, .thread_num = 4});
 
-    BigInt  x(3000ULL);
+    BigInt  x(uint64_t{3000});
     ECPoint h = g * x;
     auto    result = solver.solve(h);
     ASSERT_TRUE(result.has_value());
@@ -172,7 +172,7 @@ TEST_F(BSGSTest, PrepareAPI) {
     solver.prepare();
     ASSERT_TRUE(solver.is_ready());
 
-    BigInt  x(512ULL);
+    BigInt  x(uint64_t{512});
     ECPoint h = g * x;
     auto    result = solver.solve(h);
     ASSERT_TRUE(result.has_value());

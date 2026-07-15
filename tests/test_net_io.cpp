@@ -305,7 +305,7 @@ TEST_F(NetIOTest, ZnElement_SendRecv) {
     run_pair(port,
         [&](NetIO& io) { io.send(a); },
         [&](NetIO& io) {
-            ZnElement received(field, BigInt(0ULL));
+            ZnElement received(field, kBigIntZero);
             io.recv(received);
             EXPECT_EQ(received.value, a.value);
         });
@@ -323,8 +323,8 @@ TEST_F(NetIOTest, ZnElement_BufferFlush) {
             io.flush();
         },
         [&](NetIO& io) {
-            ZnElement r1(field, BigInt(0ULL));
-            ZnElement r2(field, BigInt(0ULL));
+            ZnElement r1(field, kBigIntZero);
+            ZnElement r2(field, kBigIntZero);
             io.recv(r1);
             io.recv(r2);
             EXPECT_EQ(r1.value, a1.value);
@@ -334,12 +334,12 @@ TEST_F(NetIOTest, ZnElement_BufferFlush) {
 
 TEST_F(NetIOTest, ZnElement_Zero_RoundTrip) {
     const uint16_t port = next_port();
-    ZnElement zero(field, BigInt(0ULL));
+    ZnElement zero(field, kBigIntZero);
 
     run_pair(port,
         [&](NetIO& io) { io.send(zero); },
         [&](NetIO& io) {
-            ZnElement r(field, BigInt(1ULL));
+            ZnElement r(field, kBigIntOne);
             io.recv(r);
             EXPECT_EQ(r.value, zero.value);
         });
@@ -486,7 +486,7 @@ TEST_F(NetIOTest, MultiRound_MixedTypes) {
         // Client: recv each type separately
         [&](NetIO& io) {
             ECPoint rpt = {ECPoint(group)};
-            ZnElement ra(field, BigInt(0ULL));
+            ZnElement ra(field, kBigIntZero);
             Block rb;
 
             io.recv(rpt);

@@ -29,6 +29,7 @@ class BigInt {
 public:
     BIGNUM* bn_ptr;
 
+
     // --- Lifecycle Management ---
     BigInt();                                   // Default constructor (value 0)
     BigInt(const BigInt& other);                // Copy constructor (Deep Copy)
@@ -160,6 +161,8 @@ inline BigInt hash_to_bigint(const std::string& input) {
     return hash_to_bigint<Algo>(reinterpret_cast<const uint8_t*>(input.data()), input.size());
 }
 
+inline static const BigInt kBigIntZero{uint64_t{0}};
+inline static const BigInt kBigIntOne{uint64_t{1}};
 
 } // namespace taihang
 

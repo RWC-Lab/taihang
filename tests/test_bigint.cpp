@@ -87,8 +87,8 @@ TEST_F(BigIntModTest, ModularSquareRoot) {
 
 TEST_F(BigIntModTest, LargeNumberWrapAround) {
     // Test that mod_add handles numbers larger than the modulus correctly
-    BigInt a = m_prime7.add(BigInt(1ULL)); // 8
-    BigInt b = m_prime7.add(BigInt(2ULL)); // 9
+    BigInt a = m_prime7.add(BigInt(uint64_t{1})); // 8
+    BigInt b = m_prime7.add(BigInt(uint64_t{2})); // 9
     // (8 + 9) mod 7 = 17 mod 7 = 3
     EXPECT_EQ(a.mod_add(b, m_prime7).to_uint64(), 3ULL);
 }
@@ -109,7 +109,7 @@ TEST_F(BigIntModTest, P256RandomIdentity) {
         if (a.is_zero()) continue;
 
         // Fermat's Little Theorem: a^(p-1) mod p = 1
-        BigInt p_minus_1 = m_p256.sub(BigInt(1ULL));
+        BigInt p_minus_1 = m_p256.sub(kBigIntOne);
         BigInt res = a.mod_exp(p_minus_1, m_p256);
         
         EXPECT_TRUE(res.is_one()) << "Fermat's Little Theorem failed for: " << a.to_hex();
@@ -129,7 +129,7 @@ TEST_F(BigIntModTest, ThreadLocalContextSafety) {
 
     // Use a large modulus to increase the work per thread
     BigInt modulus = m_p256;
-    BigInt exponent = m_p256.sub(BigInt(2ULL)); // Random large exponent
+    BigInt exponent = m_p256.sub(BigInt(uint64_t{2})); // Random large exponent
 
     std::vector<bool> thread_success(kNumThreads, true);
 
@@ -140,7 +140,7 @@ TEST_F(BigIntModTest, ThreadLocalContextSafety) {
             for (int i = 0; i < kIterationsPerThread; ++i) {
                 // Generate a thread-specific random base
                 BigInt base = gen_random_bigint_less_than(modulus);
-                if (base.is_zero()) base = BigInt(2ULL);
+                if (base.is_zero()) base = BigInt(uint64_t{2});
 
                 // Modular exponentiation uses the thread_local BN_CTX
                 BigInt res = base.mod_exp(exponent, modulus);

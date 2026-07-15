@@ -16,11 +16,11 @@ Zn::Zn(const BigInt& mod) : modulus(mod) {
 }
 
 ZnElement Zn::get_zero() const {
-    return ZnElement(this, BigInt(0ULL));
+    return ZnElement(this, kBigIntZero);
 }
 
 ZnElement Zn::get_one() const {
-    return ZnElement(this, BigInt(1ULL));
+    return ZnElement(this, kBigIntOne);
 }
 
 ZnElement Zn::gen_random() const {
@@ -30,9 +30,9 @@ ZnElement Zn::gen_random() const {
 // --- ZnElement (Instance) Implementation ---
 
 
-ZnElement::ZnElement() : value(BigInt(0ULL)), ring_ctx(nullptr) {}
+ZnElement::ZnElement() : value(kBigIntZero), ring_ctx(nullptr) {}
 
-ZnElement::ZnElement(const Zn* field) : value(BigInt(0ULL)), ring_ctx(field) {}
+ZnElement::ZnElement(const Zn* field) : value(kBigIntZero), ring_ctx(field) {}
 
 ZnElement::ZnElement(std::shared_ptr<Zn> field) : ZnElement(field.get()) {}
 
@@ -168,6 +168,7 @@ std::string ZnElement::to_string(Base base) const {
             return value.to_dec();
             break;
     }
+    return ""; 
 }
 
 std::vector<uint8_t> ZnElement::to_bytes() const {

@@ -23,8 +23,8 @@ TEST_F(EcTest, PointBasicLaws) {
     EXPECT_EQ(g + (-g), zero_pt);
 
     // Use ULL to avoid BigInt(0) vs BigInt(BIGNUM*) ambiguity
-    EXPECT_EQ(g * BigInt(2ULL), g + g);
-    EXPECT_EQ(g * BigInt(0ULL), zero_pt);
+    EXPECT_EQ(g * BigInt(uint64_t{2}), g + g);
+    EXPECT_EQ(g * BigInt(uint64_t{0}), zero_pt);
 }
 
 TEST_F(EcTest, ScalarFieldArithmetic) {

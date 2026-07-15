@@ -269,7 +269,7 @@ BigInt& BigInt::operator>>=(int n)
 
 BigInt BigInt::get_last_n_bits(int n) const {
     // If n is 0, return 0
-    if (n <= 0) return BigInt(0ULL);
+    if (n <= 0) BigInt(uint64_t{0});
 
     BigInt result(*this); // Copy current value
     
@@ -423,6 +423,7 @@ std::string BigInt::to_string(Base base) const {
             return to_dec();
             break;
     }
+    return ""; 
 }
 
 } // namespace taihang
