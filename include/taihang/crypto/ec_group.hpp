@@ -295,8 +295,7 @@ struct ECPointHash{
 };
 
 
-
-auto ECPoint_Lexical_Compare = [](ECPoint A, ECPoint B){ 
+inline constexpr auto ECPoint_Lexical_Compare = [](ECPoint A, ECPoint B){ 
     return A.to_string() < B.to_string(); 
 };
 
