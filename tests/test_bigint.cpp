@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <taihang/crypto/bigint.hpp>
+#include <sstream>
 #include <vector>
 #include <string>
 #include <omp.h> // For multi-thread testing
@@ -165,6 +166,56 @@ TEST_F(BigIntModTest, ThreadLocalContextSafety) {
     for (int i = 0; i < kNumThreads; ++i) {
         EXPECT_TRUE(thread_success[i]) << "Thread " << i << " failed during concurrent BN_CTX usage.";
     }
+}
+
+TEST(BigIntSerializationTest, RoundTripsCanonicalValues) {
+    const std::vector<BigInt> values{
+        BigInt(uint64_t{0}),
+        BigInt(uint64_t{42}),
+        BigInt("0x1234567890ABCDEF1234567890ABCDEF"),
+        BigInt("-42")};
+
+    for (const BigInt& value : values) {
+        std::stringstream stream;
+        stream << value;
+        BigInt decoded(uint64_t{7});
+        stream >> decoded;
+        ASSERT_TRUE(stream);
+        EXPECT_EQ(decoded, value);
+    }
+}
+
+TEST(BigIntSerializationTest, RejectsLeadingZeroMagnitude) {
+    std::string encoded(11, '\0');
+    encoded[8] = 2;
+    encoded[10] = 1;
+    std::stringstream stream(encoded);
+    BigInt decoded(uint64_t{7});
+    stream >> decoded;
+    EXPECT_TRUE(stream.fail());
+    EXPECT_EQ(decoded, BigInt(uint64_t{7}));
+}
+
+TEST(BigIntSerializationTest, RejectsNegativeZero) {
+    std::string encoded(10, '\0');
+    encoded[0] = 1;
+    encoded[8] = 1;
+    std::stringstream stream(encoded);
+    BigInt decoded(uint64_t{7});
+    stream >> decoded;
+    EXPECT_TRUE(stream.fail());
+    EXPECT_EQ(decoded, BigInt(uint64_t{7}));
+}
+
+TEST(BigIntSerializationTest, TruncatedInputPreservesDestination) {
+    std::stringstream complete;
+    complete << BigInt("0x1234567890ABCDEF");
+    const std::string truncated = complete.str().substr(0, complete.str().size() - 1);
+    std::stringstream stream(truncated);
+    BigInt decoded(uint64_t{7});
+    stream >> decoded;
+    EXPECT_TRUE(stream.fail());
+    EXPECT_EQ(decoded, BigInt(uint64_t{7}));
 }
 
 } // namespace taihang

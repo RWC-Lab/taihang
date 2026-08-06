@@ -106,6 +106,10 @@ public:
     std::vector<uint8_t> to_bytes() const; 
     void from_bytes(const uint8_t* buffer, size_t len);
 
+    /** @brief Serialize as sign, byte length, and unsigned big-endian magnitude. */
+    friend std::ostream& operator<<(std::ostream& os, const BigInt& value);
+    friend std::istream& operator>>(std::istream& is, BigInt& value);
+
     // Hexadecimal Serialization
     std::string to_hex() const;
     void from_hex(const std::string& hex_str);

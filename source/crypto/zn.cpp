@@ -198,6 +198,39 @@ void ZnElement::from_bytes(const std::vector<uint8_t> buffer) {
     }
 } 
 
+std::ostream& operator<<(std::ostream& os, const ZnElement& element) {
+    TAIHANG_ASSERT(element.ring_ctx != nullptr,
+                   "ZnElement: Cannot serialize without a valid field context.");
+    TAIHANG_ASSERT(element.value.is_non_negative() &&
+                       element.value < element.ring_ctx->modulus,
+                   "ZnElement: Cannot serialize a non-canonical value.");
+
+    const std::vector<uint8_t> encoded = element.to_bytes();
+    os.write(reinterpret_cast<const char*>(encoded.data()), encoded.size());
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, ZnElement& element) {
+    TAIHANG_ASSERT(element.ring_ctx != nullptr,
+                   "ZnElement: Cannot deserialize without a valid field context.");
+
+    std::vector<uint8_t> encoded(element.ring_ctx->element_byte_len);
+    if (!is.read(reinterpret_cast<char*>(encoded.data()),
+                 static_cast<std::streamsize>(encoded.size()))) {
+        return is;
+    }
+
+    BigInt decoded;
+    decoded.from_bytes(encoded.data(), encoded.size());
+    if (decoded >= element.ring_ctx->modulus) {
+        is.setstate(std::ios::failbit);
+        return is;
+    }
+
+    element.value = std::move(decoded);
+    return is;
+}
+
 
 std::vector<ZnElement> gen_random_znelement_vector(const Zn* ring_ctx, size_t len) {
     // Requires the zero-argument default constructor we discussed earlier to exist.

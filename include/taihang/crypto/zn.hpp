@@ -124,10 +124,38 @@ public:
     std::vector<uint8_t> to_bytes() const;
     void from_bytes(const uint8_t* buffer, size_t len); 
     void from_bytes(const std::vector<uint8_t> buffer); 
+
+    /** @brief Serialize using the fixed width defined by ring_ctx. */
+    friend std::ostream& operator<<(std::ostream& os, const ZnElement& element);
+
+    /** @brief Deserialize canonically using the preinitialized ring_ctx. */
+    friend std::istream& operator>>(std::istream& is, ZnElement& element);
 };
 
 std::vector<ZnElement> gen_random_znelement_vector(const Zn* ring_ctx, size_t len); 
 std::vector<ZnElement> gen_random_znelement_vector(const std::shared_ptr<Zn>& ring_ctx, size_t len); 
+
+/** @brief Derives a scalar-field element from a hash of the input data. */
+template <cryptohash::Provider Algo = kDefaultHash>
+inline ZnElement hash_to_zn(const uint8_t* data, size_t len, const Zn* ring_ctx) {
+    TAIHANG_ASSERT(ring_ctx != nullptr, "hash_to_zn: Ring context is null.");
+    return ZnElement(ring_ctx, hash_to_bigint<Algo>(data, len));
+}
+
+template <cryptohash::Provider Algo = kDefaultHash>
+inline ZnElement hash_to_zn(const std::string& input, const Zn* ring_ctx) {
+    return hash_to_zn<Algo>(reinterpret_cast<const uint8_t*>(input.data()), input.size(), ring_ctx);
+}
+
+template <cryptohash::Provider Algo = kDefaultHash>
+inline ZnElement hash_to_zn(const uint8_t* data, size_t len, const Zn& ring_ctx) {
+    return hash_to_zn<Algo>(data, len, &ring_ctx);
+}
+
+template <cryptohash::Provider Algo = kDefaultHash>
+inline ZnElement hash_to_zn(const std::string& input, const Zn& ring_ctx) {
+    return hash_to_zn<Algo>(input, &ring_ctx);
+}
 
 } // namespace taihang
 

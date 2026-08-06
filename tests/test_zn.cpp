@@ -6,6 +6,8 @@
 #include <gtest/gtest.h>
 #include <taihang/crypto/zn.hpp>
 
+#include <sstream>
+
 namespace taihang::test {
 
 class ZnTest : public ::testing::Test {
@@ -70,6 +72,58 @@ TEST_F(ZnTest, Randomness) {
     // Still test that values are within the small field's range
     ZnElement r3 = field.gen_random();
     EXPECT_LT(r3.value, field.modulus);
+}
+
+TEST_F(ZnTest, SerializationRoundTripUsesFixedWidth) {
+    const ZnElement value(field, BigInt(uint64_t{7}));
+    std::stringstream stream;
+    stream << value;
+    EXPECT_EQ(stream.str().size(), field.element_byte_len);
+
+    ZnElement decoded(&field, BigInt(uint64_t{3}));
+    stream >> decoded;
+    ASSERT_TRUE(stream);
+    EXPECT_EQ(decoded, value);
+}
+
+TEST_F(ZnTest, HashToZnMatchesReducedHash) {
+    const std::string input = "taihang hash to zn";
+    const ZnElement hashed = hash_to_zn(input, field);
+    const ZnElement expected(field, hash_to_bigint(input));
+    EXPECT_EQ(hashed, expected);
+}
+
+TEST_F(ZnTest, HashToZnSupportsByteInputAndProviders) {
+    const std::vector<uint8_t> input{0, 1, 2, 3, 4};
+    const ZnElement sha256 = hash_to_zn<cryptohash::Provider::SHA256>(input.data(), input.size(), field);
+    const ZnElement sm3 = hash_to_zn<cryptohash::Provider::SM3>(input.data(), input.size(), field);
+    EXPECT_EQ(sha256, ZnElement(field, hash_to_bigint<cryptohash::Provider::SHA256>(input.data(), input.size())));
+    EXPECT_EQ(sm3, ZnElement(field, hash_to_bigint<cryptohash::Provider::SM3>(input.data(), input.size())));
+}
+
+TEST_F(ZnTest, DeserializationRejectsModulus) {
+    const std::vector<uint8_t> encoded = field.modulus.to_bytes();
+    ASSERT_EQ(encoded.size(), field.element_byte_len);
+    std::stringstream stream;
+    stream.write(reinterpret_cast<const char*>(encoded.data()),
+                 static_cast<std::streamsize>(encoded.size()));
+
+    ZnElement decoded(&field, BigInt(uint64_t{3}));
+    stream >> decoded;
+    EXPECT_TRUE(stream.fail());
+    EXPECT_EQ(decoded.value, BigInt(uint64_t{3}));
+}
+
+TEST_F(ZnTest, TruncatedInputPreservesDestination) {
+    std::stringstream stream;
+    stream << ZnElement(&field, BigInt(uint64_t{7}));
+    const std::string truncated = stream.str().substr(0, stream.str().size() - 1);
+    std::stringstream input(truncated);
+
+    ZnElement decoded(&field, BigInt(uint64_t{3}));
+    input >> decoded;
+    EXPECT_TRUE(input.fail());
+    EXPECT_EQ(decoded.value, BigInt(uint64_t{3}));
 }
 
 } // namespace taihang::test

@@ -12,9 +12,31 @@
 #include <openssl/bn.h>
 #include <openssl/crypto.h>
 #include <omp.h>
+#include <array>
+#include <limits>
 #include <sstream>
 
 namespace taihang {
+
+namespace {
+
+constexpr size_t kSerializedLengthSize = sizeof(uint64_t);
+
+void encode_u64(uint64_t value, uint8_t* output) {
+    for (size_t i = 0; i < kSerializedLengthSize; ++i) {
+        output[i] = static_cast<uint8_t>(value >> (8 * (kSerializedLengthSize - 1 - i)));
+    }
+}
+
+uint64_t decode_u64(const uint8_t* input) {
+    uint64_t value = 0;
+    for (size_t i = 0; i < kSerializedLengthSize; ++i) {
+        value = (value << 8) | input[i];
+    }
+    return value;
+}
+
+} // namespace
 
 
 // --- Lifecycle ---
@@ -324,6 +346,59 @@ void BigInt::from_bytes(const uint8_t* buffer, size_t len) {
     if (BN_bin2bn(buffer, static_cast<int>(len), this->bn_ptr) == nullptr) {
         TAIHANG_ASSERT(false, "BigInt: from_bytes failed.");
     }
+}
+
+std::ostream& operator<<(std::ostream& os, const BigInt& value) {
+    const std::vector<uint8_t> magnitude = value.to_bytes();
+    const uint8_t sign = value.is_non_negative() ? 0 : 1;
+    std::array<uint8_t, kSerializedLengthSize> encoded_len{};
+    encode_u64(static_cast<uint64_t>(magnitude.size()), encoded_len.data());
+
+    os.put(static_cast<char>(sign));
+    os.write(reinterpret_cast<const char*>(encoded_len.data()), encoded_len.size());
+    os.write(reinterpret_cast<const char*>(magnitude.data()), magnitude.size());
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, BigInt& value) {
+    const int encoded_sign = is.get();
+    if (encoded_sign == std::char_traits<char>::eof()) {
+        is.setstate(std::ios::failbit);
+        return is;
+    }
+
+    std::array<uint8_t, kSerializedLengthSize> encoded_len{};
+    if (!is.read(reinterpret_cast<char*>(encoded_len.data()), encoded_len.size())) {
+        return is;
+    }
+
+    const uint64_t magnitude_len = decode_u64(encoded_len.data());
+    if ((encoded_sign != 0 && encoded_sign != 1) || magnitude_len == 0 ||
+        magnitude_len > std::numeric_limits<size_t>::max() ||
+        magnitude_len > static_cast<uint64_t>(std::numeric_limits<std::streamsize>::max())) {
+        is.setstate(std::ios::failbit);
+        return is;
+    }
+
+    std::vector<uint8_t> magnitude(static_cast<size_t>(magnitude_len));
+    if (!is.read(reinterpret_cast<char*>(magnitude.data()),
+                 static_cast<std::streamsize>(magnitude.size()))) {
+        return is;
+    }
+
+    if ((magnitude.size() > 1 && magnitude.front() == 0) ||
+        (encoded_sign == 1 && magnitude.size() == 1 && magnitude.front() == 0)) {
+        is.setstate(std::ios::failbit);
+        return is;
+    }
+
+    BigInt decoded;
+    decoded.from_bytes(magnitude.data(), magnitude.size());
+    if (encoded_sign == 1) {
+        decoded = -decoded;
+    }
+    value = std::move(decoded);
+    return is;
 }
 
 std::string BigInt::to_hex() const {
