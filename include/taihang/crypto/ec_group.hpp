@@ -177,9 +177,9 @@ public:
      */
     uint64_t aeshash_to_uint64() const;
 
-    // use xxHash3: gold standard for non-cryptographic hashing, significantly faster than MurmurHash2/3.
-    // avoid heavy serialization EC_POINT_point2oct: Use EC_POINT_get_affine_coordinates to get the raw $X$ coordinate.
-    uint64_t xxhash_to_uint64() const;
+    // Use seeded xxHash3 without the heavier EC_POINT_point2oct serialization.
+    // The default seed preserves the simple API for non-persistent hash tables.
+    uint64_t xxhash_to_uint64(uint64_t seed = 0) const;
 
     /** * @brief Cryptographically hashes the point to a 128-bit Block.
      * @details Serializes the point and applies a cryptographic hash (Random Oracle),
@@ -244,6 +244,34 @@ public:
 ECPoint ec_point_msm(const std::vector<ECPoint>& vec_A, const std::vector<BigInt>& vec_a);
 ECPoint ec_point_msm(const std::vector<ECPoint>& vec_A, const std::vector<ZnElement>& vec_a);
 
+/**
+ * @brief MSM over borrowed point references, avoiding temporary ECPoint copies.
+ */
+ECPoint ec_point_msm(const std::vector<const ECPoint*>& points,
+                     const std::vector<ZnElement>& scalars);
+
+/**
+ * @brief Two-term MSM used by logarithmic proof folding.
+ *
+ * Computes scalar_a * point_a + scalar_b * point_b in one OpenSSL
+ * simultaneous-multiplication call, avoiding two temporary scalar products
+ * and a separate point addition.
+ */
+ECPoint ec_point_msm(const ECPoint& point_a,
+                     const ZnElement& scalar_a,
+                     const ECPoint& point_b,
+                     const ZnElement& scalar_b);
+
+/**
+ * @brief MSM with a dedicated scalar for the group's precomputed generator.
+ *
+ * Computes generator_scalar*G + sum_i scalars[i]*points[i].
+ */
+ECPoint ec_point_msm_with_generator(
+    const ZnElement& generator_scalar,
+    const std::vector<const ECPoint*>& points,
+    const std::vector<ZnElement>& scalars);
+
 /** * @brief MSM on a specific sub-range of vectors. 
  * @param start_index The inclusive starting index.
  * @param end_index The exclusive ending index.
@@ -281,11 +309,17 @@ ECPoint hash_to_curve_fast(const Block& data, const ECGroup& group = ECGroup::ge
 
 // --- Standard Hashing (IETF RFC 9380 / SSWU) ---
 
-/** @brief RFC 9380 compliant mapping for raw bytes. Requires a DST. */
+/**
+ * @brief Hash raw bytes with the RFC 9380 P256_XMD:SHA-256_SSWU_RO_ suite.
+ * @param data Message bytes; may be null only when len is zero.
+ * @param len Message length in bytes.
+ * @param dst Application-specific domain separation tag.
+ * @param group P-256 group context. Other RFC suites are not yet supported.
+ */
 ECPoint hash_to_curve_standard(const uint8_t* data, size_t len, const std::string& dst, const ECGroup& group = ECGroup::get_default_group());
-/** @brief RFC 9380 compliant mapping for strings. */
+/** @brief String overload for the RFC 9380 P-256 random-oracle suite. */
 ECPoint hash_to_curve_standard(const std::string& data, const std::string& dst, const ECGroup& group = ECGroup::get_default_group());
-/** @brief RFC 9380 compliant mapping for 128-bit blocks. */
+/** @brief 128-bit block overload for the RFC 9380 P-256 random-oracle suite. */
 ECPoint hash_to_curve_standard(const Block& data, const std::string& dst, const ECGroup& group = ECGroup::get_default_group());
 
 
@@ -304,8 +338,3 @@ inline constexpr auto ECPoint_Lexical_Compare = [](ECPoint A, ECPoint B){
 
 
 #endif // TAIHANG_CRYPTO_EC_GROUP_HPP
-
-
-
-
-

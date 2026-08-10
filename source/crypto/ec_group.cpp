@@ -5,10 +5,14 @@
  *****************************************************************************/
 
 #include <openssl/ec.h>
+#include <openssl/err.h>
 #include <openssl/obj_mac.h>
 #include <omp.h>
 #include <taihang/crypto/ec_group.hpp>
+#include <algorithm>
+#include <array>
 #include <cstring>
+#include <span>
 #include <xxhash.h>
 #include <taihang/crypto/bn_ctx.hpp>
 
@@ -299,10 +303,12 @@ uint64_t ECPoint::aeshash_to_uint64() const {
     return static_cast<uint64_t>(_mm_cvtsi128_si64(hash_state));
 }
 
-uint64_t ECPoint::xxhash_to_uint64() const {
-    // Point at infinity has no affine coordinates — return a fixed sentinel
+uint64_t ECPoint::xxhash_to_uint64(uint64_t seed) const {
+    // Point at infinity has no affine coordinates. Hash a distinct canonical
+    // marker so its key changes when BSGS retries with a new seed.
     if (EC_POINT_is_at_infinity(group_ctx->group_ptr, pt_ptr)) {
-        return 0xFFFFFFFFFFFFFFFFULL; // Distinct sentinel value
+        constexpr uint8_t kInfinityMarker = 0;
+        return XXH3_64bits_withSeed(&kInfinityMarker, sizeof(kInfinityMarker), seed);
     }
 
     // Thread-local cache: Allocated once per thread, reused millions of times
@@ -313,17 +319,19 @@ uint64_t ECPoint::xxhash_to_uint64() const {
     int ret = EC_POINT_get_affine_coordinates(group_ctx->group_ptr, pt_ptr, x, y, ctx);
     TAIHANG_ASSERT(ret == 1, "xxhash_to_uint64: Failed to get affine coordinates.");
 
-    // Use Fixed-Length Padding
-    // P-256 is 32 bytes, P-521 is 66 bytes. 
-    // group_ctx->point_byte_len should be pre-calculated (field size in bytes).
-    size_t field_len = group_ctx->get_point_byte_len(); 
-    alignas(16) uint8_t buffer[80]; 
+    // P-256 is 32 bytes and P-521 is 66 bytes. Hashing the affine x-coordinate
+    // avoids the heavier point2oct serialization used by to_bytes().
+    const size_t field_len = group_ctx->base_field_byte_len;
+    alignas(16) uint8_t buffer[80];
+    TAIHANG_ASSERT(field_len <= sizeof(buffer),
+                   "xxhash_to_uint64: Base-field encoding exceeds stack buffer.");
     
     // BN_bn2binpad is faster than BN_bn2bin because it avoids conditional length logic
-    BN_bn2binpad(x, buffer, field_len);
+    const int encoded_len = BN_bn2binpad(x, buffer, static_cast<int>(field_len));
+    TAIHANG_ASSERT(encoded_len == static_cast<int>(field_len),
+                   "xxhash_to_uint64: Failed to encode affine coordinate.");
 
-    // Hash the fixed-length buffer
-    uint64_t hash = XXH3_64bits(buffer, field_len);
+    uint64_t hash = XXH3_64bits_withSeed(buffer, field_len, seed);
 
     // Symmetric bit-flip to handle P vs -P
     if (BN_is_odd(y)) {
@@ -525,6 +533,84 @@ ECPoint ec_point_msm(const std::vector<ECPoint>& vec_A, const std::vector<ZnElem
     return result;
 }
 
+ECPoint ec_point_msm(const std::vector<const ECPoint*>& points,
+                     const std::vector<ZnElement>& scalars) {
+    TAIHANG_ASSERT(points.size() == scalars.size(), "MSM: Size mismatch.");
+    TAIHANG_ASSERT(!points.empty(), "MSM: Size is zero.");
+
+    const ECGroup* group_ctx = points[0]->group_ctx;
+    ECPoint result(group_ctx);
+    std::vector<const EC_POINT*> points_raw(points.size());
+    std::vector<const BIGNUM*> scalars_raw(scalars.size());
+    for (std::size_t i = 0; i < points.size(); ++i) {
+        points_raw[i] = points[i]->pt_ptr;
+        scalars_raw[i] = scalars[i].value.bn_ptr;
+    }
+
+    const int status = EC_POINTs_mul(
+        group_ctx->group_ptr,
+        result.pt_ptr,
+        nullptr,
+        points.size(),
+        points_raw.data(),
+        scalars_raw.data(),
+        BnContext::get());
+    TAIHANG_CHECK(status == 1, "MSM Failed.");
+    return result;
+}
+
+ECPoint ec_point_msm(const ECPoint& point_a,
+                     const ZnElement& scalar_a,
+                     const ECPoint& point_b,
+                     const ZnElement& scalar_b) {
+    const ECGroup* group_ctx = point_a.group_ctx;
+    ECPoint result(group_ctx);
+    const EC_POINT* points[2] = {point_a.pt_ptr, point_b.pt_ptr};
+    const BIGNUM* scalars[2] = {
+        scalar_a.value.bn_ptr,
+        scalar_b.value.bn_ptr,
+    };
+
+    const int status = EC_POINTs_mul(
+        group_ctx->group_ptr,
+        result.pt_ptr,
+        nullptr,
+        2,
+        points,
+        scalars,
+        BnContext::get());
+    TAIHANG_CHECK(status == 1, "Two-term MSM failed.");
+    return result;
+}
+
+ECPoint ec_point_msm_with_generator(
+    const ZnElement& generator_scalar,
+    const std::vector<const ECPoint*>& points,
+    const std::vector<ZnElement>& scalars) {
+    TAIHANG_ASSERT(points.size() == scalars.size(), "MSM: Size mismatch.");
+    TAIHANG_ASSERT(!points.empty(), "MSM: Size is zero.");
+
+    const ECGroup* group_ctx = points[0]->group_ctx;
+    ECPoint result(group_ctx);
+    std::vector<const EC_POINT*> points_raw(points.size());
+    std::vector<const BIGNUM*> scalars_raw(scalars.size());
+    for (std::size_t i = 0; i < points.size(); ++i) {
+        points_raw[i] = points[i]->pt_ptr;
+        scalars_raw[i] = scalars[i].value.bn_ptr;
+    }
+
+    const int status = EC_POINTs_mul(
+        group_ctx->group_ptr,
+        result.pt_ptr,
+        generator_scalar.value.bn_ptr,
+        points.size(),
+        points_raw.data(),
+        scalars_raw.data(),
+        BnContext::get());
+    TAIHANG_CHECK(status == 1, "MSM with generator failed.");
+    return result;
+}
+
 ECPoint ec_point_msm(const std::vector<ECPoint>& vec_A, const std::vector<ZnElement>& vec_a, size_t start_index, size_t end_index) {
     size_t n = end_index - start_index;
 
@@ -683,26 +769,196 @@ ECPoint hash_to_curve_fast(const Block& input_block, const ECGroup& group) {
 
 // --- 2. Standard Path Implementations ---
 
-ECPoint hash_to_curve_standard(const uint8_t* input_bytes, size_t len, const std::string& dst, const ECGroup& group) {
-    // RFC 9380 involves: 1. expand_message_xmd, 2. SSWU map, 3. Addition
-    // We utilize 48 bytes (L) for P-256 to ensure negligible bias.
-    size_t L = 48; 
-    std::vector<uint8_t> pseudo_random_bytes(2 * L); 
-    
-    // expand_message_xmd(data, dst, 2*L) implementation logic here...
-    // (Calls internal SHA256-based block expansion)
+namespace {
 
-    BigInt u0, u1;
-    BN_bin2bn(pseudo_random_bytes.data(), L, u0.bn_ptr);
-    BN_bin2bn(pseudo_random_bytes.data() + L, L, u1.bn_ptr);
+constexpr std::size_t kSha256DigestSize = 32;
+constexpr std::size_t kSha256BlockSize = 64;
+constexpr std::size_t kP256HashToFieldLength = 48;
 
-    // Map to curve using SSWU (Shallue-van de Woestijne-Ulas)
-    // Q0 = map_to_curve_sswu(u0 mod p); Q1 = map_to_curve_sswu(u1 mod p);
-    // return Q0 + Q1;
-    
-    // For this context, we return an identity point if SSWU logic is not yet linked
-    TAIHANG_ASSERT(false, "Standard Path: SSWU Math mapping implementation required.");
-    return ECPoint(&group);
+std::array<uint8_t, kSha256DigestSize>
+sha256(std::initializer_list<std::span<const uint8_t>> inputs) {
+    cryptohash::State state(cryptohash::Provider::SHA256);
+    for (const auto input : inputs) state.update(input.data(), input.size());
+    std::array<uint8_t, kSha256DigestSize> output{};
+    state.finalize(output.data());
+    return output;
+}
+
+std::vector<uint8_t> normalize_xmd_dst(const std::string& dst) {
+    TAIHANG_ASSERT(!dst.empty(), "hash_to_curve_standard: DST cannot be empty");
+    if (dst.size() <= 255) return std::vector<uint8_t>(dst.begin(), dst.end());
+
+    // RFC 9380, Section 5.3.3: long DSTs are first compressed with the
+    // suite hash and the fixed H2C-OVERSIZE-DST- prefix.
+    static constexpr std::array<uint8_t, 17> kOversizePrefix = {
+        'H', '2', 'C', '-', 'O', 'V', 'E', 'R', 'S', 'I', 'Z', 'E', '-', 'D', 'S', 'T', '-'
+    };
+    const auto digest = sha256({kOversizePrefix,
+                                std::span<const uint8_t>(
+                                    reinterpret_cast<const uint8_t*>(dst.data()), dst.size())});
+    return std::vector<uint8_t>(digest.begin(), digest.end());
+}
+
+std::vector<uint8_t> expand_message_xmd_sha256(const uint8_t* message,
+                                                std::size_t message_length,
+                                                const std::string& dst,
+                                                std::size_t output_length) {
+    const std::size_t ell = (output_length + kSha256DigestSize - 1) /
+                            kSha256DigestSize;
+    TAIHANG_ASSERT(message != nullptr || message_length == 0,
+                   "expand_message_xmd: null message with nonzero length");
+    TAIHANG_ASSERT(ell > 0 && ell <= 255 && output_length <= 65535,
+                   "expand_message_xmd: invalid output length");
+
+    std::vector<uint8_t> dst_prime = normalize_xmd_dst(dst);
+    dst_prime.push_back(static_cast<uint8_t>(dst_prime.size()));
+
+    const std::array<uint8_t, kSha256BlockSize> zero_pad{};
+    const std::array<uint8_t, 2> length_string = {
+        static_cast<uint8_t>(output_length >> 8),
+        static_cast<uint8_t>(output_length)
+    };
+    const std::array<uint8_t, 1> zero = {0};
+    const std::span<const uint8_t> message_span(message, message_length);
+    const std::span<const uint8_t> dst_span(dst_prime);
+
+    // RFC 9380, Section 5.3.1, steps 6-8.
+    const auto b0 = sha256({zero_pad, message_span, length_string, zero, dst_span});
+    std::array<uint8_t, 1> counter = {1};
+    auto previous = sha256({b0, counter, dst_span});
+
+    std::vector<uint8_t> uniform_bytes;
+    uniform_bytes.reserve(ell * kSha256DigestSize);
+    uniform_bytes.insert(uniform_bytes.end(), previous.begin(), previous.end());
+
+    for (std::size_t i = 2; i <= ell; ++i) {
+        std::array<uint8_t, kSha256DigestSize> xor_block{};
+        std::transform(b0.begin(), b0.end(), previous.begin(), xor_block.begin(),
+                       [](uint8_t lhs, uint8_t rhs) { return lhs ^ rhs; });
+        counter[0] = static_cast<uint8_t>(i);
+        previous = sha256({xor_block, counter, dst_span});
+        uniform_bytes.insert(uniform_bytes.end(), previous.begin(), previous.end());
+    }
+    uniform_bytes.resize(output_length);
+    return uniform_bytes;
+}
+
+BigInt curve_equation(const BigInt& x, const ECGroup& group) {
+    // g(x) = x^3 + A*x + B over GF(p).
+    const BigInt x_squared = x.mod_square(group.p);
+    const BigInt x_cubed = x_squared.mod_mul(x, group.p);
+    return x_cubed.mod_add(group.a.mod_mul(x, group.p), group.p)
+                   .mod_add(group.b, group.p);
+}
+
+struct SimpleSwuP256Parameters {
+    BigInt z;
+    BigInt negative_b_over_a;
+    BigInt exceptional_x;
+
+    explicit SimpleSwuP256Parameters(const ECGroup& group)
+        : z(BigInt(uint64_t{0}).mod_sub(BigInt(uint64_t{10}), group.p)),
+          negative_b_over_a(BigInt(uint64_t{0}).mod_sub(group.b, group.p)
+                                .mod_mul(group.a.mod_inverse(group.p), group.p)),
+          exceptional_x(group.b.mod_mul(
+              z.mod_mul(group.a, group.p).mod_inverse(group.p), group.p)) {}
+};
+
+const SimpleSwuP256Parameters& p256_sswu_parameters(const ECGroup& group) {
+    // These values depend only on the standardized P-256 curve. Constructing
+    // them once avoids repeating two modular inversions for every mapped point.
+    static const SimpleSwuP256Parameters parameters(group);
+    return parameters;
+}
+
+bool square_root_if_exists(const BigInt& value,
+                           const BigInt& modulus,
+                           BigInt& root) {
+    ERR_clear_error();
+    if (BN_mod_sqrt(root.bn_ptr, value.bn_ptr, modulus.bn_ptr,
+                    BnContext::get()) != nullptr) {
+        return true;
+    }
+    // BN_mod_sqrt reports a non-residue through the OpenSSL error queue. The
+    // second SSWU candidate is guaranteed to be square, so this is a branch of
+    // the mapping rather than an error to expose to the caller.
+    ERR_clear_error();
+    return false;
+}
+
+ECPoint map_to_curve_simple_swu_p256(const BigInt& input,
+                                     const SimpleSwuP256Parameters& parameters,
+                                     const ECGroup& group) {
+    const BigInt zero(uint64_t{0});
+    const BigInt one(uint64_t{1});
+    const BigInt u = input.mod(group.p);
+    const BigInt u_squared = u.mod_square(group.p);
+
+    // RFC 9380, Section 6.6.2. The denominator is
+    // Z^2*u^4 + Z*u^2. inv0 maps zero to zero for the exceptional input.
+    const BigInt z_u_squared = parameters.z.mod_mul(u_squared, group.p);
+    const BigInt denominator = z_u_squared.mod_square(group.p)
+                                            .mod_add(z_u_squared, group.p);
+    BigInt inverse(uint64_t{0});
+    if (!denominator.is_zero()) inverse = denominator.mod_inverse(group.p);
+
+    BigInt x1 = parameters.negative_b_over_a.mod_mul(
+        one.mod_add(inverse, group.p), group.p);
+    if (denominator.is_zero()) x1 = parameters.exceptional_x;
+
+    const BigInt gx1 = curve_equation(x1, group);
+    const BigInt x2 = z_u_squared.mod_mul(x1, group.p);
+    const BigInt gx2 = curve_equation(x2, group);
+    BigInt x = x1;
+    BigInt y;
+    if (!square_root_if_exists(gx1, group.p, y)) {
+        x = x2;
+        const bool has_root = square_root_if_exists(gx2, group.p, y);
+        TAIHANG_CHECK(has_root, "hash_to_curve_standard: SSWU invariant failed");
+    }
+
+    // RFC sgn0 for a prime field is the least significant bit of the canonical
+    // integer encoding. Select the root having the same sign as u.
+    if (BN_is_odd(u.bn_ptr) != BN_is_odd(y.bn_ptr)) {
+        y = zero.mod_sub(y, group.p);
+    }
+
+    ECPoint point(&group);
+    const int result = EC_POINT_set_affine_coordinates(group.group_ptr, point.pt_ptr,
+                                                        x.bn_ptr, y.bn_ptr,
+                                                        BnContext::get());
+    TAIHANG_CHECK(result == 1, "hash_to_curve_standard: failed to set SSWU point");
+    return point;
+}
+
+} // namespace
+
+ECPoint hash_to_curve_standard(const uint8_t* input_bytes, size_t len,
+                               const std::string& dst, const ECGroup& group) {
+    // Taihang's current hash provider surface exposes SHA-256 and SM3. This
+    // implementation therefore realizes the RFC 9380 P-256 suite exactly;
+    // P-384 and P-521 require SHA-384 and SHA-512 suite implementations.
+    TAIHANG_ASSERT(group.curve_id == NID_X9_62_prime256v1,
+                   "hash_to_curve_standard currently supports only P-256");
+
+    constexpr std::size_t kElementCount = 2;
+    const auto uniform_bytes = expand_message_xmd_sha256(
+        input_bytes, len, dst, kElementCount * kP256HashToFieldLength);
+
+    std::array<BigInt, kElementCount> field_elements;
+    for (std::size_t i = 0; i < kElementCount; ++i) {
+        field_elements[i].from_bytes(
+            uniform_bytes.data() + i * kP256HashToFieldLength,
+            kP256HashToFieldLength);
+        field_elements[i] = field_elements[i].mod(group.p);
+    }
+
+    // P256_XMD:SHA-256_SSWU_RO_: map two independent field elements, add the
+    // points, and clear the cofactor. P-256 has h_eff = 1, so the sum is final.
+    const auto& parameters = p256_sswu_parameters(group);
+    const ECPoint q0 = map_to_curve_simple_swu_p256(field_elements[0], parameters, group);
+    const ECPoint q1 = map_to_curve_simple_swu_p256(field_elements[1], parameters, group);
+    return q0 + q1;
 }
 
 ECPoint hash_to_curve_standard(const std::string& input_str, const std::string& dst, const ECGroup& group) {
@@ -720,7 +976,3 @@ size_t ECPointHash::operator()(const ECPoint& A) const noexcept {
 }
 
 } // namespace taihang
-
-
-
-

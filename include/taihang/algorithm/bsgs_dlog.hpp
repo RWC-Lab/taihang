@@ -34,9 +34,6 @@ struct BSGSConfig {
 
 class BSGSSolver {
 public:
-    static constexpr size_t   kHashKeyLen = 8;           // uint64_t hash per entry
-    static constexpr uint32_t kNotFound   = UINT32_MAX;  // sentinel for flat map miss
-
     // --- Context (non-owning) ---
     const ECGroup* group_ctx;
     ECPoint        g;
@@ -49,9 +46,13 @@ public:
     size_t sliced_giantstep_num;
 
     // --- Lookup Table Using Flat Hash Table ---
-    //   - Open addressing (no pointer chasing)
+    //   - Open addressing (no pointer chasing for the hash lookup)
     //   - Automatically reserves power-of-2 capacity
-    //   - ~2x faster lookup vs std::unordered_map for integer keys
+    //   - Table construction changes the xxHash seed until every baby-step
+    //     hash is unique, retaining one compact index per hash.
+    //   - Solving still verifies the final group equation because an external
+    //     query point can share a 64-bit hash with a table entry.
+    uint64_t hash_salt = 0;
     robin_hood::unordered_flat_map<uint64_t, uint32_t> key_to_index;
 
     // --- Giant Step State ---
@@ -71,6 +72,7 @@ public:
 
 private:
     void check_parameters() const;
+    bool populate_hashmap_if_unique(const std::vector<uint64_t>& hash_keys);
 };
 
 } // namespace taihang::dlog

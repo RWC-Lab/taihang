@@ -1,10 +1,17 @@
 #include <taihang/algorithm/bsgs_dlog.hpp>
-#include <taihang/crypto/bn_ctx.hpp>
+#include <array>
 #include <fstream>
-#include <cstring>
+#include <limits>
 #include <omp.h>
 
 namespace taihang::dlog {
+
+namespace {
+
+constexpr std::array<char, 8> kTableMagic = {'T', 'H', 'B', 'S', 'G', 'S', '0', '1'};
+constexpr uint64_t kTableFormatVersion = 1;
+
+} // namespace
 
 // --- Constructor ---
 
@@ -56,31 +63,67 @@ void BSGSSolver::check_parameters() const {
                    "BSGS: giantstep_num must be divisible by thread_num.");
 }
 
+bool BSGSSolver::populate_hashmap_if_unique(
+    const std::vector<uint64_t>& hash_keys) {
+    key_to_index.clear();
+    key_to_index.reserve(babystep_num * 2);
+
+    for (size_t i = 0; i < hash_keys.size(); ++i) {
+        const bool inserted =
+            key_to_index.emplace(hash_keys[i], static_cast<uint32_t>(i)).second;
+        if (!inserted) {
+            key_to_index.clear();
+            return false;
+        }
+    }
+    return true;
+}
+
 void BSGSSolver::build_and_save_table() {
     // Each thread computes its own start point independently to avoid
     // sequential dependency (thread i can't start until thread i-1 finishes).
 
-    std::vector<uint8_t> buffer(babystep_num * kHashKeyLen);
+    std::vector<uint64_t> hash_keys(babystep_num);
+    hash_salt = 0;
 
-    #pragma omp parallel for num_threads(bsgs_config.thread_num)
-    for (size_t i = 0; i < bsgs_config.thread_num; ++i) {
-        size_t start_index = i * sliced_babystep_num;  
-        ECPoint start_point  = g * BigInt(start_index);
-        // build sliced table
-        for (size_t j = 0; j < sliced_babystep_num; ++j) {
-            uint64_t hashkey = start_point.xxhash_to_uint64(); // 1 inversion per call
-            std::memcpy(buffer.data() + (start_index + j) * kHashKeyLen, &hashkey, kHashKeyLen);
-            //current = current + g;
-            start_point.add_inplace(g); 
+    // A different salt produces an independent 64-bit key assignment. Keep
+    // retrying until the baby-step table has exactly one index per hash.
+    while (true) {
+        #pragma omp parallel for num_threads(bsgs_config.thread_num)
+        for (size_t i = 0; i < bsgs_config.thread_num; ++i) {
+            const size_t start_index = i * sliced_babystep_num;
+            ECPoint point = g * BigInt(start_index);
+
+            for (size_t j = 0; j < sliced_babystep_num; ++j) {
+                hash_keys[start_index + j] = point.xxhash_to_uint64(hash_salt);
+                point.add_inplace(g);
+            }
         }
+
+        if (populate_hashmap_if_unique(hash_keys)) {
+            break;
+        }
+
+        TAIHANG_ASSERT(hash_salt != std::numeric_limits<uint64_t>::max(),
+                       "BSGS: Exhausted the hash-salt space.");
+        ++hash_salt;
     }
 
     const std::string filename = get_table_filename();
     std::ofstream fout(filename, std::ios::binary);
     TAIHANG_CHECK(fout.is_open(), "BSGS: Failed to open table file for writing.");
 
-    fout.write(reinterpret_cast<const char*>(&babystep_num), sizeof(babystep_num));
-    fout.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+    // Table layout: magic | version | baby-step count | hash salt | hash keys.
+    const uint64_t serialized_babystep_num = static_cast<uint64_t>(babystep_num);
+    fout.write(kTableMagic.data(), kTableMagic.size());
+    fout.write(reinterpret_cast<const char*>(&kTableFormatVersion),
+               sizeof(kTableFormatVersion));
+    fout.write(reinterpret_cast<const char*>(&serialized_babystep_num),
+               sizeof(serialized_babystep_num));
+    fout.write(reinterpret_cast<const char*>(&hash_salt), sizeof(hash_salt));
+    fout.write(reinterpret_cast<const char*>(hash_keys.data()),
+               static_cast<std::streamsize>(hash_keys.size() * sizeof(uint64_t)));
+    TAIHANG_CHECK(fout.good(), "BSGS: Failed to write the complete table file.");
     fout.close();
 }
 
@@ -89,23 +132,29 @@ void BSGSSolver::construct_hashmap_from_table(const std::string& filename) {
     std::ifstream fin(filename, std::ios::binary);
     TAIHANG_CHECK(fin.is_open(), "BSGS: Failed to open table file for reading.");
 
-    size_t file_babystep_num = 0;
+    std::array<char, kTableMagic.size()> file_magic{};
+    uint64_t file_version = 0;
+    uint64_t file_babystep_num = 0;
+    uint64_t file_hash_salt = 0;
+
+    fin.read(file_magic.data(), file_magic.size());
+    fin.read(reinterpret_cast<char*>(&file_version), sizeof(file_version));
     fin.read(reinterpret_cast<char*>(&file_babystep_num), sizeof(file_babystep_num));
-    TAIHANG_CHECK(file_babystep_num == babystep_num, "BSGS: Table file babystep_num mismatch — rebuild required.");
+    fin.read(reinterpret_cast<char*>(&file_hash_salt), sizeof(file_hash_salt));
+    TAIHANG_CHECK(fin.good(), "BSGS: Table header is truncated.");
+    TAIHANG_CHECK(file_magic == kTableMagic && file_version == kTableFormatVersion,
+                  "BSGS: Unsupported table format — rebuild required.");
+    TAIHANG_CHECK(file_babystep_num == babystep_num,
+                  "BSGS: Table babystep_num mismatch — rebuild required.");
 
-    std::vector<uint8_t> buffer(babystep_num * kHashKeyLen);
-    fin.read(reinterpret_cast<char*>(buffer.data()), buffer.size());
+    std::vector<uint64_t> hash_keys(babystep_num);
+    fin.read(reinterpret_cast<char*>(hash_keys.data()),
+             static_cast<std::streamsize>(hash_keys.size() * sizeof(uint64_t)));
+    TAIHANG_CHECK(fin.good(), "BSGS: Table data is truncated.");
 
-    key_to_index.clear();
-    // Reserve 2x capacity upfront: robin_hood targets ~50% load factor,
-    // pre-sizing avoids all rehashing during construction.
-    key_to_index.reserve(babystep_num * 2);
-
-    uint64_t hashkey;
-    for (size_t i = 0; i < babystep_num; ++i) {
-        std::memcpy(&hashkey, buffer.data() + i * kHashKeyLen, kHashKeyLen);
-        key_to_index.emplace(hashkey, static_cast<uint32_t>(i));
-    }
+    hash_salt = file_hash_salt;
+    TAIHANG_CHECK(populate_hashmap_if_unique(hash_keys),
+                  "BSGS: Table contains duplicate hashes — rebuild required.");
 }
 
 // --- Standard Path: Solving ---
@@ -113,7 +162,7 @@ std::optional<BigInt> BSGSSolver::solve(const ECPoint& h) const {
     TAIHANG_ASSERT(
         EC_GROUP_cmp(group_ctx->group_ptr, h.group_ctx->group_ptr, nullptr) == 0,
         "BSGS: Target point h is on a different curve.");
-    TAIHANG_ASSERT(is_ready(), "BSGS: Hashmap is not avaiable — call prepare() first.");
+    TAIHANG_ASSERT(is_ready(), "BSGS: Hashmap is not available — call prepare() first.");
 
     // std::atomic<bool> gives correct visibility across OMP threads
     // without the undefined behavior of plain bool shared across threads.
@@ -128,39 +177,41 @@ std::optional<BigInt> BSGSSolver::solve(const ECPoint& h) const {
         if (found.load(std::memory_order_relaxed)) continue;
 
         ECPoint target_point = h + search_offset_points[i];
-        size_t start_giant_index  = i * sliced_giantstep_num;
+        const size_t start_giant_index = i * sliced_giantstep_num;
 
         for (size_t j = 0; j < sliced_giantstep_num; ++j) {
             if (found.load(std::memory_order_relaxed)) break;
 
-            auto it = key_to_index.find(target_point.xxhash_to_uint64());
+            const uint64_t hash_key = target_point.xxhash_to_uint64(hash_salt);
+            const auto table_entry = key_to_index.find(hash_key);
 
-            if (it != key_to_index.end()) {
-                const size_t baby_index  = it->second;
+            if (table_entry != key_to_index.end()) {
                 const size_t giant_index = start_giant_index + j;
+                const BigInt candidate =
+                    BigInt(table_entry->second) +
+                    BigInt(giant_index) * BigInt(babystep_num);
 
-                #pragma omp critical
-                {
-                    if (!found.load(std::memory_order_relaxed)) {
-                        dlog_result = BigInt(baby_index) + BigInt(giant_index) * BigInt(babystep_num);
-                        found.store(true, std::memory_order_relaxed);
+                if (g * candidate == h) {
+                    #pragma omp critical
+                    {
+                        if (!found.load(std::memory_order_relaxed)) {
+                            dlog_result = candidate;
+                            found.store(true, std::memory_order_relaxed);
+                        }
                     }
+                    break;
                 }
-                break; // This thread is done regardless
+            }
+
+            target_point.add_inplace(giantstep_point);
         }
-        // target_point = target_point + giantstep_point;
-        target_point.add_inplace(giantstep_point);
     }
 
+    if (found.load()) {
+        return dlog_result;
     }
-
-    if (found.load()) return dlog_result;
     return std::nullopt;
 }
-
-
-
-
 
 // --- Helpers ---
 
@@ -175,7 +226,8 @@ void BSGSSolver::prepare() {
 }
 
 std::string BSGSSolver::get_table_filename() const {
-    return "bsgs_" + g.to_string()
+    return "bsgs_v" + std::to_string(kTableFormatVersion)
+         + "_" + g.to_string()
          + "_" + std::to_string(bsgs_config.range_bits)
          + "_" + std::to_string(bsgs_config.tradeoff_num)
          + ".table";

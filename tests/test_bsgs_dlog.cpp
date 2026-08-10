@@ -90,6 +90,22 @@ TEST_F(BSGSTest, OutOfRange) {
     ASSERT_FALSE(result.has_value());
 }
 
+TEST_F(BSGSTest, VerifiesCandidatePointAfterHashLookup) {
+    BSGSSolver solver = make_solver({.range_bits = 10, .tradeoff_num = 0, .thread_num = 1});
+
+    const BigInt exponent(uint64_t{10});
+    const ECPoint target = g * exponent;
+    const auto it =
+        solver.key_to_index.find(target.xxhash_to_uint64(solver.hash_salt));
+    ASSERT_NE(it, solver.key_to_index.end());
+
+    // Replace the hash-selected baby index with a different candidate. A
+    // hash-only solver would return the wrong exponent; candidate verification
+    // must reject it.
+    it->second = 11;
+    EXPECT_FALSE(solver.solve(target).has_value());
+}
+
 // --- 4. Parallel execution ---
 
 TEST_F(BSGSTest, ParallelExecution) {

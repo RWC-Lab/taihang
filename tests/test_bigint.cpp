@@ -54,6 +54,11 @@ TEST_F(BigIntModTest, ModularMultiplication) {
     EXPECT_EQ(a.mod_mul(b, m_prime7).to_uint64(), 5ULL);
 }
 
+TEST_F(BigIntModTest, GreatestCommonDivisor) {
+    EXPECT_EQ(BigInt(uint64_t{84}).gcd(BigInt(uint64_t{30})), BigInt(uint64_t{6}));
+    EXPECT_EQ(BigInt(uint64_t{0}).gcd(BigInt(uint64_t{30})), BigInt(uint64_t{30}));
+}
+
 // --- 2. Advanced Modular Arithmetic ---
 
 TEST_F(BigIntModTest, ModularInverse) {
@@ -100,6 +105,38 @@ TEST_F(BigIntModTest, ModuloNegativeResult) {
     // -10 mod 7 should wrap to 4
     BigInt res = neg_a.mod(m_prime7);
     EXPECT_EQ(res.to_uint64(), 4ULL);
+}
+
+TEST(BigIntBitTest, NonpositiveBitCountReturnsZero) {
+    const BigInt value("0x123456789ABCDEF");
+
+    EXPECT_TRUE(value.get_last_n_bits(0).is_zero());
+    EXPECT_TRUE(value.get_last_n_bits(-1).is_zero());
+}
+
+TEST(BigIntParsingTest, AcceptsCompleteStrings) {
+    BigInt value;
+
+    value.from_hex("ABCDEF");
+    EXPECT_EQ(value, BigInt("0xABCDEF"));
+
+    value.from_dec("-123456789");
+    EXPECT_EQ(value, BigInt("-123456789"));
+}
+
+TEST(BigIntParsingTest, RejectsPartiallyParsedStrings) {
+#ifdef NDEBUG
+    BigInt value(uint64_t{7});
+
+    value.from_hex("ABCXYZ");
+    EXPECT_EQ(value, BigInt(uint64_t{7}));
+
+    value.from_dec("123abc");
+    EXPECT_EQ(value, BigInt(uint64_t{7}));
+#else
+    EXPECT_DEATH(BigInt().from_hex("ABCXYZ"), "requires a complete hexadecimal string");
+    EXPECT_DEATH(BigInt().from_dec("123abc"), "requires a complete decimal string");
+#endif
 }
 
 // --- 4. Stress Test (P-256 scale) ---

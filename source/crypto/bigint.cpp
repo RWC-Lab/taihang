@@ -157,17 +157,11 @@ BigInt BigInt::exp(const BigInt& exponent) const {
 
 
 // --- Modular Arithmetic ---
-BigInt BigInt::gcd(const BigInt& other) const
-{
+BigInt BigInt::gcd(const BigInt& other) const {
     BigInt result;
-    BN_CTX* ctx = BN_CTX_new();
-
-    if (!BN_gcd(result.bn_ptr, bn_ptr, other.bn_ptr, ctx)) {
-        BN_CTX_free(ctx);
-        TAIHANG_ASSERT(false, "BN_gcd failed");
-    }
-
-    BN_CTX_free(ctx);
+    BN_CTX* ctx = BnContext::get();
+    const int ret = BN_gcd(result.bn_ptr, bn_ptr, other.bn_ptr, ctx);
+    TAIHANG_ASSERT(ret == 1, "BigInt::gcd failed.");
     return result;
 }
 
@@ -290,20 +284,17 @@ BigInt& BigInt::operator>>=(int n)
 
 
 BigInt BigInt::get_last_n_bits(int n) const {
-    // If n is 0, return 0
-    if (n <= 0) BigInt(uint64_t{0});
-
-    BigInt result(*this); // Copy current value
-    
-    // BN_mask_bits truncates the BIGNUM to n bits.
-    // It returns 1 on success, 0 on failure.
-    if (1 != BN_mask_bits(result.bn_ptr, n)) {
-        // BN_mask_bits can fail if the BIGNUM is already shorter than n bits
-        // in some OpenSSL versions, or if n is negative.
-        // If it fails because the number is already small, the result is just the number.
-        return result; 
+    if (n <= 0) {
+        return BigInt(uint64_t{0});
     }
-    
+
+    if (static_cast<size_t>(n) >= get_bit_length()) {
+        return *this;
+    }
+
+    BigInt result(*this);
+    const int ret = BN_mask_bits(result.bn_ptr, n);
+    TAIHANG_ASSERT(ret == 1, "BigInt::get_last_n_bits failed.");
     return result;
 }
 
@@ -410,15 +401,14 @@ std::string BigInt::to_hex() const {
 }
 
 void BigInt::from_hex(const std::string& hex_str) {
-    // BN_hex2bn allocates if *bn is NULL, or reallocates if needed.
-    // Since we allocated in constructor, we are safe.
-    // BUT: BN_hex2bn returns the number of characters processed, NOT 1/0 status in all versions.
-    // CHECK THE RETURN VALUE CAREFULLY.
-    
-    // Correct check: It returns 0 on error, or non-zero length on success.
-    if (BN_hex2bn(&this->bn_ptr, hex_str.c_str()) == 0) {
-        TAIHANG_ASSERT(false, "BigInt: from_hex failed.");
+    BigInt parsed;
+    const int parsed_len = BN_hex2bn(&parsed.bn_ptr, hex_str.c_str());
+    if (parsed_len <= 0 || static_cast<size_t>(parsed_len) != hex_str.size()) {
+        TAIHANG_ASSERT(false, "BigInt::from_hex requires a complete hexadecimal string.");
+        return;
     }
+
+    *this = std::move(parsed);
 }
 
 std::string BigInt::to_dec() const {
@@ -430,9 +420,14 @@ std::string BigInt::to_dec() const {
 }
 
 void BigInt::from_dec(const std::string& dec_str) {
-    if (BN_dec2bn(&this->bn_ptr, dec_str.c_str()) == 0) {
-        TAIHANG_ASSERT(false, "BigInt: from_dec failed.");
+    BigInt parsed;
+    const int parsed_len = BN_dec2bn(&parsed.bn_ptr, dec_str.c_str());
+    if (parsed_len <= 0 || static_cast<size_t>(parsed_len) != dec_str.size()) {
+        TAIHANG_ASSERT(false, "BigInt::from_dec requires a complete decimal string.");
+        return;
     }
+
+    *this = std::move(parsed);
 }
 
 // --- Random Generation ---
