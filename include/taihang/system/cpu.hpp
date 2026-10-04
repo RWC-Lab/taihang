@@ -8,6 +8,15 @@
 
 namespace taihang::system {
 
+/** @brief CPU SIMD features used by optional cryptographic backends. */
+struct CpuFeatures {
+    bool avx2 = false;
+    bool avx512_ifma = false;
+};
+
+/** @brief Detect SIMD features supported by both the CPU and operating system. */
+CpuFeatures get_cpu_features() noexcept;
+
 /**
  * @brief Returns the number of physical CPU cores.
  *

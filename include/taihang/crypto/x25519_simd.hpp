@@ -4,8 +4,8 @@
  * @author    Yang Cao
  *****************************************************************************/
 
-#ifndef TAIHANG_SYSTEM_X25519_SIMD_HPP
-#define TAIHANG_SYSTEM_X25519_SIMD_HPP
+#ifndef TAIHANG_CRYPTO_X25519_SIMD_HPP
+#define TAIHANG_CRYPTO_X25519_SIMD_HPP
 
 #include <taihang/crypto/ec25519_point.hpp>
 
@@ -13,7 +13,7 @@
 #include <string_view>
 #include <vector>
 
-namespace taihang::system::x25519_simd {
+namespace taihang::crypto::x25519_simd {
 
 /** @brief X25519 scalar-multiplication implementation. */
 enum class Backend {
@@ -43,6 +43,6 @@ void scalar_mul_batch(std::vector<EC25519Point>& points,
                       const std::vector<uint8_t>& scalar,
                       Backend backend = Backend::Auto);
 
-} // namespace taihang::system::x25519_simd
+} // namespace taihang::crypto::x25519_simd
 
-#endif // TAIHANG_SYSTEM_X25519_SIMD_HPP
+#endif // TAIHANG_CRYPTO_X25519_SIMD_HPP

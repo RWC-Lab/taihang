@@ -6,8 +6,9 @@
  * @author    Yang Cao
  *****************************************************************************/
 
-#include <taihang/system/x25519_simd.hpp>
+#include <taihang/crypto/x25519_simd.hpp>
 #include <taihang/common/config.hpp>
+#include <taihang/system/cpu.hpp>
 
 #include <algorithm>
 #include <array>
@@ -17,14 +18,13 @@
 #include <stdexcept>
 
 #if TAIHANG_X25519_AVX2_ENABLED || TAIHANG_X25519_IFMA512_ENABLED
-#include <cpuid.h>
 #include <immintrin.h>
 #define TAIHANG_X25519_SIMD_X86 1
 #else
 #define TAIHANG_X25519_SIMD_X86 0
 #endif
 
-namespace taihang::system::x25519_simd {
+namespace taihang::crypto::x25519_simd {
 
 using Bytes32 = std::array<uint8_t, EC25519Point::POINT_BYTE_LEN>;
 
@@ -45,7 +45,7 @@ void secure_zero(T& value) noexcept {
 
 } // namespace detail
 
-} // namespace taihang::system::x25519_simd
+} // namespace taihang::crypto::x25519_simd
 
 #if TAIHANG_X25519_SIMD_X86
 
@@ -55,7 +55,7 @@ void secure_zero(T& value) noexcept {
 #pragma GCC target("avx2")
 
 
-namespace taihang::system::x25519_simd::detail::avx2_field {
+namespace taihang::crypto::x25519_simd::detail::avx2_field {
 
 struct alignas(32) FieldElement {
     __m256i limbs[9];
@@ -89,7 +89,7 @@ void conditional_swap(FieldElement& lhs,
 void decode(FieldElement& result, const LaneBytes& input) noexcept;
 void encode(LaneBytes& output, FieldElement& value) noexcept;
 
-} // namespace taihang::system::x25519_simd::detail::avx2_field
+} // namespace taihang::crypto::x25519_simd::detail::avx2_field
 
 #define NWORDS 9
 #define BITS29 29
@@ -108,7 +108,7 @@ void encode(LaneBytes& output, FieldElement& value) noexcept;
 #define VSET164(X) _mm256_set1_epi64x(X)
 #define VZERO _mm256_setzero_si256()
 
-namespace taihang::system::x25519_simd::detail::avx2_field::avxecc {
+namespace taihang::crypto::x25519_simd::detail::avx2_field::avxecc {
 
 
 /**
@@ -680,7 +680,7 @@ void mpi29_copy_avx2(__m256i *r, const __m256i *a)
   r[8] = a[8];
 }
 
-} // namespace taihang::system::x25519_simd::detail::avx2_field::avxecc
+} // namespace taihang::crypto::x25519_simd::detail::avx2_field::avxecc
 
 #undef BITS29
 #undef CONSTC
@@ -698,7 +698,7 @@ void mpi29_copy_avx2(__m256i *r, const __m256i *a)
 #undef VZERO
 #undef VXOR
 
-namespace taihang::system::x25519_simd::detail::avx2_field {
+namespace taihang::crypto::x25519_simd::detail::avx2_field {
 
 void set_zero(FieldElement& result) noexcept {
   for (auto& limb : result.limbs) {
@@ -917,9 +917,9 @@ void encode(LaneBytes& output, FieldElement& value) noexcept {
   }
 }
 
-} // namespace taihang::system::x25519_simd::detail::avx2_field
+} // namespace taihang::crypto::x25519_simd::detail::avx2_field
 
-namespace taihang::system::x25519_simd::detail {
+namespace taihang::crypto::x25519_simd::detail {
 
 struct ProjectivePointAvx2 {
     avx2_field::FieldElement x;
@@ -1070,7 +1070,7 @@ void x25519_avx2_many(EC25519Point* output,
     secure_zero(packed_scalar);
 }
 
-} // namespace taihang::system::x25519_simd::detail
+} // namespace taihang::crypto::x25519_simd::detail
 
 
 #pragma GCC pop_options
@@ -1081,7 +1081,7 @@ void x25519_avx2_many(EC25519Point* output,
 #pragma GCC target("avx512f,avx512ifma")
 
 
-namespace taihang::system::x25519_simd::detail::ifma512_field {
+namespace taihang::crypto::x25519_simd::detail::ifma512_field {
 
 struct alignas(64) FieldElement {
     __m512i limbs[5];
@@ -1112,9 +1112,9 @@ void conditional_swap(FieldElement& lhs,
 void decode(FieldElement& result, const LaneBytes& input) noexcept;
 void encode(LaneBytes& output, FieldElement& value) noexcept;
 
-} // namespace taihang::system::x25519_simd::detail::ifma512_field
+} // namespace taihang::crypto::x25519_simd::detail::ifma512_field
 
-namespace taihang::system::x25519_simd::detail::ifma_common {
+namespace taihang::crypto::x25519_simd::detail::ifma_common {
 
 constexpr std::uint64_t kMask52 = (std::uint64_t{1} << 52U) - 1U;
 constexpr std::uint64_t kMask47 = (std::uint64_t{1} << 47U) - 1U;
@@ -1489,9 +1489,9 @@ void encode(LaneBytes& output, FieldElement& value) noexcept {
     secure_zero(limbs);
 }
 
-} // namespace taihang::system::x25519_simd::detail::ifma_common
+} // namespace taihang::crypto::x25519_simd::detail::ifma_common
 
-namespace taihang::system::x25519_simd::detail::ifma512_field::implementation {
+namespace taihang::crypto::x25519_simd::detail::ifma512_field::implementation {
 
 struct Operations {
     using Vector = __m512i;
@@ -1551,9 +1551,9 @@ struct Operations {
     }
 };
 
-} // namespace taihang::system::x25519_simd::detail::ifma512_field::implementation
+} // namespace taihang::crypto::x25519_simd::detail::ifma512_field::implementation
 
-namespace taihang::system::x25519_simd::detail::ifma512_field {
+namespace taihang::crypto::x25519_simd::detail::ifma512_field {
 
 void set_zero(FieldElement& result) noexcept {
     ifma_common::set_zero<implementation::Operations>(result);
@@ -1613,9 +1613,9 @@ void encode(LaneBytes& output, FieldElement& value) noexcept {
     ifma_common::encode<implementation::Operations>(output, value);
 }
 
-} // namespace taihang::system::x25519_simd::detail::ifma512_field
+} // namespace taihang::crypto::x25519_simd::detail::ifma512_field
 
-namespace taihang::system::x25519_simd::detail::ifma512_implementation {
+namespace taihang::crypto::x25519_simd::detail::ifma512_implementation {
 
 struct ProjectivePoint {
     ifma512_field::FieldElement x;
@@ -1686,9 +1686,9 @@ void multiply_eight(ifma512_field::FieldElement& result,
     secure_zero(previous_bit);
 }
 
-} // namespace taihang::system::x25519_simd::detail::ifma512_implementation
+} // namespace taihang::crypto::x25519_simd::detail::ifma512_implementation
 
-namespace taihang::system::x25519_simd::detail {
+namespace taihang::crypto::x25519_simd::detail {
 
 void x25519_ifma512_many(EC25519Point* output,
                          const Bytes32& scalar,
@@ -1736,7 +1736,7 @@ void x25519_ifma512_many(EC25519Point* output,
     secure_zero(clamped_scalar);
 }
 
-} // namespace taihang::system::x25519_simd::detail
+} // namespace taihang::crypto::x25519_simd::detail
 
 
 #pragma GCC pop_options
@@ -1744,59 +1744,9 @@ void x25519_ifma512_many(EC25519Point* output,
 
 #endif // TAIHANG_X25519_SIMD_X86
 
-namespace taihang::system::x25519_simd {
+namespace taihang::crypto::x25519_simd {
 
 namespace detail {
-
-struct CpuFeatures {
-    bool avx2 = false;
-    bool ifma512 = false;
-};
-
-CpuFeatures detect_cpu_features() noexcept {
-    CpuFeatures features{};
-
-#if TAIHANG_X25519_SIMD_X86
-    if (__get_cpuid_max(0, nullptr) < 1) {
-        return features;
-    }
-
-    unsigned int eax = 0;
-    unsigned int ebx = 0;
-    unsigned int ecx = 0;
-    unsigned int edx = 0;
-    __cpuid(1, eax, ebx, ecx, edx);
-
-    if ((ecx & bit_AVX) == 0 || (ecx & bit_OSXSAVE) == 0) {
-        return features;
-    }
-
-    uint32_t xcr0_low = 0;
-    uint32_t xcr0_high = 0;
-    __asm__ volatile("xgetbv"
-                     : "=a"(xcr0_low), "=d"(xcr0_high)
-                     : "c"(0));
-    (void)xcr0_high;
-
-    if (__get_cpuid_max(0, nullptr) < 7) {
-        return features;
-    }
-
-    __cpuid_count(7, 0, eax, ebx, ecx, edx);
-#if TAIHANG_X25519_AVX2_ENABLED
-    features.avx2 =
-        (xcr0_low & 0x6U) == 0x6U && (ebx & bit_AVX2) != 0;
-#endif
-#if TAIHANG_X25519_IFMA512_ENABLED
-    features.ifma512 =
-        (xcr0_low & 0xe6U) == 0xe6U &&
-        (ebx & bit_AVX512F) != 0 &&
-        (ebx & bit_AVX512IFMA) != 0;
-#endif
-#endif
-
-    return features;
-}
 
 void scalar_mul_openssl(std::vector<EC25519Point>& points,
                         const std::vector<uint8_t>& scalar) {
@@ -1823,8 +1773,7 @@ std::string_view backend_name(Backend backend) noexcept {
 }
 
 bool backend_available(Backend backend) noexcept {
-    static const detail::CpuFeatures features =
-        detail::detect_cpu_features();
+    static const system::CpuFeatures features = system::get_cpu_features();
 
     switch (backend) {
         case Backend::Auto:
@@ -1838,7 +1787,7 @@ bool backend_available(Backend backend) noexcept {
 #endif
         case Backend::Ifma512:
 #if TAIHANG_X25519_IFMA512_ENABLED
-            return features.ifma512;
+            return features.avx512_ifma;
 #else
             return false;
 #endif
@@ -1910,6 +1859,6 @@ void scalar_mul_batch(std::vector<EC25519Point>& points,
     detail::secure_zero(scalar_bytes);
 }
 
-} // namespace taihang::system::x25519_simd
+} // namespace taihang::crypto::x25519_simd
 
 #undef TAIHANG_X25519_SIMD_X86
