@@ -57,14 +57,14 @@ void NetIO::buffer(const T& n){
     buffer(&n, sizeof(T));
 }
 
-// assume vec_a.size() are known by both sides 
+// Assume vec_a.size() is known by both sides.
 void NetIO::buffer(const std::vector<uint8_t>& vec_a) {
     if (vec_a.size() == 0) return;
     const auto* p = static_cast<const uint8_t*>(vec_a.data());
     send_buffer.insert(send_buffer.end(), p, p + vec_a.size());
 }
 
-// assume vec_a.size() are known by both sides 
+// Assume vec_a.size() is known by both sides.
 void NetIO::buffer(const std::vector<ECPoint>& vec_a) {
     if (vec_a.size() == 0) return;
     size_t point_byte_len = vec_a[0].group_ctx->get_point_byte_len();
@@ -80,7 +80,7 @@ void NetIO::buffer(const std::vector<ECPoint>& vec_a) {
     }
 }
 
-// assume vec_a.size() are known by both sides 
+// Assume vec_a.size() is known by both sides.
 void NetIO::buffer(const std::vector<EC25519Point>& vec_a) {
     if (vec_a.size() == 0) return;
     size_t point_byte_len = EC25519Point::POINT_BYTE_LEN;
@@ -124,7 +124,7 @@ void NetIO::buffer(const Block& b) {
     buffer(&b, sizeof(Block));
 }
 
-// assume vec_b.size() are known by both sides 
+// Assume vec_b.size() is known by both sides.
 void NetIO::buffer(const std::vector<Block>& vec_b) {
     if (vec_b.size() == 0) return;
     size_t offset = send_buffer.size();
@@ -136,8 +136,8 @@ void NetIO::buffer(const std::vector<Block>& vec_b) {
     std::memcpy(dst, vec_b.data(), vec_b.size() * sizeof(Block));
 }
 
-// assume vec_M.size() are known by both sides
-// each item has the same item len, but item_len may not known by the receiver 
+// Assume vec_M.size() is known by both sides.
+// Each item has the same length, but item_len may not be known by the receiver.
 void NetIO::buffer(const std::vector<std::vector<uint8_t>>& M) {
     if (M.empty()) return;
     size_t item_len = M[0].size();
@@ -155,8 +155,8 @@ void NetIO::buffer(const std::vector<std::vector<uint8_t>>& M) {
     }
 }
 
-// assume vec_S.size() are known by both sides
-// each string has the same str len, but str_len may not known by the receiver 
+// Assume vec_S.size() is known by both sides.
+// Each string has the same length, but str_len may not be known by the receiver.
 void NetIO::buffer(const std::vector<std::string>& S) {
     if (S.empty()) return;
 

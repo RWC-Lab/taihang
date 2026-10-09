@@ -18,10 +18,9 @@
 #include <iostream>
 #include <fstream>
 
-/* 
-** x25519 in OpenSSL is not available for outside invoke 
-** here we do some hacking to make it public accessable
-** interface for curve 25519 multiplication
+/*
+** OpenSSL does not expose X25519 scalar multiplication for direct external use.
+** Taihang provides a public interface for Curve25519 multiplication.
 */
 extern "C"
 {

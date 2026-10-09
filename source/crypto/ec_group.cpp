@@ -382,11 +382,11 @@ void ECPoint::to_bytes(uint8_t* buffer) const {
                                    POINT_CONVERSION_UNCOMPRESSED;
 
     // We pass 'fixed_len' as the buffer length. OpenSSL will fill it.
-    size_t actural_len = EC_POINT_point2oct(group_ctx->group_ptr, pt_ptr, form, 
-                                        buffer, fixed_len, BnContext::get());
+    size_t actual_len = EC_POINT_point2oct(group_ctx->group_ptr, pt_ptr, form,
+                                           buffer, fixed_len, BnContext::get());
 
     // Sanity check: ensure OpenSSL wrote the expected number of bytes
-    TAIHANG_CHECK(actural_len == fixed_len, "ECPoint serialization size mismatch.");
+    TAIHANG_CHECK(actual_len == fixed_len, "ECPoint serialization size mismatch.");
 }
 
 std::vector<uint8_t> ECPoint::to_bytes() const {
