@@ -39,17 +39,43 @@ find_package(OpenMP REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(xxHash REQUIRED CONFIG)
 
+include(CheckCXXCompilerFlag)
+set(TAIHANG_X25519_AVX2_ENABLED 0)
+set(TAIHANG_X25519_IFMA512_ENABLED 0)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND
+   CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|amd64|AMD64")
+    check_cxx_compiler_flag("-mavx2" TAIHANG_COMPILER_SUPPORTS_AVX2)
+    check_cxx_compiler_flag("-mavx512f" TAIHANG_COMPILER_SUPPORTS_AVX512F)
+    check_cxx_compiler_flag("-mavx512ifma" TAIHANG_COMPILER_SUPPORTS_AVX512IFMA)
+    if(TAIHANG_COMPILER_SUPPORTS_AVX2)
+        set(TAIHANG_X25519_AVX2_ENABLED 1)
+    endif()
+    if(TAIHANG_COMPILER_SUPPORTS_AVX512F AND
+       TAIHANG_COMPILER_SUPPORTS_AVX512IFMA)
+        set(TAIHANG_X25519_IFMA512_ENABLED 1)
+    endif()
+endif()
+
+message(STATUS "Taihang: X25519 AVX2 compiler support: ${TAIHANG_X25519_AVX2_ENABLED}")
+message(STATUS "Taihang: X25519 AVX-512 IFMA compiler support: ${TAIHANG_X25519_IFMA512_ENABLED}")
+message(STATUS "Taihang: X25519 backend selection uses runtime CPUID/XGETBV")
+
 # ------------------------------------------------------------
 # 3. Library Definition
 # ------------------------------------------------------------
 
 file(GLOB_RECURSE TAIHANG_SOURCES
     CONFIGURE_DEPENDS
-    ${PROJECT_SOURCE_DIR}/source/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp
 )
 
 add_library(taihang STATIC ${TAIHANG_SOURCES})
 add_library(taihang::taihang ALIAS taihang)
+
+target_compile_definitions(taihang PRIVATE
+    TAIHANG_X25519_AVX2_ENABLED=${TAIHANG_X25519_AVX2_ENABLED}
+    TAIHANG_X25519_IFMA512_ENABLED=${TAIHANG_X25519_IFMA512_ENABLED}
+)
 
 # ------------------------------------------------------------
 # 4. Compiler Flags
@@ -59,7 +85,7 @@ function(taihang_apply_arch_flags TARGET_NAME)
 
     if(MSVC)
 
-        target_compile_options(${TARGET_NAME} PRIVATE /W4 /Ot /arch:AVX2)
+        target_compile_options(${TARGET_NAME} PRIVATE /W4 /Ot)
 
     else()
 
@@ -75,8 +101,11 @@ function(taihang_apply_arch_flags TARGET_NAME)
 
             message(STATUS "Taihang: Adding x86_64 SIMD flags")
 
+            # Keep generic objects free of AVX instructions. The X25519 SIMD
+            # translation unit uses target attributes, and runtime CPUID/XGETBV
+            # dispatch selects AVX-512 IFMA, AVX2, or OpenSSL safely.
             target_compile_options(${TARGET_NAME} PRIVATE
-                -maes -mpclmul -msse4.1 -mavx -mavx2 -mrdseed
+                -maes -mpclmul -msse4.1
             )
 
             target_compile_definitions(${TARGET_NAME} PRIVATE TAIHANG_ARCH_X64)
