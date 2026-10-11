@@ -51,8 +51,12 @@ void secure_zero(T& value) noexcept {
 
 #if TAIHANG_X25519_AVX2_ENABLED
 
+#if defined(__clang__)
+#pragma clang attribute push(__attribute__((target("avx2"))), apply_to = function)
+#elif defined(__GNUC__)
 #pragma GCC push_options
 #pragma GCC target("avx2")
+#endif
 
 
 namespace taihang::crypto::x25519_simd::detail::avx2_field {
@@ -1073,12 +1077,20 @@ void x25519_avx2_many(EC25519Point* output,
 } // namespace taihang::crypto::x25519_simd::detail
 
 
+#if defined(__clang__)
+#pragma clang attribute pop
+#elif defined(__GNUC__)
 #pragma GCC pop_options
+#endif
 #endif // TAIHANG_X25519_AVX2_ENABLED
 
 #if TAIHANG_X25519_IFMA512_ENABLED
+#if defined(__clang__)
+#pragma clang attribute push(__attribute__((target("avx512f,avx512ifma"))), apply_to = function)
+#elif defined(__GNUC__)
 #pragma GCC push_options
 #pragma GCC target("avx512f,avx512ifma")
+#endif
 
 
 namespace taihang::crypto::x25519_simd::detail::ifma512_field {
@@ -1739,7 +1751,11 @@ void x25519_ifma512_many(EC25519Point* output,
 } // namespace taihang::crypto::x25519_simd::detail
 
 
+#if defined(__clang__)
+#pragma clang attribute pop
+#elif defined(__GNUC__)
 #pragma GCC pop_options
+#endif
 #endif // TAIHANG_X25519_IFMA512_ENABLED
 
 #endif // TAIHANG_X25519_SIMD_X86
