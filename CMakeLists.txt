@@ -159,6 +159,7 @@ if(TAIHANG_ENABLE_LTO)
 
     if(result)
         set_property(TARGET taihang PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
     endif()
 
 endif()
