@@ -216,3 +216,27 @@ Because std::istream::operator>> automatically skips whitespace before parsing t
 
 ## 尽量使用std::array代替C数组和std::vector
 
+
+## Batching and Buffer Reuse
+
+**Batching independent work**
+
+The CBC hash of a matrix row is sequential: each block depends on the result from the previous block. Different rows have independent hash states and can be processed together.
+
+With `base_len = 128`, each ALSZ row contains exactly one `Block`. Its CBC hash uses a fixed key and a zero IV, making the result simply `AES_K(x)`. Several rows can therefore be hashed with a single call to `encrypt_ecb()`. Taihang’s batch AES routine applies each encryption round to eight blocks before proceeding to the next round. Since the blocks are independent, the processor can overlap work on different blocks. ALSZ hashes the rows directly in the output buffer. This avoids allocating a temporary vector for each row and making another copy inside `hash_blocks_to_block()`.
+
+**Processing matrices in blocks**
+
+The amount of temporary memory a computation needs depends on how its steps are organized. If later steps can work on a small part of a matrix independently, that part can be processed through to completion before moving on.
+
+In ALSZ, a group of rows can be generated, transposed, and hashed to produce the corresponding keys. The temporary buffer can then be reused for the next group. This avoids keeping the entire matrix and its transposed copy in memory at the same time.
+
+The design principle is to distinguish between results that must be retained and intermediate data whose storage can be reused after consumption.
+
+**Reusing buffers across stages**
+
+Separate operations do not always need separate buffers. The PRG accepts an output pointer, so random blocks can be generated directly into a matrix column without allocating a temporary vector and copying its contents.
+
+For `BlockPolicy`, the sender computes each ciphertext as `key ^ message` and overwrites the corresponding key with the result. The receiver computes `key ^ ciphertext` for each selected ciphertext and likewise replaces the key with the recovered message. Since the keys are no longer needed after these operations, the same buffers can hold the ciphertexts or recovered messages without allocating separate arrays.
+
+NetIO's vector send overload first copies the array into an internal buffer. Sending directly from the existing array avoids that copy; pending buffered data must be flushed first to preserve send order.
