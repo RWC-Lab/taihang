@@ -233,18 +233,7 @@ inline std::string to_bytes(const Block &var) {
  * @param block_data Output array of blocks.
  * @param block_len Number of blocks to produce.
  */
-// AFTER — pack directly into bytes with LSB-first order, matching the transpose:
-inline void pack_bits_to_blocks(const uint8_t* byte_data, size_t byte_len, Block* block_data, size_t block_len) {
-    TAIHANG_ASSERT(byte_len == block_len * 128, "pack bits to blocks: size mismatch.");
-    uint8_t* out = reinterpret_cast<uint8_t*>(block_data);
-    std::memset(out, 0, block_len * 16);
-    for (size_t k = 0; k < byte_len; ++k) {
-        if (byte_data[k]) {
-            // bit k → byte k/8, bit position k%8 (LSB = bit 0)
-            out[k / 8] |= (uint8_t(1) << (k % 8));
-        }
-    }
-}
+void pack_bits_to_blocks(const uint8_t* byte_data, size_t byte_len, Block* block_data, size_t block_len);
 
 // --- Hashing & Random Oracles ---
 

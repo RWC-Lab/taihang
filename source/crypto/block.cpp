@@ -61,6 +61,57 @@ bool is_less_than(const Block &a, const Block &b) {
 #endif
 }
 
+// AFTER — pack directly into bytes with LSB-first order, matching the transpose:
+void pack_bits_to_blocks(const uint8_t* byte_data, size_t byte_len, Block* block_data, size_t block_len) {
+    TAIHANG_ASSERT(byte_len == block_len * 128, "pack bits to blocks: size mismatch.");
+    uint8_t* out = reinterpret_cast<uint8_t*>(block_data);
+#if defined(TAIHANG_ARCH_X64)
+    for (size_t i = 0; i < byte_len; i += 16) {
+        const __m128i values = _mm_loadu_si128(reinterpret_cast<const __m128i*>(byte_data + i));
+        const unsigned mask = static_cast<unsigned>(~_mm_movemask_epi8(
+            _mm_cmpeq_epi8(values, _mm_setzero_si128()))) & 0xffff;
+        out[i / 8] = static_cast<uint8_t>(mask);
+        out[i / 8 + 1] = static_cast<uint8_t>(mask >> 8);
+    }
+#else
+    std::memset(out, 0, block_len * 16);
+    for (size_t k = 0; k < byte_len; ++k) {
+        if (byte_data[k]) {
+            // bit k → byte k/8, bit position k%8 (LSB = bit 0)
+            out[k / 8] |= (uint8_t(1) << (k % 8));
+        }
+    }
+#endif
+}
+
+#if defined(TAIHANG_ARCH_X64)
+template <size_t Width>
+static void interleave_matrix_rows(__m128i* rows) {
+    __m128i next[16];
+    for (size_t group = 0; group < 16; group += 2 * Width) {
+        for (size_t i = 0; i < Width; i++) {
+            const __m128i a = rows[group + i];
+            const __m128i b = rows[group + Width + i];
+            const size_t index = group + 2 * i;
+            if constexpr (Width == 1) {
+                next[index] = _mm_unpacklo_epi8(a, b);
+                next[index + 1] = _mm_unpackhi_epi8(a, b);
+            } else if constexpr (Width == 2) {
+                next[index] = _mm_unpacklo_epi16(a, b);
+                next[index + 1] = _mm_unpackhi_epi16(a, b);
+            } else if constexpr (Width == 4) {
+                next[index] = _mm_unpacklo_epi32(a, b);
+                next[index + 1] = _mm_unpackhi_epi32(a, b);
+            } else {
+                next[index] = _mm_unpacklo_epi64(a, b);
+                next[index + 1] = _mm_unpackhi_epi64(a, b);
+            }
+        }
+    }
+    for (size_t i = 0; i < 16; i++) rows[i] = next[i];
+}
+#endif
+
 /* --- Matrix Transpose Macros --- */
 #define INPUT_VAL(x, y) input[(x)*output_cols/8 + (y)/8]
 #define OUTPUT_VAL(x, y) output[(y)*output_rows/8 + (x)/8]
@@ -75,6 +126,34 @@ void bit_matrix_transpose(uint8_t const *input, uint64_t output_rows, uint64_t o
                    "bit_matrix_transpose: Dimensions must be multiples of 8.");
 
 #if defined(TAIHANG_ARCH_X64)
+    if (output_rows == 128 && output_cols % 128 == 0) {
+        const size_t column_blocks = output_cols / 128;
+        for (size_t row = 0; row < 128; row += 16) {
+            for (size_t block = 0; block < column_blocks; block++) {
+                __m128i rows[16];
+                for (size_t i = 0; i < 16; i++) {
+                    rows[i] = _mm_loadu_si128(reinterpret_cast<const __m128i*>(
+                        input + ((row + i) * column_blocks + block) * sizeof(Block)));
+                }
+                interleave_matrix_rows<1>(rows);
+                interleave_matrix_rows<2>(rows);
+                interleave_matrix_rows<4>(rows);
+                interleave_matrix_rows<8>(rows);
+                for (size_t column = 0; column < 16; column++) {
+                    __m128i bits = rows[column];
+                    for (int bit = 7; bit >= 0; bit--) {
+                        const uint16_t mask = static_cast<uint16_t>(_mm_movemask_epi8(bits));
+                        const size_t output_row = block * 128 + column * 8 + bit;
+                        std::memcpy(output + output_row * sizeof(Block) + row / 8,
+                                    &mask, sizeof(mask));
+                        bits = _mm_slli_epi64(bits, 1);
+                    }
+                }
+            }
+        }
+        return;
+    }
+
     /* --- Intel/AMD Optimized Path (SSE) --- */
     uint64_t rr, cc;
     int i;
