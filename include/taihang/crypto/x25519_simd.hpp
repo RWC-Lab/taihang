@@ -23,7 +23,10 @@ enum class Backend {
     Ifma512
 };
 
-/** @brief Return the display name of a backend. */
+/**
+ * @brief Return "normal" (OpenSSL), "avx2", or "avx512" (AVX-512 IFMA).
+ * Auto is resolved to the backend selected on the current machine.
+ */
 std::string_view backend_name(Backend backend) noexcept;
 
 /** @brief Check whether a backend can run on the current machine. */
