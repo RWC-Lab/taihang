@@ -1775,17 +1775,20 @@ void scalar_mul_openssl(std::vector<EC25519Point>& points,
 } // namespace detail
 
 std::string_view backend_name(Backend backend) noexcept {
-    switch (backend) {
-        case Backend::Auto:
-            return "Auto";
-        case Backend::OpenSSL:
-            return "OpenSSL";
-        case Backend::Avx2:
-            return "AVX2";
-        case Backend::Ifma512:
-            return "AVX-512 IFMA";
+    if (backend == Backend::Auto) {
+        backend = automatic_backend();
     }
-    return "Unknown";
+
+    switch (backend) {
+        case Backend::OpenSSL:
+            return "normal";
+        case Backend::Avx2:
+            return "avx2";
+        case Backend::Ifma512:
+            return "avx512";
+        default:
+            return "unknown";
+    }
 }
 
 bool backend_available(Backend backend) noexcept {
